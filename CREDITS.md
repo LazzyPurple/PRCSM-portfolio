@@ -14,7 +14,7 @@ Le lien du tweet n'a pas été retrouvé et n'est pas disponible auprès du comm
 Cette mention ne constitue pas une vérification indépendante de cette autorisation.
 Le dépôt consulté ne contient pas de licence générale explicite pour ces fichiers.
 
-Portages prévus (aucun encore effectué à la phase 0) :
+Portages Dao : `world.ts`, `shape.ts`, `markings.ts` et les règles de moteur sont présents depuis la phase 1. Le maillage reste prévu pour la phase 2.
 
 | Source dans `src/app/components/koi-pond/` | Destination |
 | --- | --- |

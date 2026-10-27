@@ -1,6 +1,9 @@
+import KoiPond from "@/pond/KoiPond";
+
 export default function Home() {
   return (
     <main className="pond relative isolate min-h-svh overflow-hidden">
+      <KoiPond />
       <section
         data-koi-avoid
         className="paper absolute left-1/2 top-1/2 w-[min(25rem,calc(100%-3rem))] -translate-x-1/2 -translate-y-1/2 px-8 py-7 sm:px-10 sm:py-9"
