@@ -1,0 +1,155 @@
+{
+  "mode": "dev",
+  "url": "http://127.0.0.1:3000",
+  "startedAt": "2026-10-27T23:12:14.311Z",
+  "checks": [
+    "poster paints before engine on slow connection; 600 ms fade and no layout shift",
+    "WebGL2 MRT and feeding",
+    "debug pause freezes simulation",
+    "live reduced motion freezes frame and blocks feeding",
+    "reduced-motion initial state is exactly 240 steps",
+    "synthetic visibilitychange stops and resumes RAF",
+    "real IntersectionObserver pauses offscreen canvas",
+    "context loss shows fallback and restores rendering",
+    "seven coat varieties, >2x size range and fish shadows verified by GPU pixel comparison",
+    "portrait 3 koi, touch tap feeds without hover curiosity",
+    "portrait retains 55 degree camera and broad pond; food radius >= 3.5 CSS pixels",
+    "destroy clears observers/listeners/debug reference and disposes GPU resources",
+    "no WebGL2 shows the mobile poster and skips engine boot",
+    "server-rendered responsive posters work without JavaScript in all five framings; one image per visit"
+  ],
+  "errors": [],
+  "loadingPoster": {
+    "source": "http://127.0.0.1:3000/pond/wide-1440.webp",
+    "opacity": "0"
+  },
+  "posterRequests": [
+    "http://127.0.0.1:3000/pond/wide-1440.webp"
+  ],
+  "reducedState": {
+    "gpu": {
+      "count": 367,
+      "median": 2.980864,
+      "p95": 3.807232
+    },
+    "cpu": {
+      "count": 368,
+      "median": 0.30000000447034836,
+      "p95": 0.6999999955296516
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 15,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 230.8759928794079,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.499999999999986,
+    "reduced": true,
+    "raf": 0,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "school": {
+    "varieties": [
+      "kohaku",
+      "yamabuki",
+      "shiro",
+      "asagi",
+      "sanke",
+      "showa",
+      "tancho"
+    ],
+    "sizeRatio": 2.4447764218342156,
+    "shadows": 7,
+    "shadowPixels": 24661
+  },
+  "desktop": {
+    "gpu": {
+      "count": 246,
+      "median": 3.05664,
+      "p95": 3.739648
+    },
+    "cpu": {
+      "count": 254,
+      "median": 0.29999999701976776,
+      "p95": 0.5
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 15,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 223.41067552184938,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.033333333333321,
+    "reduced": false,
+    "raf": 254,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "portrait": {
+    "worldWidth": 1139.4,
+    "worldHeight": 844,
+    "fov": 40,
+    "inclination": 55,
+    "pelletRadii": [
+      5.706439609464757,
+      5.642675631709412,
+      5.658026466391142,
+      5.540737423181764,
+      5.548956363634862
+    ]
+  },
+  "staticPosters": [
+    {
+      "width": 2400,
+      "height": 1000,
+      "source": "http://127.0.0.1:3000/pond/ultrawide-2400.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "source": "http://127.0.0.1:3000/pond/wide-1440.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "source": "http://127.0.0.1:3000/pond/mid-1280.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "source": "http://127.0.0.1:3000/pond/tablet-768.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "source": "http://127.0.0.1:3000/pond/phone-390.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    }
+  ],
+  "passed": true
+}

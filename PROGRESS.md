@@ -110,3 +110,29 @@ taches vermillon et deux taches blanc cassé. Les motifs blancs disposent de leu
 propres uniformes ; les autres robes gardent leur rendu. Le panneau de debug reste affiché.
 16 tests CPU, 12 scénarios Chrome, typecheck/lint/build passent ; capture paysage observée.
 Le budget GPU de production n'a pas été remesuré pour cette modification de motifs.
+
+## Phase 6 — affiches livrées, 28 octobre 2026
+
+13 WebP, cinq cadrages (ultralarge, paysage, intermédiaire, tablette, téléphone),
+capturés à la première image prête de notre canvas. Les images ne contiennent ni HTML,
+ni texte, ni debug. Le manifeste src/pond/posters.json conserve viewport, taille réelle,
+graine de capture, navigateur, révision de base, empreinte PNG, qualité et poids.
+
+Le picture est présent dans le HTML initial, décoratif et sans interaction ; un seul fichier
+adapté au ratio et à la densité d'écran est téléchargé. L'affiche reste derrière le canvas,
+qui apparaît en 600 ms, et sert au secours sans WebGL2, sans JavaScript ou après perte
+de contexte. La transition est désactivée en reduced motion ; le dégradé reste sous l'image.
+La graine fixe ne concerne que l'outil de capture, la simulation du site reste vivante.
+
+Génération : npm run posters (serveur dev 3000 lancé), ou URL explicite après --.
+Sharp 0.35.5, déjà installé par Next, est déclaré en dev pour l'encodage hors navigateur.
+Le transport Chrome est partagé avec la validation. Le nettoyage des anciennes affiches
+a été vérifié : il supprime les fichiers générés obsolètes et préserve les autres fichiers.
+
+17 tests CPU/actifs, 14 scénarios Chrome dev et la matrice production sans JavaScript
+passent, ainsi que typecheck/lint/build, sans erreur navigateur. Réseau ralenti : affiche
+visible avant le moteur, une seule requête WebP et CLS < 0.001. Captures observées.
+Poids téléphone 10.6–33.9 Kio ; paysage 27.4–103.6 Kio ; maximum 129.2 Kio.
+Profil prod 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 3.265 ms, p95 4.483 ms,
+239.97 FPS sur 10 secondes. Preuves : docs/validation/chrome-posters-{dev,prod}.json.
+Safari, téléphone réel et portable moyen restent à qualifier.

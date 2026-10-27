@@ -25,6 +25,17 @@ body {
   background: color-mix(in srgb, var(--paper) 88%, transparent);
 }
 
+.pond-poster,
+.pond-poster img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.pond-poster img { object-fit: cover; }
+
 .pond-canvas {
   position: absolute;
   inset: 0;
@@ -36,6 +47,9 @@ body {
 }
 
 .pond-canvas[data-ready="true"] { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .pond-canvas { transition: none; }
+}
 .debug-panel {
   position: fixed;
   z-index: 10;

@@ -3,10 +3,14 @@
 // Boot timing adapted from Ardia apps/site/src/scripts/meadow/boot.ts.
 // https://github.com/mantrakp04/ardia — Copyright 2026 Mantra Patel, Apache-2.0.
 // SPDX-License-Identifier: Apache-2.0
-// Modified for React lifetime and an actual WebGL2 capability check.
+// Modified for React lifetime, WebGL2 capability checks and generated posters.
 import { useEffect, useRef, useState } from "react";
 import type { PondEngine } from "./engine";
 import type { ComponentType } from "react";
+import posters from "./posters.json";
+
+const posterSources = posters.frames.map(frame => ({ ...frame, srcSet: frame.files.map(file => `${file.file} ${file.width}w`).join(", ") }));
+const phonePoster = posterSources[posterSources.length - 1];
 
 export default function KoiPond() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,6 +57,15 @@ export default function KoiPond() {
 
   return (
     <>
+      <picture className="pond-poster">
+        {posterSources.filter(frame => frame.media).map(frame => (
+          <source key={frame.name} media={frame.media} srcSet={frame.srcSet} sizes="100vw" />
+        ))}
+        {/* Already encoded with responsive crops; keep the browser's native picture selection. */}
+        <img src={phonePoster.files[0].file} srcSet={phonePoster.srcSet} sizes="100vw"
+          width={phonePoster.width} height={phonePoster.height} alt="" loading="eager" fetchPriority="high" decoding="async"
+          onError={event => { event.currentTarget.style.visibility = "hidden"; }} />
+      </picture>
       <canvas ref={canvasRef} aria-hidden="true" className="pond-canvas" />
       {debug && <debug.Panel engine={debug.engine} />}
     </>

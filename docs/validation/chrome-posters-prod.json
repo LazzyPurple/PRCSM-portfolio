@@ -1,0 +1,61 @@
+{
+  "mode": "prod",
+  "url": "http://127.0.0.1:3001",
+  "startedAt": "2026-10-27T23:16:07.575Z",
+  "checks": [
+    "production page has no debug panel",
+    "10 second Chrome GPU timer/RAF capture",
+    "Chrome Performance trace and allocation sampling saved",
+    "server-rendered responsive posters work without JavaScript in all five framings; one image per visit"
+  ],
+  "errors": [],
+  "gpu": {
+    "samples": 2408,
+    "median": 3.264512,
+    "p95": 4.483072
+  },
+  "frameMs": {
+    "samples": 2409,
+    "median": 4.199999999998909,
+    "p95": 4.299999999999272
+  },
+  "fps": 239.96892058811926,
+  "resolution": {
+    "width": 1440,
+    "height": 900,
+    "dpr": 1
+  },
+  "staticPosters": [
+    {
+      "width": 2400,
+      "height": 1000,
+      "source": "http://127.0.0.1:3001/pond/ultrawide-2400.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "source": "http://127.0.0.1:3001/pond/wide-1440.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "source": "http://127.0.0.1:3001/pond/mid-1280.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "source": "http://127.0.0.1:3001/pond/tablet-768.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "source": "http://127.0.0.1:3001/pond/phone-390.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    }
+  ],
+  "passed": true
+}

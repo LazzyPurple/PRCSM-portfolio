@@ -102,7 +102,7 @@ Artefacts locaux ignorés par Git :
 - `artifacts/validation-prod/production-final.png` : rendu de production.
 - `artifacts/validation-dev/desktop-final.png`, `portrait-final.png`, `no-webgl2.png`.
 
-Il n'y a pas d'affiches WebP de chargement générées : la phase 6 facultative est différée.
+Les affiches étaient différées à la phase 5 ; la phase 6 ci-dessous les fournit désormais.
 
 ## Après correction des berges et du cadrage — 27 octobre 2026
 
@@ -121,3 +121,45 @@ Rapports : `docs/validation/chrome-school-dev.json` et `chrome-school-prod.json`
 Les ombres de koï partagent leur géométrie animée et ajoutent une projection GPU par poisson.
 Les ombres des feuilles restent analytiques ; aucun budget supplémentaire de shadow map.
 Les contacts utilisent les buffers de colonne existants sans allocation par paire.
+
+## Affiches de chargement — 28 octobre 2026
+
+13 fichiers générés depuis notre premier canvas prêt, sans UI ni textures externes.
+Le navigateur télécharge une seule variante avec picture/srcset/sizes ; les fichiers sont
+préencodés, sans réencodage Next au chargement. Sharp est un outil de génération en dev,
+absent du code navigateur. La bibliothèque entière pèse 764.5 Kio ; un visiteur ne la charge pas entière.
+
+| Cadrage source CSS | Largeurs WebP | Poids par fichier |
+| --- | --- | --- |
+| Ultralarge 2400×1000 | 1280, 1920, 2400 | 38.3–129.2 Kio |
+| Paysage 1440×900 | 960, 1440, 1920 | 27.4–103.6 Kio |
+| Intermédiaire 1024×900 | 768, 1280, 1600 | 23.9–92.5 Kio |
+| Tablette 768×1024 | 768, 1200 | 28.5–68.1 Kio |
+| Téléphone 390×844 | 390, 700 | 10.6–33.9 Kio |
+
+Le manifeste src/pond/posters.json donne les tailles, empreintes et paramètres de capture.
+Qualité WebP 70 pour tous les fichiers actuels, encodage borné par budget d'octets.
+Les captures utilisent un profil Chrome isolé, avec preserveDrawingBuffer activé uniquement
+dans l'outil. Les ressources affichées sur le site gardent leur configuration WebGL habituelle.
+
+Pour régénérer après une modification visuelle, lancer `npm run dev`, puis dans un autre terminal :
+
+```powershell
+npm run posters -- http://127.0.0.1:3000/
+npm test
+npm run build
+```
+
+CHROME permet de remplacer le chemin de l'exécutable Chrome. Les fichiers générés sont
+versionnés dans public/pond/ et src/pond/posters.json. Refaire le build après génération.
+
+Validation Chrome : affiche avant moteur sous latence simulée de 400 ms, une requête WebP,
+CLS < 0.001, fondu 600 ms, fondu désactivé en reduced motion, secours après perte de contexte
+et sans WebGL2. Sans JavaScript, les cinq cadrages et leurs styles restent visibles en dev/prod.
+Captures : artifacts/validation-dev/loading-poster.png, context-lost-poster.png,
+no-js-wide.png et no-js-phone.png ; versions sans JS de production dans validation-prod/.
+
+Nouveau profil production : 1440×900/DPR 1, RTX 4070 SUPER, 2 408 échantillons GPU,
+médiane 3.265 ms, p95 4.483 ms ; 239.97 FPS sur 10 secondes.
+Rapports : docs/validation/chrome-posters-dev.json et chrome-posters-prod.json.
+Ces contrôles ne qualifient pas Safari, un téléphone physique ou un portable moyen.

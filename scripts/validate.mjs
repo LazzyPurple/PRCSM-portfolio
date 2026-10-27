@@ -3,69 +3,15 @@
 // SPDX-License-Identifier: Apache-2.0
 // Modified: Windows Chrome, lifecycle assertions, production timing and allocation trace.
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
-import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
-import { resolve, sep, basename } from "node:path";
+import { writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { launchChrome, sleep } from "./chrome.mjs";
 
 const baseUrl = process.argv[2] ?? "http://127.0.0.1:3000";
 const mode = process.argv[3] ?? "dev";
 assert.ok((await fetch(baseUrl, { signal: AbortSignal.timeout(5000) })).ok, "Start the local server before validation");
 const output = resolve("artifacts", `validation-${mode}`);
-const profile = resolve(output, `chrome-${Date.now()}`);
-await mkdir(profile, { recursive: true });
-const proc = spawn(process.env.CHROME ?? "C:/Program Files/Google/Chrome/Application/chrome.exe", [
-  "--headless=new", "--remote-debugging-port=0", `--user-data-dir=${profile}`,
-  "--no-first-run", "--no-default-browser-check", "--disable-extensions", "--enable-gpu",
-  "--window-size=1440,900", "about:blank",
-], { stdio: "ignore", windowsHide: true });
-let launchError;
-proc.on("error", error => { launchError = error; });
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-let port;
-for (let i = 0; i < 100 && !port; i++) {
-  if (launchError) throw launchError;
-  port = await readFile(resolve(profile, "DevToolsActivePort"), "utf8").then(text => Number(text.split("\n")[0])).catch(() => null);
-  if (!port) await sleep(100);
-}
-assert.ok(port, "Chrome did not start within 10 seconds");
-const { webSocketDebuggerUrl } = await fetch(`http://127.0.0.1:${port}/json/version`).then(res => res.json());
-const socket = new WebSocket(webSocketDebuggerUrl);
-await new Promise((resolve, reject) => { socket.onopen = resolve; socket.onerror = reject; });
-let nextId = 0;
-const pending = new Map(), events = [], errors = [];
-socket.onmessage = event => {
-  const message = JSON.parse(event.data);
-  if (message.method) {
-    events.push(message);
-    if (message.method === "Runtime.exceptionThrown" || (message.method === "Log.entryAdded" && message.params.entry.level === "error")) errors.push(message);
-  }
-  const waiter = pending.get(message.id);
-  if (!waiter) return;
-  clearTimeout(waiter.timeout); pending.delete(message.id);
-  if (message.error) waiter.reject(new Error(JSON.stringify(message.error)));
-  else waiter.resolve(message.result);
-};
-const send = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
-  const id = ++nextId;
-  const timeout = setTimeout(() => { pending.delete(id); reject(new Error(`${method} timed out`)); }, 30000);
-  pending.set(id, { resolve, reject, timeout });
-  socket.send(JSON.stringify({ id, method, params, sessionId }));
-});
-const { targetId } = await send("Target.createTarget", { url: "about:blank" });
-const { sessionId } = await send("Target.attachToTarget", { targetId, flatten: true });
-const page = (method, params) => send(method, params, sessionId);
-const evaluate = async expression => {
-  const result = await page("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
-  if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description ?? result.exceptionDetails.text);
-  return result.result.value;
-};
-const waitFor = async expression => {
-  const deadline = Date.now() + 30000;
-  while (!(await evaluate(expression))) {
-    if (Date.now() > deadline) throw new Error(`Timed out: ${expression}`);
-    await sleep(100);
-  }
-};
+const { page, evaluate, waitFor, events, errors, close } = await launchChrome(output);
 const capture = async name => {
   const { data } = await page("Page.captureScreenshot", { format: "png" });
   await writeFile(resolve(output, `${name}.png`), Buffer.from(data, "base64"));
@@ -79,9 +25,23 @@ try {
   await page("Page.enable"); await page("Runtime.enable"); await page("Log.enable");
   await page("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   if (mode === "dev") {
+    await page("Network.enable");
+    await page("Network.emulateNetworkConditions", { offline: false, latency: 400, downloadThroughput: 1e6, uploadThroughput: 1e6 });
+    await page("Page.addScriptToEvaluateOnNewDocument", { source: "window.__cls=0;new PerformanceObserver(list=>{for(const entry of list.getEntries())if(!entry.hadRecentInput)window.__cls+=entry.value}).observe({type:'layout-shift',buffered:true})" });
     await page("Page.navigate", { url: `${baseUrl}/?debug` });
+    await waitFor("document.querySelector('.pond-poster img')?.complete && document.querySelector('.pond-poster img').naturalWidth>0 && document.querySelector('canvas')?.dataset.ready!=='true'");
+    report.loadingPoster = await evaluate("({source:document.querySelector('.pond-poster img').currentSrc,opacity:getComputedStyle(document.querySelector('canvas')).opacity})");
+    assert.ok(report.loadingPoster.source.includes("/pond/wide-"));
+    assert.equal(report.loadingPoster.opacity, "0");
+    await capture("loading-poster");
+    await page("Network.emulateNetworkConditions", { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
     await waitFor("!!window.__pond && document.querySelector('canvas').dataset.ready === 'true'");
     await sleep(1500);
+    report.posterRequests = await evaluate("performance.getEntriesByType('resource').filter(entry=>entry.name.includes('/pond/')&&entry.name.endsWith('.webp')).map(entry=>entry.name)");
+    assert.equal(new Set(report.posterRequests).size, 1, "Download only the matching poster, without a second fallback image");
+    assert.equal(await evaluate("getComputedStyle(document.querySelector('canvas')).transitionDuration"), "0.6s");
+    assert.ok(await evaluate("window.__cls") < 0.001);
+    report.checks.push("poster paints before engine on slow connection; 600 ms fade and no layout shift");
     assert.equal(await evaluate("window.__pond.mrtReady"), true);
     const before = await evaluate("window.__pond.world.pellets.length");
     await click(420, 280);
@@ -97,6 +57,7 @@ try {
     await sleep(200);
     report.reducedState = await evaluate("window.__pond.stats()");
     await waitFor("window.__pond.stats().reduced && window.__pond.stats().raf === 0");
+    assert.equal(await evaluate("getComputedStyle(document.querySelector('canvas')).transitionDuration"), "0s");
     const still = await evaluate("({time:window.__pond.world.time,pellets:window.__pond.world.pellets.length})");
     await click(420, 280); await sleep(500);
     assert.deepEqual(await evaluate("({time:window.__pond.world.time,pellets:window.__pond.world.pellets.length})"), still);
@@ -120,6 +81,9 @@ try {
     report.checks.push("real IntersectionObserver pauses offscreen canvas");
     await evaluate("window.__lose=document.querySelector('canvas').getContext('webgl2').getExtension('WEBGL_lose_context');window.__lose.loseContext()");
     await waitFor("document.querySelector('canvas').dataset.ready === 'false'");
+    await sleep(650);
+    assert.ok(await evaluate("document.querySelector('.pond-poster img').naturalWidth>0 && Number(getComputedStyle(document.querySelector('canvas')).opacity)<0.01"));
+    await capture("context-lost-poster");
     await evaluate("window.__lose.restoreContext()");
     await waitFor("document.querySelector('canvas').dataset.ready === 'true'");
     report.checks.push("context loss shows fallback and restores rendering");
@@ -180,8 +144,10 @@ try {
     await page("Page.reload"); await sleep(1500);
     assert.equal(await evaluate("!!window.__pond"), false);
     assert.notEqual(await evaluate("document.querySelector('canvas').dataset.ready"), "true");
+    await waitFor("document.querySelector('.pond-poster img').complete && document.querySelector('.pond-poster img').naturalWidth>0");
+    assert.ok((await evaluate("document.querySelector('.pond-poster img').currentSrc")).includes("/pond/phone-"));
     await capture("no-webgl2");
-    report.checks.push("no WebGL2 leaves CSS fallback and skips engine boot");
+    report.checks.push("no WebGL2 shows the mobile poster and skips engine boot");
   } else {
     await page("Page.addScriptToEvaluateOnNewDocument", { source: `
       window.__bench={gpu:new Float64Array(4096),gpuCount:0,frames:new Float64Array(4096),frameCount:0,last:0};
@@ -219,6 +185,21 @@ try {
     report.checks.push("production page has no debug panel", "10 second Chrome GPU timer/RAF capture", "Chrome Performance trace and allocation sampling saved");
     assert.ok(timing.gpuCount > 0, "GPU timer unavailable; do not claim measured GPU performance");
   }
+  await page("Emulation.setScriptExecutionDisabled", { value: true });
+  report.staticPosters = [];
+  for (const [width, height, name] of [[2400,1000,"ultrawide"],[1440,900,"wide"],[1024,900,"mid"],[768,1024,"tablet"],[390,844,"phone"]]) {
+    await page("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: width < height });
+    await page("Page.reload");
+    await waitFor("document.querySelector('.pond-poster img')?.complete && document.querySelector('.pond-poster img').naturalWidth>0");
+    const source = await evaluate("document.querySelector('.pond-poster img').currentSrc");
+    assert.ok(source.includes(`/pond/${name}-`), source);
+    assert.notEqual(await evaluate("document.querySelector('canvas').dataset.ready"), "true");
+    const requests = await evaluate("performance.getEntriesByType('resource').filter(entry=>entry.name.includes('/pond/')&&entry.name.endsWith('.webp')).map(entry=>entry.name)");
+    assert.equal(new Set(requests).size, 1);
+    report.staticPosters.push({ width, height, source, font: await evaluate("getComputedStyle(document.querySelector('p')).fontFamily") });
+    if (name === "wide" || name === "phone") await capture(`no-js-${name}`);
+  }
+  report.checks.push("server-rendered responsive posters work without JavaScript in all five framings; one image per visit");
   assert.equal(errors.length, 0, "Browser logged errors");
   report.passed = true;
 } catch (error) {
@@ -227,8 +208,5 @@ try {
 } finally {
   await writeFile(resolve(output, "report.json"), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
-  await send("Browser.close").catch(() => {}); socket.close();
-  await sleep(300); if (proc.exitCode === null) proc.kill();
-  assert.ok(profile.startsWith(output + sep) && basename(profile).startsWith("chrome-"));
-  await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 }).catch(error => console.warn(`Chrome profile retained: ${error.message}`));
+  await close();
 }

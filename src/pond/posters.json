@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-10-27T23:15:08.253Z",
+  "baseRevision": "a4d4d2734dc53d8ed9d1a8c26cd48c44a4d44ef8",
+  "seed": 80210,
+  "browser": "Chrome/156.0.8078.49",
+  "frames": [
+    {
+      "name": "ultrawide",
+      "media": "(min-aspect-ratio: 2/1)",
+      "width": 2400,
+      "height": 1000,
+      "captureWidth": 2400,
+      "captureHeight": 1000,
+      "captureSha256": "cec10503bc5b5ced41057cb70622b31f9e5335fd75556cc03c9e52fac487907d",
+      "budget": 163840,
+      "files": [
+        {
+          "file": "/pond/ultrawide-1280.webp",
+          "width": 1280,
+          "height": 533,
+          "bytes": 39198,
+          "quality": 70
+        },
+        {
+          "file": "/pond/ultrawide-1920.webp",
+          "width": 1920,
+          "height": 800,
+          "bytes": 89072,
+          "quality": 70
+        },
+        {
+          "file": "/pond/ultrawide-2400.webp",
+          "width": 2400,
+          "height": 1000,
+          "bytes": 132296,
+          "quality": 70
+        }
+      ]
+    },
+    {
+      "name": "wide",
+      "media": "(min-aspect-ratio: 4/3)",
+      "width": 1440,
+      "height": 900,
+      "captureWidth": 1960,
+      "captureHeight": 1225,
+      "captureSha256": "06d9ae24074f6faabc6d2df5e702cfafa3587b38b65beae51536668f95c7da76",
+      "budget": 143360,
+      "files": [
+        {
+          "file": "/pond/wide-960.webp",
+          "width": 960,
+          "height": 600,
+          "bytes": 28072,
+          "quality": 70
+        },
+        {
+          "file": "/pond/wide-1440.webp",
+          "width": 1440,
+          "height": 900,
+          "bytes": 61526,
+          "quality": 70
+        },
+        {
+          "file": "/pond/wide-1920.webp",
+          "width": 1920,
+          "height": 1200,
+          "bytes": 106076,
+          "quality": 70
+        }
+      ]
+    },
+    {
+      "name": "mid",
+      "media": "(min-aspect-ratio: 1/1)",
+      "width": 1024,
+      "height": 900,
+      "captureWidth": 1638,
+      "captureHeight": 1440,
+      "captureSha256": "2109a78f5e081f487f513c3def53d3a3d518ae5762de064bedcc1daac85c3f5a",
+      "budget": 122880,
+      "files": [
+        {
+          "file": "/pond/mid-768.webp",
+          "width": 768,
+          "height": 675,
+          "bytes": 24428,
+          "quality": 70
+        },
+        {
+          "file": "/pond/mid-1280.webp",
+          "width": 1280,
+          "height": 1125,
+          "bytes": 62872,
+          "quality": 70
+        },
+        {
+          "file": "/pond/mid-1600.webp",
+          "width": 1600,
+          "height": 1407,
+          "bytes": 94710,
+          "quality": 70
+        }
+      ]
+    },
+    {
+      "name": "tablet",
+      "media": "(min-aspect-ratio: 3/5)",
+      "width": 768,
+      "height": 1024,
+      "captureWidth": 1229,
+      "captureHeight": 1638,
+      "captureSha256": "869204221e3448c57173e7371b62b739de6d52b41545770f3dac88cd3c6d2866",
+      "budget": 102400,
+      "files": [
+        {
+          "file": "/pond/tablet-768.webp",
+          "width": 768,
+          "height": 1024,
+          "bytes": 29218,
+          "quality": 70
+        },
+        {
+          "file": "/pond/tablet-1200.webp",
+          "width": 1200,
+          "height": 1599,
+          "bytes": 69736,
+          "quality": 70
+        }
+      ]
+    },
+    {
+      "name": "phone",
+      "media": "",
+      "width": 390,
+      "height": 844,
+      "captureWidth": 713,
+      "captureHeight": 1543,
+      "captureSha256": "c624998430bc765e28273a0169df1b418bbcaea652d382b733c34dec9267259f",
+      "budget": 61440,
+      "files": [
+        {
+          "file": "/pond/phone-390.webp",
+          "width": 390,
+          "height": 844,
+          "bytes": 10878,
+          "quality": 70
+        },
+        {
+          "file": "/pond/phone-700.webp",
+          "width": 700,
+          "height": 1515,
+          "bytes": 34758,
+          "quality": 70
+        }
+      ]
+    }
+  ]
+}

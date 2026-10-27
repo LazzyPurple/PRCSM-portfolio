@@ -56,8 +56,11 @@ Portages peinture présents depuis la phase 4 :
 
 Chaque fichier effectivement porté conserve un en-tête avec le chemin d'origine,
 le dépôt, le copyright, Apache-2.0 et une mention des modifications.
-Le transport de capture Chrome de `scripts/validate.mjs` est adapté de
+Le transport de capture Chrome partagé dans `scripts/chrome.mjs`, son usage dans
+`scripts/validate.mjs` et le générateur `scripts/posters.mjs` sont adaptés de
 `apps/site/scripts/hero-posters.mjs`, sous la même licence Apache-2.0.
+Les affiches WebP dans `public/pond/` sont des captures de notre propre canvas,
+sans texte ni panneau de debug ; `src/pond/posters.json` consigne leur provenance.
 
 Les images, textures, palettes, modèles de terrain, personnages et analytics d'Ardia
 ne sont pas repris. La palette de cette mare et ses éléments visuels sont propres au projet.
