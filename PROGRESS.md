@@ -23,3 +23,11 @@ Typecheck/lint passent, 7 tests dont déformation sans renouvellement des buffer
 Erreur de mot réservé GLSL corrigée avant validation.
 Le MRT est déjà employé pour assembler la couleur et préparer la phase 3.
 Le rendu reste brut ; la peinture, la mesure GPU et l'audit d'allocations restent à faire.
+
+## Phase 3 — flux
+
+Deux attachments MRT observés complets dans le contexte WebGL2 réel du navigateur.
+La vue Flux montre les silhouettes distinctes et des directions suivant les colonnes des koï.
+Projection des tangentes corrigée par la taille du viewport, régions préservées par la surface.
+Typecheck/lint passent. Aucune nécessité de repli en second rendu sur ce contexte.
+Pas encore de validation sur un autre pilote/GPU ; les performances finales restent non mesurées.

@@ -21,6 +21,7 @@ export default function DebugPanel({ engine }: { engine: PondEngine }) {
       </label>
       <output>{engine.fps.toFixed(0)} FPS · GPU {engine.gpuMs === null ? "n/d" : `${engine.gpuMs.toFixed(2)} ms`} · ×{engine.scale.toFixed(2)}</output>
       <output>{engine.world.koi.length} koï · {engine.world.pellets.length} granulés · {engine.world.time.toFixed(1)} s</output>
+      <output>MRT · {engine.mrtReady ? "2 cibles complètes" : "en attente"}</output>
       <label>Heure · jour → crépuscule
         <input type="range" min="0" max="1" step="0.01" value={engine.hour} onChange={e => { engine.setHour(e.target.valueAsNumber); refresh(); }} />
       </label>

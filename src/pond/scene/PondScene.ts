@@ -16,6 +16,7 @@ const MAX_PELLETS = 24;
 const MAX_BITES = 24;
 
 export class PondScene {
+  mrtReady = false;
   readonly renderer: THREE.WebGLRenderer;
   readonly camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 200);
   readonly scene = new THREE.Scene();
@@ -67,6 +68,7 @@ export class PondScene {
     const dpr = Math.min(devicePixelRatio || 1, 1.6, Math.sqrt(2.4e6 / (width * height))) * scale;
     const w = Math.max(1, Math.round(width * dpr)), h = Math.max(1, Math.round(height * dpr));
     this.renderer.setSize(w, h, false);
+    this.uniforms.uTargetSize.value.set(w, h);
     this.opaque.setSize(w, h); this.target.setSize(w, h);
     this.camera.aspect = width / height;
     this.camera.fov = width < height ? 50 : FOV;
@@ -145,6 +147,11 @@ export class PondScene {
     this.renderer.render(this.scene, this.camera);
     this.renderer.setRenderTarget(this.target);
     this.renderer.render(this.composite.scene, this.composite.camera);
+    if (!this.mrtReady) {
+      const gl = this.renderer.getContext();
+      this.mrtReady = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+      if (!this.mrtReady) throw new Error("Pond MRT framebuffer is incomplete");
+    }
     this.displayMaterial.uniforms.uSource.value = this.target.textures[view === "flow" ? 1 : 0];
     this.renderer.setRenderTarget(null); this.renderer.render(this.display.scene, this.display.camera);
   }

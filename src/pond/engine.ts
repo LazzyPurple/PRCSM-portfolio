@@ -21,6 +21,7 @@ export class PondEngine {
   fps = 0;
   gpuMs: number | null = null;
   scale = 1;
+  get mrtReady() { return this.scene.mrtReady; }
   private ctx: CanvasRenderingContext2D | null;
   private scene: PondScene;
   private debugCanvas: HTMLCanvasElement | null = null;

@@ -53,6 +53,7 @@ export function sharedUniforms() {
     uTime: { value: 0 }, uLight: { value: new THREE.Vector3(-0.5, 0.8, 0.3).normalize() },
     uLightColor: { value: new THREE.Color(palette.light.day) }, uWater: { value: new THREE.Color(palette.water.middle) },
     uMaxDepth: { value: 1.5 }, uPads: { value: new Float32Array(20 * 4) },
+    uTargetSize: { value: new THREE.Vector2(1, 1) },
   };
 }
 export type SceneUniforms = ReturnType<typeof sharedUniforms>;

@@ -15,11 +15,12 @@ const MAX_BLACK = 6;
 const VS = `precision highp float;
 in vec3 position,normal,tangent; in vec3 body;
 uniform mat4 modelViewMatrix,projectionMatrix;
+uniform vec2 uTargetSize;
 out vec3 vWorld,vNormal; out vec3 vBody; out vec2 vDirection;
 void main(){vWorld=position;vNormal=normal;vBody=body;
  vec4 clip=projectionMatrix*modelViewMatrix*vec4(position,1);
  vec4 ahead=projectionMatrix*modelViewMatrix*vec4(position+tangent*0.05,1);
- vDirection=(ahead.xy/ahead.w-clip.xy/clip.w);
+ vDirection=(ahead.xy/ahead.w-clip.xy/clip.w)*uTargetSize;
  gl_Position=clip;}`;
 
 export function createKoi(koi: Koi, uniforms: SceneUniforms) {
