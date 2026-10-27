@@ -1,0 +1,26 @@
+@import "tailwindcss" source("../");
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--water-deep);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.pond {
+  background: radial-gradient(
+    ellipse at 30% 18%,
+    var(--water-shallow),
+    var(--water-middle) 45%,
+    var(--water-deep) 100%
+  );
+}
+
+.paper {
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+}
