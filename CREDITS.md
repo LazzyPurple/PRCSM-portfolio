@@ -41,7 +41,7 @@ Le `NOTICE` à la racine couvre les propres sources d'Ardia sous Apache-2.0 ;
 La GPL-3.0 de l'application distribuée avec son moteur ne doit pas être confondue
 avec la licence de ces sources du site.
 
-Portages prévus (aucun encore effectué à la phase 0) :
+Portages peinture présents depuis la phase 4 :
 
 | Source dans `apps/site/src/scripts/meadow/` | Destination |
 | --- | --- |
@@ -52,6 +52,7 @@ Portages prévus (aucun encore effectué à la phase 0) :
 | `budget.ts`, `GpuClock`, `Scaler` | `src/pond/paint/budget.ts` |
 | `scene.ts`, `pickTier()` et formule du budget de pixels | `src/pond/paint/budget.ts` |
 | `boot.ts`, principe de démarrage après affichage | `src/pond/KoiPond.tsx` |
+| `shaders.ts`, `encodeFlow()` | `src/pond/scene/flow.ts` |
 
 Chaque fichier effectivement porté recevra un en-tête avec le chemin d'origine,
 le dépôt, le copyright, Apache-2.0 et une mention des modifications.

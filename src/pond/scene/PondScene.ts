@@ -7,6 +7,7 @@ import { createLilyPads } from "./lilyPads";
 import { createBank } from "./bank";
 import { createWater, fullscreenScene, FULLSCREEN_VS } from "./water";
 import { flatMaterial, REGION, sharedUniforms } from "./flow";
+import { PaintPipeline } from "../paint/strokePass";
 
 const SCALE = 0.01;
 const MAX_DEPTH = 1.5;
@@ -49,6 +50,8 @@ export class PondScene {
   private dusk = new THREE.Color(palette.light.dusk);
   private sun = new THREE.DirectionalLight(palette.light.day, 2);
   private hemisphere = new THREE.HemisphereLight(palette.light.hemisphere, palette.light.ground, 1);
+  private paint: PaintPipeline;
+  private screenLight = new THREE.Vector3();
   readonly simulationPoint = { x: 0, y: 0 };
 
   constructor(readonly canvas: HTMLCanvasElement) {
@@ -57,6 +60,7 @@ export class PondScene {
     this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
     this.renderer.toneMapping = THREE.NoToneMapping;
     this.renderer.setClearColor(palette.water.deep, 1);
+    this.paint = new PaintPipeline(this.renderer);
     this.uniforms.uMaxDepth.value = MAX_DEPTH;
     this.scene.add(this.decoration, this.sun, this.hemisphere);
     this.water.uniforms.uColor.value = this.opaque.textures[0];
@@ -70,6 +74,7 @@ export class PondScene {
     this.renderer.setSize(w, h, false);
     this.uniforms.uTargetSize.value.set(w, h);
     this.opaque.setSize(w, h); this.target.setSize(w, h);
+    this.paint.resize(w, h, width);
     this.camera.aspect = width / height;
     this.camera.fov = width < height ? 50 : FOV;
     const tangent = Math.tan(this.camera.fov * Math.PI / 360);
@@ -112,7 +117,7 @@ export class PondScene {
     return this.simulationPoint;
   }
 
-  render(world: World, hour: number, view: string) {
+  render(world: World, hour: number, view: string, dt: number, pointer: { x: number; y: number; active: boolean }) {
     this.uniforms.uTime.value = world.time;
     this.uniforms.uLight.value.set(-0.5 + hour * 0.85, 0.9 - hour * 0.55, 0.3).normalize();
     this.uniforms.uLightColor.value.copy(this.daylight).lerp(this.dusk, hour);
@@ -152,7 +157,15 @@ export class PondScene {
       this.mrtReady = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
       if (!this.mrtReady) throw new Error("Pond MRT framebuffer is incomplete");
     }
-    this.displayMaterial.uniforms.uSource.value = this.target.textures[view === "flow" ? 1 : 0];
+    if (view === "final" || view === "paint") {
+      this.screenLight.copy(this.uniforms.uLight.value).transformDirection(this.camera.matrixWorldInverse);
+      this.screenLight.z = Math.abs(this.screenLight.z);
+      this.screenLight.normalize();
+      const result = this.paint.render(this.target.textures[0], this.target.textures[1], this.width, this.height, dt,
+        world.time, pointer, this.screenLight, this.uniforms.uLightColor.value, view);
+      if (!result) return;
+      this.displayMaterial.uniforms.uSource.value = result;
+    } else this.displayMaterial.uniforms.uSource.value = this.target.textures[view === "flow" ? 1 : 0];
     this.renderer.setRenderTarget(null); this.renderer.render(this.display.scene, this.display.camera);
   }
 
@@ -171,5 +184,6 @@ export class PondScene {
     this.water.dispose(); this.composite.geometry.dispose();
     this.displayMaterial.dispose(); this.display.geometry.dispose();
     this.renderer.dispose();
+    this.paint.dispose();
   }
 }

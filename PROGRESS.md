@@ -31,3 +31,12 @@ La vue Flux montre les silhouettes distinctes et des directions suivant les colo
 Projection des tangentes corrigée par la taille du viewport, régions préservées par la surface.
 Typecheck/lint passent. Aucune nécessité de repli en second rendu sur ce contexte.
 Pas encore de validation sur un autre pilote/GPU ; les performances finales restent non mesurées.
+
+## Phase 4 — peinture
+
+PAINT_FS porté avec corps inchangé (test de comparaison au source), puis cellules MRT float,
+FINAL_FS sans astres/horizon, touches à 55 %, relief, grain et dithering.
+Régions de koï distinctes et protection bidirectionnelle des frontières.
+WetPaint 64×40, déplacement atténué sur les koï, résorption 0.45 s vérifiée par test.
+Gouache observée dans le navigateur : grandes touches d'eau et relief sur les poissons.
+Typecheck/lint passent, 9 tests passent. Le budget GPU et l'audit de robustesse restent à effectuer.

@@ -15,7 +15,7 @@ export type PondView = "scene" | "flow" | "paint" | "final" | "simulation";
 
 export class PondEngine {
   world = new World();
-  view: PondView = "scene";
+  view: PondView = "final";
   hour = 0;
   paused = false;
   fps = 0;
@@ -26,6 +26,7 @@ export class PondEngine {
   private scene: PondScene;
   private debugCanvas: HTMLCanvasElement | null = null;
   private lost = false;
+  private screenPointer = { x: 0, y: 0, active: false };
   private raf = 0;
   private last = 0;
   private acc = 0;
@@ -134,14 +135,14 @@ export class PondEngine {
     this.measuredAt = performance.now();
   }
 
-  private draw() {
+  private draw(dt = 0) {
     if (this.lost || this.disposed) return;
     if (this.debugCanvas) this.debugCanvas.style.display = this.view === "simulation" ? "block" : "none";
     if (this.ctx && this.view === "simulation") {
       drawSimulation(this.ctx, this.world, this.width, this.height);
       if (this.debugCanvas) this.debugCanvas.dataset.ready = "true";
     } else {
-      this.scene.render(this.world, this.hour, this.view);
+      this.scene.render(this.world, this.hour, this.view, dt, this.screenPointer);
     }
     this.canvas.dataset.ready = "true";
   }
@@ -175,13 +176,15 @@ export class PondEngine {
     }
     if (steps === MAX_STEPS) this.acc = 0;
     if (now - this.measuredAt > MEASURE_INTERVAL_MS) this.measure();
-    this.draw();
+    this.draw(elapsed);
     this.raf = requestAnimationFrame(this.frame);
   };
 
   private onMove = (e: PointerEvent) => {
     if (this.reduced.matches) return;
     const localX = e.clientX - this.originX, localY = e.clientY - this.originY;
+    this.screenPointer.x = localX; this.screenPointer.y = localY;
+    this.screenPointer.active = e.pointerType !== "touch" && localX >= 0 && localY >= 0 && localX <= this.width && localY <= this.height;
     const point = this.view === "simulation" ? this.scene.simulationPoint : this.scene.project(localX, localY);
     if (this.view === "simulation" && point) { point.x = localX; point.y = localY; }
     if (!point) return this.onLeave();
@@ -213,7 +216,7 @@ export class PondEngine {
     const { x, y } = point;
     if (x >= 0 && y >= 0 && x <= this.width && y <= this.height) this.world.feed(x, y);
   };
-  private onLeave = () => { this.world.pointer.active = false; this.world.pointer.speed = 0; };
+  private onLeave = () => { this.world.pointer.active = false; this.world.pointer.speed = 0; this.screenPointer.active = false; };
   private onLayout = () => { this.measuredAt = -Infinity; };
   private onLost = (event: Event) => { event.preventDefault(); this.lost = true; this.canvas.dataset.ready = "false"; this.schedule(); };
   private onRestored = () => { this.lost = false; this.resize(); };
