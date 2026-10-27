@@ -80,3 +80,25 @@ Captures observées en paysage et portrait ; style peinture conservé.
 Profil production 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 2.607 ms,
 p95 4.259 ms, 239.77 FPS. Preuves : `docs/validation/chrome-fixes-{dev,prod}.json`.
 Le mobile physique et le portable moyen restent non qualifiés.
+
+## Espacement, diversité et ombrage — 27 octobre 2026
+
+La mare anticipe désormais les contacts avec le corps entier, freine à l'approche
+et écarte doucement les colonnes lors d'un contact. L'alignement du banc est moins fort,
+y compris pendant le nourrissage. Le placement initial est réparti autour du centre.
+Les gabarits sont moins encombrants et couvrent plus d'un facteur 2 entre petits et grands.
+Sept robes sont présentes en paysage : kohaku, yamabuki doré, shiro blanc/noir,
+asagi bleu ardoise, sanke, karasu charbon et tancho. Les nouvelles couleurs sont dans palette.ts.
+Les règles d'origine restent vérifiées par l'oracle dans World sans rive physique.
+
+Les nénuphars projettent une ombre orientée, échancrée et adoucie selon la profondeur,
+appliquée après le brouillard pour rester visible. Les koï projettent leur silhouette animée
+sur le fond en réutilisant leurs buffers : aucun second calcul CPU du maillage ni shadow map.
+Cette approximation ne produit pas d'ombres d'un koï sur un autre.
+
+16 tests CPU, 12 scénarios Chrome, typecheck/lint/build passent. La comparaison des pixels
+GPU avec/sans ombres de poissons confirme 26 192 pixels assombris dans la capture de test.
+Profil prod 1440×900, DPR 1, RTX 4070 SUPER : médiane GPU 2.748 ms, p95 3.658 ms,
+239.97 FPS sur 10 secondes. Preuves : docs/validation/chrome-school-{dev,prod}.json.
+Le panneau est de nouveau affiché dans l'aperçu de développement : http://127.0.0.1:3000/?debug.
+Les limites de qualification sur mobile physique et portable moyen restent inchangées.

@@ -44,6 +44,7 @@ export function createLilyPads(width: number, height: number, seed: number, unif
       p.mesh.rotation.z = Math.sin(time * 0.4 + p.phase) * 0.018;
       const field = uniforms.uPads.value;
       field[i * 4] = p.mesh.position.x; field[i * 4 + 1] = p.mesh.position.z; field[i * 4 + 2] = p.radius;
+      field[i * 4 + 3] = p.mesh.rotation.y;
     }
   } };
 }

@@ -7,7 +7,7 @@ async function loadWorld(path) {
   const source = stripTypeScriptTypes(readFileSync(path, "utf8"));
   return import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
 }
-const { World } = await loadWorld("src/pond/sim/world.ts");
+const { World, POND_SWIM_RADIUS } = await loadWorld("src/pond/sim/world.ts");
 const originalPath = "references/dao-portfolio/src/app/components/koi-pond/world.ts";
 
 function withSeed(seed, callback) {
@@ -65,4 +65,21 @@ test("fast nearby motion startles koi, slow hover does not", () => withSeed(13, 
   world.pointer.speed = 2000;
   world.step(1 / 60);
   assert.ok(koi.startle > 0.9);
+}));
+
+test("parallel bodies steer apart before their heads collide", () => withSeed(42, () => {
+  const world = new World(); world.shore = POND_SWIM_RADIUS; world.resize(1440, 900);
+  world.koi.length = 2;
+  for (let i = 0; i < 2; i++) {
+    const k = world.koi[i]; k.length = 200; k.heading = 0; k.speed = 30; k.nextBurst = 100;
+    for (let n = 0; n < 20; n++) { k.nodes[n * 2] = 760 - n * 200 / 19; k.nodes[n * 2 + 1] = 440 + i * 30; }
+  }
+  for (let i = 0; i < 120; i++) world.step(1 / 60);
+  assert.ok(world.koi[0].nodes[1] < 440);
+  assert.ok(world.koi[1].nodes[1] > 470);
+  let nearest = Infinity;
+  for (let a = 0; a < 20; a++) for (let b = 0; b < 20; b++) {
+    nearest = Math.min(nearest, Math.hypot(world.koi[0].nodes[a * 2] - world.koi[1].nodes[b * 2], world.koi[0].nodes[a * 2 + 1] - world.koi[1].nodes[b * 2 + 1]));
+  }
+  assert.ok(nearest > 50, `body clearance was only ${nearest}`);
 }));

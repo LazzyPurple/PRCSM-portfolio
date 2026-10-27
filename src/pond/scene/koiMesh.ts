@@ -76,12 +76,14 @@ export function createKoi(koi: Koi, uniforms: SceneUniforms) {
   geometry.setAttribute("tangent", new THREE.BufferAttribute(tangents, 3).setUsage(THREE.DynamicDrawUsage));
   geometry.setAttribute("body", new THREE.BufferAttribute(body, 3).setUsage(THREE.DynamicDrawUsage));
   const markings = koiMarkings(koi);
+  const coat = koi.variety === "yamabuki" ? palette.koi.gold : koi.variety === "asagi" ? palette.koi.slate
+    : koi.variety === "karasu" ? palette.koi.charcoal : palette.koi.white;
   const red = new Float32Array(MAX_RED * 4), black = new Float32Array(MAX_BLACK * 4);
   for (let i = 0; i < markings.red.length; i++) { const p = markings.red[i]; red.set([p.s, p.v, p.rs, p.rv], i * 4); }
   for (let i = 0; i < markings.black.length; i++) { const p = markings.black[i]; black.set([p.s, p.v, p.rs, p.rv], i * 4); }
   const material = new THREE.RawShaderMaterial({
     glslVersion: THREE.GLSL3, vertexShader: VS, side: THREE.DoubleSide,
-    uniforms: { ...uniforms, uWhite: { value: new THREE.Color(palette.koi.white) }, uRed: { value: new THREE.Color(palette.koi.vermilion) },
+    uniforms: { ...uniforms, uWhite: { value: new THREE.Color(coat) }, uRed: { value: new THREE.Color(palette.koi.vermilion) },
       uInk: { value: new THREE.Color(palette.koi.ink) }, uRedPatches: { value: red }, uBlackPatches: { value: black },
       uRedCount: { value: markings.red.length }, uBlackCount: { value: markings.black.length },
       uRegion: { value: REGION.koi + (koi.id - 1) * REGION.koiStep }, uId: { value: koi.id } },

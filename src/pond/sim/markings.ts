@@ -12,6 +12,16 @@ export type Markings = { red: Patch[]; black: Patch[] };
  */
 export function koiMarkings(k: Koi): Markings {
     const r = (j: number) => hash3(k.id, j, 41);
+    if (k.variety === "yamabuki" || k.variety === "karasu") return { red: [], black: [] };
+    if (k.variety === "shiro") return { red: [], black: [
+        { s: 0.12, v: 0.025, rs: 0.07, rv: 0.14 },
+        { s: 0.34, v: -0.02, rs: 0.1, rv: 0.16 },
+        { s: 0.6, v: 0.02, rs: 0.08, rv: 0.13 },
+    ] };
+    if (k.variety === "asagi") return { red: [
+        { s: 0.32, v: -0.12, rs: 0.2, rv: 0.055 },
+        { s: 0.32, v: 0.12, rs: 0.2, rv: 0.055 },
+    ], black: [] };
     if (k.variety === "tancho") return { red: [{ s: 0.11, v: 0, rs: 0.05, rv: 0.055 }], black: [] };
 
     const red: Patch[] = [];

@@ -27,17 +27,21 @@ vec4 encodeFlow(vec2 dir,float scale,float region) {
 float leafShadow(vec3 p) {
  float shade=0.0;
  for(int i=0;i<20;i++) {
-  vec2 offset=uPads[i].xy + uLight.xz/max(uLight.y,0.25)*p.y;
-  float r=length(p.xz-offset)/max(uPads[i].z,0.001);
-  shade=max(shade,(1.0-smoothstep(0.65,1.25,r))*0.38*step(p.y,-0.05));
+  vec2 offset=uPads[i].xy + uLight.xz/max(uLight.y,0.25)*(p.y-0.03);
+  vec2 d=(p.xz-offset)/max(uPads[i].z,0.001);
+  float a=uPads[i].w;d=mat2(cos(a),sin(a),-sin(a),cos(a))*d;
+  float softness=0.04+max(-p.y,0.0)*0.11;
+  float notch=step(0.0,d.x)*(1.0-smoothstep(0.10,0.22+softness,abs(atan(d.y,d.x))));
+  float mask=(1.0-smoothstep(1.0-softness,1.0+softness,length(d)))*(1.0-notch);
+  shade=max(shade,mask*0.48*(1.0-smoothstep(-0.04,0.01,p.y)));
  }
  return 1.0-shade;
 }
 vec3 litColor(vec3 albedo,vec3 n,vec3 p) {
  float diffuse=0.55+0.45*max(dot(normalize(n),uLight),0.0);
- vec3 color=albedo*(vec3(0.38)+uLightColor*diffuse*0.7)*leafShadow(p);
+ vec3 color=albedo*(vec3(0.38)+uLightColor*diffuse*0.7);
  float fog=1.0-exp(-max(-p.y,0.0)*1.2);
- return mix(color,uWater,fog*0.72);
+ return mix(color,uWater,fog*0.72)*leafShadow(p);
 }
 `;
 

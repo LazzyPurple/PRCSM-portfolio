@@ -25,6 +25,36 @@ const { createKoi } = await import(moduleUrl("src/pond/scene/koiMesh.ts"));
 const { createLilyPads } = await import(moduleUrl("src/pond/scene/lilyPads.ts"));
 const { POND_SWIM_RADIUS } = await import(moduleUrl("src/pond/sim/world.ts"));
 const { pondWidth } = await import(moduleUrl("src/pond/scene/framing.ts"));
+const { createKoiShadow } = await import(moduleUrl("src/pond/scene/shadows.ts"));
+const { koiMarkings } = await import(moduleUrl("src/pond/sim/markings.ts"));
+
+test("pond schools include gold, black-white, slate and young koi on every seed", () => {
+  const world = new World(); world.shore = POND_SWIM_RADIUS; world.resize(1440, 900);
+  assert.equal(new Set(world.koi.map(k => k.variety)).size, 7);
+  const lengths = world.koi.map(k => k.length);
+  assert.ok(Math.max(...lengths) / Math.min(...lengths) > 2);
+  for (const koi of world.koi) {
+    const markings = koiMarkings(koi);
+    assert.ok(markings.red.length <= 4 && markings.black.length <= 6);
+    if (koi.variety === "shiro") assert.ok(markings.black.length > 0 && markings.red.length === 0);
+    if (koi.variety === "yamabuki" || koi.variety === "karasu") assert.deepEqual(markings, { red: [], black: [] });
+  }
+});
+
+test("koi shadows share animated buffers and the moving light", () => {
+  const world = new World(); world.shore = POND_SWIM_RADIUS; world.resize(1440, 900);
+  const uniforms = sharedUniforms(), koi = createKoi(world.koi[0], uniforms);
+  const shadow = createKoiShadow(koi.mesh.geometry, uniforms);
+  assert.equal(shadow.geometry, koi.mesh.geometry);
+  assert.equal(shadow.material.uniforms.uLight, uniforms.uLight);
+  assert.equal(shadow.material.uniforms.uMaxDepth, uniforms.uMaxDepth);
+  assert.ok(shadow.material.transparent && !shadow.material.depthWrite);
+  const positions = shadow.geometry.attributes.position.array;
+  world.step(1 / 60); koi.update(0.01, -7.2, -4.5);
+  assert.equal(shadow.geometry.attributes.position.array, positions);
+  assert.ok(positions.every(Number.isFinite));
+  shadow.material.dispose(); koi.mesh.material.dispose(); koi.mesh.geometry.dispose();
+});
 
 test("portrait crops a broad pond while fish sizes and population follow the viewport", () => {
   assert.equal(pondWidth(1440, 900), 1440);

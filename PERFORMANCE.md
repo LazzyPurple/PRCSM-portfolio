@@ -112,3 +112,12 @@ Les rapports de cette passe sont `docs/validation/chrome-fixes-dev.json` et
 `chrome-fixes-prod.json`. Les mesures initiales ci-dessus restent celles de la phase 5.
 Le portrait 390×844 conserve une caméra 55°/FOV 40°, une mare large et un rayon de
 granulé supérieur à 3.5 px CSS. Aucun test sur téléphone physique n'est revendiqué.
+
+## Après espacement et ombrage — 27 octobre 2026
+
+Même protocole de production 1440×900/DPR 1 sur RTX 4070 SUPER : 2 409 échantillons,
+GPU médian 2.748 ms, p95 3.658 ms, 239.97 FPS sur 10 secondes.
+Rapports : `docs/validation/chrome-school-dev.json` et `chrome-school-prod.json`.
+Les ombres de koï partagent leur géométrie animée et ajoutent une projection GPU par poisson.
+Les ombres des feuilles restent analytiques ; aucun budget supplémentaire de shadow map.
+Les contacts utilisent les buffers de colonne existants sans allocation par paire.

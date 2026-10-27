@@ -10,6 +10,7 @@ import { flatMaterial, REGION, sharedUniforms } from "./flow";
 import { PaintPipeline } from "../paint/strokePass";
 import { GpuClock, Scaler, pickTier } from "../paint/budget";
 import { pondWidth } from "./framing";
+import { createKoiShadow } from "./shadows";
 
 const SCALE = 0.01;
 const MAX_DEPTH = 1.5;
@@ -119,7 +120,10 @@ export class PondScene {
     this.decoration.add(createBottom(w, h, this.uniforms), createBank(w, h, seed, this.uniforms));
     this.lilies = createLilyPads(w, h, seed, this.uniforms);
     this.decoration.add(this.lilies.group);
-    for (const fish of world.koi) { const koi = createKoi(fish, this.uniforms); this.koi.push(koi); this.decoration.add(koi.mesh); }
+    for (const fish of world.koi) {
+      const koi = createKoi(fish, this.uniforms); this.koi.push(koi);
+      this.decoration.add(createKoiShadow(koi.mesh.geometry, this.uniforms), koi.mesh);
+    }
     const sphere = new THREE.SphereGeometry(1, 6, 4);
     const foodMaterial = flatMaterial(palette.food, REGION.food, this.uniforms, 0);
     const biteMaterial = flatMaterial(palette.koi.white, REGION.food, this.uniforms);

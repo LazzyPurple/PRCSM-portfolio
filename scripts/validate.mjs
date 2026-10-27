@@ -123,7 +123,28 @@ try {
     await evaluate("window.__lose.restoreContext()");
     await waitFor("document.querySelector('canvas').dataset.ready === 'true'");
     report.checks.push("context loss shows fallback and restores rendering");
-    await sleep(1000); report.desktop = await evaluate("window.__pond.stats()");
+    await sleep(1000);
+    report.school = await evaluate(`(() => {
+      const e=window.__pond;e.togglePause();
+      const s=e.scene,shadows=s.decoration.children.filter(m=>m.name==='koi-shadow');
+      e.setView('scene');
+      const w=s.target.width,h=s.target.height,on=new Uint8Array(w*h*4),off=new Uint8Array(on.length);
+      s.renderer.readRenderTargetPixels(s.target,0,0,w,h,on);
+      for(const mesh of shadows)mesh.visible=false;
+      e.setView('scene');s.renderer.readRenderTargetPixels(s.target,0,0,w,h,off);
+      let changed=0;for(let i=0;i<on.length;i+=4)if(off[i]+off[i+1]+off[i+2]-on[i]-on[i+1]-on[i+2]>12)changed++;
+      for(const mesh of shadows)mesh.visible=true;
+      e.setView('final');e.togglePause();
+      const lengths=e.world.koi.map(k=>k.length);
+      return {varieties:e.world.koi.map(k=>k.variety),sizeRatio:Math.max(...lengths)/Math.min(...lengths),
+        shadows:shadows.length,shadowPixels:changed};
+    })()`);
+    assert.equal(new Set(report.school.varieties).size, 7);
+    assert.ok(report.school.sizeRatio > 2);
+    assert.equal(report.school.shadows, report.school.varieties.length);
+    assert.ok(report.school.shadowPixels > 100, "Fish shadows must darken visible bottom pixels");
+    report.checks.push("seven coat varieties, >2x size range and fish shadows verified by GPU pixel comparison");
+    report.desktop = await evaluate("window.__pond.stats()");
     await capture("desktop-final");
     await page("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
     await page("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });

@@ -1,0 +1,115 @@
+{
+  "mode": "dev",
+  "url": "http://127.0.0.1:3000",
+  "startedAt": "2026-10-27T22:23:46.828Z",
+  "checks": [
+    "WebGL2 MRT and feeding",
+    "debug pause freezes simulation",
+    "live reduced motion freezes frame and blocks feeding",
+    "reduced-motion initial state is exactly 240 steps",
+    "synthetic visibilitychange stops and resumes RAF",
+    "real IntersectionObserver pauses offscreen canvas",
+    "context loss shows fallback and restores rendering",
+    "seven coat varieties, >2x size range and fish shadows verified by GPU pixel comparison",
+    "portrait 3 koi, touch tap feeds without hover curiosity",
+    "portrait retains 55 degree camera and broad pond; food radius >= 3.5 CSS pixels",
+    "destroy clears observers/listeners/debug reference and disposes GPU resources",
+    "no WebGL2 leaves CSS fallback and skips engine boot"
+  ],
+  "errors": [],
+  "reducedState": {
+    "gpu": {
+      "count": 364,
+      "median": 2.771968,
+      "p95": 3.533824
+    },
+    "cpu": {
+      "count": 365,
+      "median": 0.30000000447034836,
+      "p95": 0.5
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 15,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 231.1131976784445,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.499999999999986,
+    "reduced": true,
+    "raf": 0,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "school": {
+    "varieties": [
+      "kohaku",
+      "yamabuki",
+      "shiro",
+      "asagi",
+      "sanke",
+      "karasu",
+      "tancho"
+    ],
+    "sizeRatio": 2.370069723776407,
+    "shadows": 7,
+    "shadowPixels": 26192
+  },
+  "desktop": {
+    "gpu": {
+      "count": 274,
+      "median": 2.786304,
+      "p95": 3.723264
+    },
+    "cpu": {
+      "count": 279,
+      "median": 0.30000000447034836,
+      "p95": 0.5
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 15,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 225.44864184429588,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.116666666666654,
+    "reduced": false,
+    "raf": 278,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "portrait": {
+    "worldWidth": 1139.4,
+    "worldHeight": 844,
+    "fov": 40,
+    "inclination": 55,
+    "pelletRadii": [
+      5.633853468501347,
+      5.640561840989468,
+      5.6882340107698885,
+      5.630031419500599,
+      5.56312158111566,
+      5.5890969291598624
+    ]
+  },
+  "passed": true
+}

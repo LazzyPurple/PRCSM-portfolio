@@ -8,6 +8,25 @@ const SHORE_ITERATIONS = 12;
 const SHORE_TURN_LEAD = 0.65;
 const SHORE_TURN_FORCE = 5;
 const SHORE_INSET_EPSILON = 0.0001;
+const POND_LENGTH_RATIO = 0.38;
+const POND_LENGTH_MIN = 120;
+const POND_LENGTH_MAX = 360;
+const POND_LENGTHS = [0.9, 0.48, 0.7, 0.36, 0.58, 0.8, 0.42, 0.65];
+const POND_VARIETIES: Variety[] = ["kohaku", "yamabuki", "shiro", "asagi", "sanke", "karasu", "tancho"];
+const SPAWN_ANGLE = 2.399963229728653;
+const SPAWN_RADIUS = 0.23;
+const SPAWN_BODY_CENTER = 0.4;
+const SIZE_JITTER = 0.05;
+const BODY_SPACE = 0.22;
+const FEED_SPACE = 0.19;
+const BODY_REPULSION = 4;
+const LOOK_AHEAD = 0.18;
+const TRAFFIC_MIN_SPEED = 0.45;
+const TRAFFIC_BRAKE_RANGE = 0.65;
+const POND_SHOALING = 0.04;
+const BODY_CONTACT_SPACE = 0.155;
+const BODY_CONTACT_RATE = 3;
+const BODY_CONTACT_MAX_STEP = 0.25;
 
 export const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
@@ -34,7 +53,7 @@ export function hash3(x: number, y: number, z: number) {
 
 export type Box = { left: number; top: number; right: number; bottom: number };
 
-export type Variety = "kohaku" | "sanke" | "tancho";
+export type Variety = "kohaku" | "sanke" | "tancho" | "yamabuki" | "shiro" | "asagi" | "karasu";
 
 const VARIETY_WEIGHTS: [Variety, number][] = [
     ["kohaku", 3],
@@ -120,6 +139,21 @@ export interface Ripple {
 
 const push = { x: 0, y: 0 };
 
+function bodyDistance(k: Koi, other: Koi, lookAhead: number) {
+    let nearest = Infinity, awayX = 0, awayY = 0;
+    const aheadX = Math.cos(k.heading) * k.length * lookAhead, aheadY = Math.sin(k.heading) * k.length * lookAhead;
+    for (let a = 0; a < KOI_NODES; a += 3) for (let b = 0; b < KOI_NODES; b += 3) {
+        const x = k.nodes[a * 2] + (a === 0 ? aheadX : 0) - other.nodes[b * 2];
+        const y = k.nodes[a * 2 + 1] + (a === 0 ? aheadY : 0) - other.nodes[b * 2 + 1];
+        const squared = x * x + y * y;
+        if (squared < nearest) { nearest = squared; awayX = x; awayY = y; }
+    }
+    const d = Math.sqrt(nearest);
+    push.x = d > 0.001 ? awayX / d : k.id < other.id ? -1 : 1;
+    push.y = d > 0.001 ? awayY / d : 0;
+    return d;
+}
+
 /** Sum of pushes away from every box within `margin` of (x, y), each scaled 0..1 by closeness. */
 function repel(boxes: Box[], x: number, y: number, margin: number, out: { x: number; y: number }) {
     out.x = 0;
@@ -174,7 +208,7 @@ export class World {
     resize(width: number, height: number, visibleWidth = width, visibleHeight = height) {
         const first = this.width === 0;
         if (this.shore) {
-            const length = Math.min(clamp(Math.min(visibleWidth, visibleHeight) * 0.5, 170, 420), Math.min(width, height) * 0.5);
+            const length = Math.min(clamp(Math.min(visibleWidth, visibleHeight) * POND_LENGTH_RATIO, POND_LENGTH_MIN, POND_LENGTH_MAX), Math.min(width, height) * POND_LENGTH_RATIO);
             if (this.pondFishLength) for (const k of this.koi) {
                 const ratio = length / this.pondFishLength;
                 k.length *= ratio;
@@ -218,6 +252,24 @@ export class World {
         }
     }
 
+    private separate(dt: number) {
+        for (let a = 0; a < this.koi.length; a++) for (let b = a + 1; b < this.koi.length; b++) {
+            const k = this.koi[a], other = this.koi[b];
+            const gap = (k.length + other.length) * BODY_CONTACT_SPACE;
+            const reach = k.length + other.length + gap;
+            if (Math.abs(k.nodes[0] - other.nodes[0]) > reach || Math.abs(k.nodes[1] - other.nodes[1]) > reach) continue;
+            const d = bodyDistance(k, other, 0);
+            if (d >= gap) continue;
+            // A gentle lateral drift resolves contact without snapping or bending the spine.
+            const shift = (gap - d) * Math.min(BODY_CONTACT_MAX_STEP, dt * BODY_CONTACT_RATE) * 0.5;
+            const x = push.x * shift, y = push.y * shift;
+            for (let n = 0; n < KOI_NODES; n++) {
+                k.nodes[n * 2] += x; k.nodes[n * 2 + 1] += y;
+                other.nodes[n * 2] -= x; other.nodes[n * 2 + 1] -= y;
+            }
+        }
+    }
+
     private seed(visibleWidth: number, visibleHeight: number) {
         const { width: W, height: H } = this;
         const minSide = Math.min(visibleWidth, visibleHeight);
@@ -229,11 +281,11 @@ export class World {
         this.koi = [];
         for (let i = 0; i < count + young; i++) {
             const isYoung = i >= count;
-            const length = baseLength * (isYoung ? rand(0.32, 0.45) : rand(0.6, 1));
+            const length = baseLength * (this.shore ? POND_LENGTHS[i % POND_LENGTHS.length] * rand(1 - SIZE_JITTER, 1 + SIZE_JITTER) : isYoung ? rand(0.32, 0.45) : rand(0.6, 1));
             const depthMax = isYoung ? 0.72 : 1;
             const heading = rand(0, TAU);
-            const x = rand(W * 0.1, W * 0.9);
-            const y = rand(H * 0.1, H * 0.9);
+            const x = this.shore ? W * (0.5 + Math.cos(i * SPAWN_ANGLE) * SPAWN_RADIUS) + Math.cos(heading) * length * SPAWN_BODY_CENTER : rand(W * 0.1, W * 0.9);
+            const y = this.shore ? H * (0.5 + Math.sin(i * SPAWN_ANGLE) * SPAWN_RADIUS) + Math.sin(heading) * length * SPAWN_BODY_CENTER : rand(H * 0.1, H * 0.9);
             const nodes = new Float32Array(KOI_NODES * 2);
             const seg = length / (KOI_NODES - 1);
             for (let n = 0; n < KOI_NODES; n++) {
@@ -242,7 +294,7 @@ export class World {
             }
             this.koi.push({
                 id: i + 1,
-                variety: pickVariety(),
+                variety: this.shore ? POND_VARIETIES[i % POND_VARIETIES.length] : pickVariety(),
                 length,
                 nodes,
                 heading,
@@ -298,7 +350,7 @@ export class World {
         this.time += dt;
         this.pointer.speed *= Math.exp(-dt * 8);
         for (const k of this.koi) this.stepKoi(k, dt);
-        if (this.shore) this.confine();
+        if (this.shore) { this.separate(dt); this.confine(); }
         const t = this.time;
         let kept = 0;
         for (let i = 0; i < this.pellets.length; i++) {
@@ -397,12 +449,23 @@ export class World {
             }
         }
 
+        let traffic = 1;
         for (const other of this.koi) {
             if (other === k) continue;
             const ohx = other.nodes[0];
             const ohy = other.nodes[1];
-            if (Math.abs(ohx - hx) > L * 2 || Math.abs(ohy - hy) > L * 2) continue;
-            for (let n = 0; n < KOI_NODES; n += 3) {
+            const reach = this.shore ? L + other.length : L * 2;
+            if (Math.abs(ohx - hx) > reach || Math.abs(ohy - hy) > reach) continue;
+            if (this.shore) {
+                // Anticipate nose contact and watch both bodies, rather than heads alone.
+                const d = bodyDistance(k, other, LOOK_AHEAD), range = (L + other.length) * (food ? FEED_SPACE : BODY_SPACE);
+                if (d < range) {
+                    const w = (1 - d / range) * BODY_REPULSION;
+                    dx += push.x * w;
+                    dy += push.y * w;
+                    traffic = Math.min(traffic, clamp(d / (range * TRAFFIC_BRAKE_RANGE), TRAFFIC_MIN_SPEED, 1));
+                }
+            } else for (let n = 0; n < KOI_NODES; n += 3) {
                 const ox = hx - other.nodes[n * 2];
                 const oy = hy - other.nodes[n * 2 + 1];
                 const d = Math.hypot(ox, oy);
@@ -416,8 +479,8 @@ export class World {
             }
             // Loose shoaling: nearby koi drift the same way.
             if (!chasing && Math.hypot(ohx - hx, ohy - hy) < L * 1.6) {
-                dx += Math.cos(other.heading) * 0.18;
-                dy += Math.sin(other.heading) * 0.18;
+                dx += Math.cos(other.heading) * (this.shore ? POND_SHOALING : 0.18);
+                dy += Math.sin(other.heading) * (this.shore ? POND_SHOALING : 0.18);
             }
         }
 
@@ -475,7 +538,7 @@ export class World {
                   : bursting
                     ? cruise * (curious ? 1.6 : 1.35)
                     : cruise * 0.45);
-        k.speed += (target - k.speed) * Math.min(1, dt * (bursting ? 1.6 + k.rush * 3 : 0.35));
+        k.speed += (target * traffic - k.speed) * Math.min(1, dt * (bursting ? 1.6 + k.rush * 3 : 0.35));
         k.phase += dt * (0.6 + k.beat * (2.2 + k.speed / 11));
         k.finPhase += dt * 2.4;
         k.gulp += ((chasing && closing > 0.55 ? 1 : 0) - k.gulp) * Math.min(1, dt * 6);
