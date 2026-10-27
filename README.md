@@ -19,8 +19,29 @@ npm run build
 Node 24+. Le compilateur TypeScript 7 et l'API TypeScript 6 utilisée par ESLint
 cohabitent via les alias officiels npm. `tsc --version` doit afficher 7.0.2.
 
-État actuel : phase 0, socle et dégradé de secours. La simulation et la mare 3D
-ne sont pas encore portées. Voir [PLAN.md](PLAN.md) et [CREDITS.md](CREDITS.md).
+La page affiche la mare en gouache. Bouger lentement le pointeur attire les koï ;
+un geste brusque les effraie ; cliquer ou toucher l'eau lance des granulés.
+Le contenu HTML superposé peut porter `data-koi-avoid`.
+Toutes les couleurs sont dans `src/pond/palette.ts`.
+
+En développement, ouvrir `http://127.0.0.1:3000/?debug` pour les vues intermédiaires,
+la simulation 2D, les statistiques, l'heure et la pause. Le panneau et sa référence de
+diagnostic sont retirés du bundle de production.
+
+Validation Chrome isolée (Chrome Windows installé, aucun profil personnel utilisé) :
+
+```powershell
+node scripts/validate.mjs http://127.0.0.1:3000 dev
+npm run build
+npm run start -- --port 3001
+node scripts/validate.mjs http://127.0.0.1:3001 prod
+```
+
+Les captures, la trace Chrome Performance et le profil d'allocations sont écrits sous
+`artifacts/` (ignoré par Git). Les chiffres et limites sont dans [PERFORMANCE.md](PERFORMANCE.md).
+Le script suppose Chrome Windows ; la variable `CHROME` permet un autre chemin.
+
+Voir [PLAN.md](PLAN.md), [PROGRESS.md](PROGRESS.md) et [CREDITS.md](CREDITS.md).
 
 Références locales, exclues de Git :
 

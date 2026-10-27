@@ -8,16 +8,30 @@ import { createBank } from "./bank";
 import { createWater, fullscreenScene, FULLSCREEN_VS } from "./water";
 import { flatMaterial, REGION, sharedUniforms } from "./flow";
 import { PaintPipeline } from "../paint/strokePass";
+import { GpuClock, Scaler, pickTier } from "../paint/budget";
 
 const SCALE = 0.01;
 const MAX_DEPTH = 1.5;
 const FOV = 40;
+const PORTRAIT_FOV = 50;
+const LANDSCAPE_FRAMING = 0.73;
+const PORTRAIT_FRAMING = 1;
 const INCLINATION = 55 * Math.PI / 180;
 const MAX_PELLETS = 24;
 const MAX_BITES = 24;
 
 export class PondScene {
   mrtReady = false;
+  gpuMs: number | null = null;
+  cpuMs = 0;
+  readonly scaler = new Scaler();
+  private tier = pickTier();
+  private clock: GpuClock;
+  private gl: WebGL2RenderingContext;
+  private gpuSamples = new Float64Array(512);
+  private gpuCount = 0;
+  private cpuSamples = new Float64Array(512);
+  private cpuCount = 0;
   readonly renderer: THREE.WebGLRenderer;
   readonly camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 200);
   readonly scene = new THREE.Scene();
@@ -48,6 +62,8 @@ export class PondScene {
   private seed = 90210;
   private daylight = new THREE.Color(palette.light.day);
   private dusk = new THREE.Color(palette.light.dusk);
+  private duskSky = palette.sky.dusk.map(color => new THREE.Color(color));
+  private daySky = palette.sky.day.map(color => new THREE.Color(color));
   private sun = new THREE.DirectionalLight(palette.light.day, 2);
   private hemisphere = new THREE.HemisphereLight(palette.light.hemisphere, palette.light.ground, 1);
   private paint: PaintPipeline;
@@ -59,8 +75,14 @@ export class PondScene {
     this.renderer.setPixelRatio(1);
     this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
     this.renderer.toneMapping = THREE.NoToneMapping;
+    this.renderer.sortObjects = false;
     this.renderer.setClearColor(palette.water.deep, 1);
     this.paint = new PaintPipeline(this.renderer);
+    const gl = this.renderer.getContext();
+    if (!(gl instanceof WebGL2RenderingContext)) throw new Error("WebGL2 is required");
+    this.gl = gl;
+    this.clock = new GpuClock(gl);
+    this.renderer.debug.onShaderError = () => { throw new Error("Pond shader compilation failed"); };
     this.uniforms.uMaxDepth.value = MAX_DEPTH;
     this.scene.add(this.decoration, this.sun, this.hemisphere);
     this.water.uniforms.uColor.value = this.opaque.textures[0];
@@ -69,16 +91,17 @@ export class PondScene {
 
   resize(width: number, height: number, scale = 1) {
     this.width = width; this.height = height;
-    const dpr = Math.min(devicePixelRatio || 1, 1.6, Math.sqrt(2.4e6 / (width * height))) * scale;
+    const dpr = Math.min(devicePixelRatio || 1, this.tier.dprCap, Math.sqrt(this.tier.pixelBudget / (width * height))) * scale;
     const w = Math.max(1, Math.round(width * dpr)), h = Math.max(1, Math.round(height * dpr));
     this.renderer.setSize(w, h, false);
     this.uniforms.uTargetSize.value.set(w, h);
     this.opaque.setSize(w, h); this.target.setSize(w, h);
     this.paint.resize(w, h, width);
     this.camera.aspect = width / height;
-    this.camera.fov = width < height ? 50 : FOV;
+    this.camera.fov = width < height ? PORTRAIT_FOV : FOV;
     const tangent = Math.tan(this.camera.fov * Math.PI / 360);
-    const distance = Math.max(height * SCALE / Math.sin(INCLINATION), width * SCALE / this.camera.aspect) / (2 * tangent) * 0.73;
+    const framing = width < height ? PORTRAIT_FRAMING : LANDSCAPE_FRAMING;
+    const distance = Math.max(height * SCALE / Math.sin(INCLINATION), width * SCALE / this.camera.aspect) / (2 * tangent) * framing;
     this.camera.position.set(0, distance * Math.sin(INCLINATION), distance * Math.cos(INCLINATION));
     this.camera.lookAt(0, 0, 0);
     this.camera.updateProjectionMatrix(); this.camera.updateMatrixWorld();
@@ -117,13 +140,31 @@ export class PondScene {
     return this.simulationPoint;
   }
 
+  private receiveGpu = (ms: number) => {
+    this.gpuMs = ms;
+    this.gpuSamples[this.gpuCount++ % this.gpuSamples.length] = ms;
+    this.scaler.gpu(ms, performance.now());
+  };
+
   render(world: World, hour: number, view: string, dt: number, pointer: { x: number; y: number; active: boolean }) {
+    const previous = this.scaler.scale;
+    this.clock.collect(this.receiveGpu);
+    const start = performance.now();
+    this.clock.start(true);
+    try { this.renderFrame(world, hour, view, dt, pointer); } finally { this.clock.stop(); }
+    this.cpuMs = performance.now() - start;
+    this.cpuSamples[this.cpuCount++ % this.cpuSamples.length] = this.cpuMs;
+    if (!this.clock.available && dt > 0) this.scaler.frame(dt * 1000, this.cpuMs, start);
+    if (previous !== this.scaler.scale) this.resize(this.width, this.height, this.scaler.scale);
+  }
+
+  private renderFrame(world: World, hour: number, view: string, dt: number, pointer: { x: number; y: number; active: boolean }) {
     this.uniforms.uTime.value = world.time;
     this.uniforms.uLight.value.set(-0.5 + hour * 0.85, 0.9 - hour * 0.55, 0.3).normalize();
     this.uniforms.uLightColor.value.copy(this.daylight).lerp(this.dusk, hour);
     this.sun.position.copy(this.uniforms.uLight.value).multiplyScalar(20);
     this.sun.color.copy(this.uniforms.uLightColor.value);
-    for (let i = 0; i < 3; i++) this.water.uniforms.uSky.value[i].set(palette.sky.day[i]).lerp(new THREE.Color(palette.sky.dusk[i]), hour);
+    for (let i = 0; i < 3; i++) this.water.uniforms.uSky.value[i].copy(this.daySky[i]).lerp(this.duskSky[i], hour);
     const ox = -world.width * SCALE / 2, oz = -world.height * SCALE / 2;
     for (const k of this.koi) k.update(SCALE, ox, oz);
     this.lilies?.update(world.time);
@@ -169,6 +210,24 @@ export class PondScene {
     this.renderer.setRenderTarget(null); this.renderer.render(this.display.scene, this.display.camera);
   }
 
+  restore() {
+    this.clock = new GpuClock(this.gl);
+    this.mrtReady = false;
+  }
+
+  stats() {
+    const summary = (samples: Float64Array, count: number) => {
+      const values = Array.from(samples.subarray(0, Math.min(count, samples.length))).sort((a, b) => a - b);
+      return values.length ? { count, median: values[values.length >> 1], p95: values[Math.min(values.length - 1, Math.floor(values.length * 0.95))] } : null;
+    };
+    const gl = this.renderer.getContext(), info = gl.getExtension("WEBGL_debug_renderer_info");
+    return { gpu: summary(this.gpuSamples, this.gpuCount), cpu: summary(this.cpuSamples, this.cpuCount),
+      gpuName: info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
+      timerAvailable: this.clock.available, scale: this.scaler.scale,
+      width: this.canvas.width, height: this.canvas.height, cssWidth: this.width, cssHeight: this.height,
+      memory: { ...this.renderer.info.memory }, calls: this.renderer.info.render.calls };
+  }
+
   private disposeGroup(group: THREE.Object3D) {
     const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>();
     group.traverse(object => { if (object instanceof THREE.Mesh) {
@@ -179,11 +238,12 @@ export class PondScene {
   }
 
   dispose() {
+    this.clock.dispose();
     this.disposeGroup(this.decoration);
     this.opaque.dispose(); this.target.dispose();
     this.water.dispose(); this.composite.geometry.dispose();
     this.displayMaterial.dispose(); this.display.geometry.dispose();
-    this.renderer.dispose();
     this.paint.dispose();
+    this.renderer.dispose();
   }
 }

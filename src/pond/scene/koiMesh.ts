@@ -58,6 +58,15 @@ export function createKoi(koi: Koi, uniforms: SceneUniforms) {
     }
   }
   const count = params.length / 4;
+  const parameters = new Float64Array(params);
+  const segment = new Uint8Array(count), fraction = new Float64Array(count);
+  const widths = new Float64Array(count), cosines = new Float64Array(count), sines = new Float64Array(count);
+  for (let i = 0; i < count; i++) {
+    const s = parameters[i * 4], angle = parameters[i * 4 + 1];
+    segment[i] = Math.min(KOI_NODES - 2, Math.floor(s * (KOI_NODES - 1)));
+    fraction[i] = s * (KOI_NODES - 1) - segment[i];
+    widths[i] = bodyHalfWidth(s); cosines[i] = Math.cos(angle); sines[i] = Math.sin(angle);
+  }
   const positions = new Float32Array(count * 3), normals = new Float32Array(count * 3);
   const body = new Float32Array(count * 3), tangents = new Float32Array(count * 3);
   const geometry = new THREE.BufferGeometry();
@@ -101,37 +110,48 @@ export function createKoi(koi: Koi, uniforms: SceneUniforms) {
   const mesh = new THREE.Mesh(geometry, material);
   mesh.frustumCulled = false;
   const spine = new Float32Array(KOI_NODES * 2);
+  const tangentX = new Float64Array(KOI_NODES), tangentZ = new Float64Array(KOI_NODES);
+  const waveAmp = new Float64Array(KOI_NODES), wavePhase = new Float64Array(KOI_NODES);
+  for (let n = 0; n < KOI_NODES; n++) {
+    const s = n / (KOI_NODES - 1);
+    waveAmp[n] = koi.length * 0.04 * (0.05 + 0.95 * Math.pow(s, 2.2));
+    wavePhase[n] = s * 4.6;
+  }
   return { mesh, update(scale: number, offsetX: number, offsetZ: number) {
     const L = koi.length;
     const swim = 0.2 + 1.1 * koi.beat;
     for (let n = 0; n < KOI_NODES; n++) {
-      const s = n / (KOI_NODES - 1), a = Math.max(0, n - 1), b = Math.min(KOI_NODES - 1, n + 1);
+      const a = Math.max(0, n - 1), b = Math.min(KOI_NODES - 1, n + 1);
       let tx = koi.nodes[a * 2] - koi.nodes[b * 2], ty = koi.nodes[a * 2 + 1] - koi.nodes[b * 2 + 1];
-      const len = Math.hypot(tx, ty) || 1; tx /= len; ty /= len;
-      const off = L * 0.04 * (0.05 + 0.95 * Math.pow(s, 2.2)) * swim * Math.sin(koi.phase - s * 4.6);
+      const len = Math.sqrt(tx * tx + ty * ty) || 1; tx /= len; ty /= len;
+      const off = waveAmp[n] * swim * Math.sin(koi.phase - wavePhase[n]);
       spine[n * 2] = koi.nodes[n * 2] - ty * off; spine[n * 2 + 1] = koi.nodes[n * 2 + 1] + tx * off;
+    }
+    for (let n = 0; n < KOI_NODES - 1; n++) {
+      const dx = spine[n * 2] - spine[(n + 1) * 2], dz = spine[n * 2 + 1] - spine[(n + 1) * 2 + 1];
+      const inverse = 1 / (Math.sqrt(dx * dx + dz * dz) || 1);
+      tangentX[n] = dx * inverse; tangentZ[n] = dz * inverse;
     }
     const bank = clamp(koi.turn * 0.6, -0.35, 0.35), spread = 1 - 0.25 * koi.beat;
     const scull = 0.18 * (1 - koi.beat) * Math.sin(koi.finPhase);
     for (let i = 0; i < count; i++) {
-      const s = params[i * 4], param = params[i * 4 + 1], kind = params[i * 4 + 2], side = params[i * 4 + 3];
-      const index = Math.min(KOI_NODES - 2, Math.floor(s * (KOI_NODES - 1))), f = s * (KOI_NODES - 1) - index;
+      const s = parameters[i * 4], param = parameters[i * 4 + 1], kind = parameters[i * 4 + 2], side = parameters[i * 4 + 3];
+      const index = segment[i], f = fraction[i];
       const ax = spine[index * 2], az = spine[index * 2 + 1];
-      let tx = ax - spine[(index + 1) * 2], tz = az - spine[(index + 1) * 2 + 1];
-      const len = Math.hypot(tx, tz) || 1; tx /= len; tz /= len;
-      const x = ax - tx * len * f, z = az - tz * len * f;
-      const width = bodyHalfWidth(s);
+      const tx = tangentX[index], tz = tangentZ[index];
+      const x = ax + (spine[(index + 1) * 2] - ax) * f, z = az + (spine[(index + 1) * 2 + 1] - az) * f;
+      const width = widths[i];
       const flare = spread + (side > 0 ? -scull + bank : scull - bank);
-      const across = kind === 0 ? Math.cos(param) * width : kind === 2 ? 0 : param * flare;
-      const up = kind === 0 ? Math.sin(param) * width * (Math.sin(param) > 0 ? 0.64 : 0.48)
+      const across = kind === 0 ? cosines[i] * width : kind === 2 ? 0 : param * flare;
+      const up = kind === 0 ? sines[i] * width * (sines[i] > 0 ? 0.64 : 0.48)
         : kind === 2 ? Math.abs(param) : Math.sin(koi.finPhase + s * 9) * Math.abs(across) * 0.17;
       const o = i * 3;
       positions[o] = (x - tz * across * L) * scale + offsetX;
       positions[o + 1] = -(1 - koi.depth) * uniforms.uMaxDepth.value + up * L * scale;
       positions[o + 2] = (z + tx * across * L) * scale + offsetZ;
-      normals[o] = kind === 0 ? -tz * Math.cos(param) : 0;
-      normals[o + 1] = kind === 0 ? Math.sin(param) / 0.6 : 1;
-      normals[o + 2] = kind === 0 ? tx * Math.cos(param) : 0;
+      normals[o] = kind === 0 ? -tz * cosines[i] : 0;
+      normals[o + 1] = kind === 0 ? sines[i] / 0.6 : 1;
+      normals[o + 2] = kind === 0 ? tx * cosines[i] : 0;
       tangents[o] = tx; tangents[o + 1] = 0; tangents[o + 2] = tz;
       body[o] = s; body[o + 1] = across; body[o + 2] = kind;
     }

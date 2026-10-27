@@ -2,7 +2,7 @@
 
 ## Koï — Dao Ho
 
-Simulation à adapter de [Dao Ho](https://www.daoho.dev/),
+Simulation adaptée de [Dao Ho](https://www.daoho.dev/),
 [Twitter / X : @daoho04](https://x.com/daoho04),
 [dépôt Dao-Ho/portfolio](https://github.com/Dao-Ho/portfolio).
 
@@ -14,7 +14,7 @@ Le lien du tweet n'a pas été retrouvé et n'est pas disponible auprès du comm
 Cette mention ne constitue pas une vérification indépendante de cette autorisation.
 Le dépôt consulté ne contient pas de licence générale explicite pour ces fichiers.
 
-Portages Dao : `world.ts`, `shape.ts`, `markings.ts` et les règles de moteur sont présents depuis la phase 1. Le maillage reste prévu pour la phase 2.
+Portages Dao : simulation, formes, motifs, règles de moteur et déformation du maillage.
 
 | Source dans `src/app/components/koi-pond/` | Destination |
 | --- | --- |
@@ -24,11 +24,11 @@ Portages Dao : `world.ts`, `shape.ts`, `markings.ts` et les règles de moteur so
 | `koi-pond.tsx`, règles de boucle et d'interaction | `src/pond/engine.ts` et `src/pond/KoiPond.tsx` |
 | `renderer.ts`, onde corporelle et ouverture des nageoires | `src/pond/scene/koiMesh.ts` |
 
-Le rendu ASCII, ses palettes, les images, les polices et les analytics ne seront pas repris.
+Le rendu ASCII, ses palettes, les images, les polices et les analytics ne sont pas repris.
 
 ## Peinture — Ardia
 
-Passes de rendu, peinture fraîche et budget GPU à adapter de
+Passes de rendu, peinture fraîche et budget GPU adaptés de
 [mantrakp04/ardia](https://github.com/mantrakp04/ardia),
 Copyright 2026 Mantra Patel, sous Apache-2.0.
 
@@ -54,7 +54,10 @@ Portages peinture présents depuis la phase 4 :
 | `boot.ts`, principe de démarrage après affichage | `src/pond/KoiPond.tsx` |
 | `shaders.ts`, `encodeFlow()` | `src/pond/scene/flow.ts` |
 
-Chaque fichier effectivement porté recevra un en-tête avec le chemin d'origine,
+Chaque fichier effectivement porté conserve un en-tête avec le chemin d'origine,
 le dépôt, le copyright, Apache-2.0 et une mention des modifications.
+Le transport de capture Chrome de `scripts/validate.mjs` est adapté de
+`apps/site/scripts/hero-posters.mjs`, sous la même licence Apache-2.0.
+
 Les images, textures, palettes, modèles de terrain, personnages et analytics d'Ardia
-ne seront pas repris. La palette de cette mare et ses éléments visuels sont propres au projet.
+ne sont pas repris. La palette de cette mare et ses éléments visuels sont propres au projet.

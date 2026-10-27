@@ -1,6 +1,7 @@
 # Mare de koï — plan de réalisation
 
-Établi le 27 octobre 2026 après lecture des références. Phase 0 uniquement réalisée.
+Établi le 27 octobre 2026 après lecture des références. Phases 0 à 4 réalisées ;
+phase 5 en validation, voir PROGRESS.md pour les résultats courants.
 Ce document est présenté avant tout portage de la phase 1, conformément au jalon demandé.
 Les phases suivantes s'enchaîneront sans nouvel accord pour les choix techniques ordinaires.
 Un changement important du rendu sera présenté avant d'être appliqué.
@@ -125,11 +126,10 @@ La page garde le secours CSS hors debug jusqu'à l'arrivée de la scène 3D en p
 
 ## 5. Espace de simulation et interactions
 
-Un seul facteur isotrope convertit les pixels CSS virtuels vers les unités 3D.
-La zone de mare visible est déterminée par les rayons des coins du viewport sur `Y = 0`.
-Ses dimensions de simulation sont normalisées pour conserver un budget de surface cohérent
-avec la surface CSS, sans étirement indépendant X/Z. Les tailles et effectifs continuent
-de venir exclusivement de `World.resize()` et de son `seed()`.
+Un seul facteur isotrope de 0.01 convertit les pixels CSS virtuels vers les unités 3D.
+La zone plein écran de la mare fournit sa largeur et sa hauteur CSS à `World.resize()` ;
+la caméra s'adapte à ce rectangle en conservant la même échelle X/Z.
+Les tailles et effectifs continuent de venir exclusivement de `World.resize()` et de son `seed()`.
 Vérifier en paysage/portrait la densité, les tailles et le seuil des jeunes koï.
 
 Conversion : `X = (x - width/2) * scale`, `Z = (y - height/2) * scale`,

@@ -1,5 +1,6 @@
 // Adapted from Ardia apps/site/src/scripts/meadow/smear.ts (0d16725).
 // https://github.com/mantrakp04/ardia — Copyright 2026 Mantra Patel, Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
 // Modified: exported fixed-size pond field, original dynamics preserved.
 const HEAL_SECONDS = 0.45;
 const MAX_SHIFT = 0.045;

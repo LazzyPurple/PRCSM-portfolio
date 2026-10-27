@@ -1,5 +1,6 @@
 // encodeFlow adapted from Ardia apps/site/src/scripts/meadow/shaders.ts.
 // https://github.com/mantrakp04/ardia — Copyright 2026 Mantra Patel, Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
 // Modified: pond regions, lighting and underwater shading.
 import * as THREE from "three";
 import { palette } from "../palette";

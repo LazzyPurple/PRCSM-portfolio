@@ -19,20 +19,25 @@ export class PondEngine {
   hour = 0;
   paused = false;
   fps = 0;
-  gpuMs: number | null = null;
-  scale = 1;
+  get gpuMs() { return this.scene.gpuMs; }
+  get scale() { return this.scene.scaler.scale; }
+  get cpuMs() { return this.scene.cpuMs; }
+  stats() { return { ...this.scene.stats(), fps: this.fps, koi: this.world.koi.length, pellets: this.world.pellets.length, time: this.world.time,
+    reduced: this.reduced.matches, raf: this.raf, visible: this.visible, hidden: document.hidden, disposed: this.disposed }; }
   get mrtReady() { return this.scene.mrtReady; }
   private ctx: CanvasRenderingContext2D | null;
   private scene: PondScene;
   private debugCanvas: HTMLCanvasElement | null = null;
   private lost = false;
+  private ready = false;
   private screenPointer = { x: 0, y: 0, active: false };
   private raf = 0;
   private last = 0;
   private acc = 0;
   private visible = true;
   private disposed = false;
-  private measuredAt = -Infinity;
+  private measureTimer = 0;
+  private stillPrepared = false;
   private pointerAt = 0;
   private down = { x: 0, y: 0, time: 0, touch: false };
   private width = 1;
@@ -51,6 +56,7 @@ export class PondEngine {
     if (debug) {
       this.debugCanvas = document.createElement("canvas");
       this.debugCanvas.className = "pond-canvas";
+      this.debugCanvas.style.display = "none";
       this.debugCanvas.setAttribute("aria-hidden", "true");
       canvas.after(this.debugCanvas);
     }
@@ -67,15 +73,21 @@ export class PondEngine {
     document.documentElement.addEventListener("pointerleave", this.onLeave);
     canvas.addEventListener("webglcontextlost", this.onLost);
     canvas.addEventListener("webglcontextrestored", this.onRestored);
-    this.resize();
-    this.schedule();
+    try { this.resize(); this.schedule(); } catch (error) { this.destroy(); throw error; }
+    this.measureTimer = window.setInterval(() => { if (!document.hidden && this.visible && !this.lost) this.measure(); }, MEASURE_INTERVAL_MS);
+    if (process.env.NODE_ENV === "development" && debug) Object.assign(window, { __pond: this });
   }
 
-  setView(view: PondView) { this.view = view; this.measure(); this.draw(); }
+  setView(view: PondView) {
+    this.view = view;
+    if (this.debugCanvas) this.debugCanvas.style.display = view === "simulation" ? "block" : "none";
+    this.measure(); this.draw();
+  }
   setHour(hour: number) { this.hour = hour; this.draw(); }
   togglePause() { this.paused = !this.paused; this.schedule(); }
   restart() {
     this.world = new World();
+    this.stillPrepared = false;
     this.world.resize(this.width, this.height);
     this.scene.rebuild(this.world, (Math.random() * 4294967296) >>> 0);
     this.measure();
@@ -101,7 +113,7 @@ export class PondEngine {
     this.schedule();
   }
 
-  private measure() {
+  private measure = () => {
     const rect = this.canvas.getBoundingClientRect();
     this.originX = rect.left;
     this.originY = rect.top;
@@ -132,19 +144,17 @@ export class PondEngine {
       }
     }
     this.world.avoid = merged;
-    this.measuredAt = performance.now();
-  }
+  };
 
   private draw(dt = 0) {
     if (this.lost || this.disposed) return;
-    if (this.debugCanvas) this.debugCanvas.style.display = this.view === "simulation" ? "block" : "none";
     if (this.ctx && this.view === "simulation") {
       drawSimulation(this.ctx, this.world, this.width, this.height);
-      if (this.debugCanvas) this.debugCanvas.dataset.ready = "true";
+      if (this.debugCanvas && this.debugCanvas.dataset.ready !== "true") this.debugCanvas.dataset.ready = "true";
     } else {
       this.scene.render(this.world, this.hour, this.view, dt, this.screenPointer);
     }
-    this.canvas.dataset.ready = "true";
+    if (!this.ready) { this.canvas.dataset.ready = "true"; this.ready = true; }
   }
 
   private schedule = () => {
@@ -154,7 +164,10 @@ export class PondEngine {
     if (this.disposed || this.lost || document.hidden || !this.visible) return;
     if (this.reduced.matches) {
       this.onLeave();
-      if (this.world.time < 4) for (let i = 0; i < 240; i++) this.world.step(STEP);
+      if (!this.stillPrepared) {
+        if (this.world.time < 4) for (let i = 0; i < 240; i++) this.world.step(STEP);
+        this.stillPrepared = true;
+      }
       this.draw();
       return;
     }
@@ -175,8 +188,13 @@ export class PondEngine {
       steps++;
     }
     if (steps === MAX_STEPS) this.acc = 0;
-    if (now - this.measuredAt > MEASURE_INTERVAL_MS) this.measure();
-    this.draw(elapsed);
+    try { this.draw(elapsed); } catch (error) {
+      this.canvas.dataset.ready = "false";
+      this.ready = false;
+      this.paused = true;
+      console.error("Pond rendering stopped", error);
+      return;
+    }
     this.raf = requestAnimationFrame(this.frame);
   };
 
@@ -217,13 +235,14 @@ export class PondEngine {
     if (x >= 0 && y >= 0 && x <= this.width && y <= this.height) this.world.feed(x, y);
   };
   private onLeave = () => { this.world.pointer.active = false; this.world.pointer.speed = 0; this.screenPointer.active = false; };
-  private onLayout = () => { this.measuredAt = -Infinity; };
-  private onLost = (event: Event) => { event.preventDefault(); this.lost = true; this.canvas.dataset.ready = "false"; this.schedule(); };
-  private onRestored = () => { this.lost = false; this.resize(); };
+  private onLayout = () => { this.measure(); };
+  private onLost = (event: Event) => { event.preventDefault(); this.lost = true; this.ready = false; this.canvas.dataset.ready = "false"; this.schedule(); };
+  private onRestored = () => { this.lost = false; this.scene.restore(); this.resize(); };
 
   destroy() {
     this.disposed = true;
     cancelAnimationFrame(this.raf);
+    clearInterval(this.measureTimer);
     this.resizeObserver.disconnect();
     this.intersectionObserver.disconnect();
     this.reduced.removeEventListener("change", this.schedule);
@@ -238,5 +257,8 @@ export class PondEngine {
     this.canvas.removeEventListener("webglcontextrestored", this.onRestored);
     this.debugCanvas?.remove();
     this.scene.dispose();
+    if (process.env.NODE_ENV === "development" && (window as Window & { __pond?: PondEngine }).__pond === this) {
+      delete (window as Window & { __pond?: PondEngine }).__pond;
+    }
   }
 }

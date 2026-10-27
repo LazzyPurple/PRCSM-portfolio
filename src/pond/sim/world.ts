@@ -125,8 +125,8 @@ function repel(boxes: Box[], x: number, y: number, margin: number, out: { x: num
         if (d > margin) continue;
         if (d < 1e-3) {
             // Inside the box: head for the nearest edge.
-            const edges = [b.left - x, x - b.right, b.top - y, y - b.bottom];
-            const nearest = edges.indexOf(Math.max(...edges));
+            const nearestValue = Math.max(b.left - x, x - b.right, b.top - y, y - b.bottom);
+            const nearest = b.left - x === nearestValue ? 0 : x - b.right === nearestValue ? 1 : b.top - y === nearestValue ? 2 : 3;
             ox = nearest === 0 ? -1 : nearest === 1 ? 1 : 0;
             oy = nearest === 2 ? -1 : nearest === 3 ? 1 : 0;
             d = 0;
@@ -249,7 +249,12 @@ export class World {
         this.pointer.speed *= Math.exp(-dt * 8);
         for (const k of this.koi) this.stepKoi(k, dt);
         const t = this.time;
-        this.pellets = this.pellets.filter((p) => t - p.born < PELLET_LIFE);
+        let kept = 0;
+        for (let i = 0; i < this.pellets.length; i++) {
+            const p = this.pellets[i];
+            if (t - p.born < PELLET_LIFE) this.pellets[kept++] = p;
+        }
+        this.pellets.length = kept;
         for (const p of this.pellets) {
             if (!p.landed) {
                 if (t - p.born < p.landAt) continue;
@@ -267,8 +272,18 @@ export class World {
             p.x += p.vx * dt;
             p.y += p.vy * dt;
         }
-        this.ripples = this.ripples.filter((r) => t - r.born < rippleLife(r));
-        this.bites = this.bites.filter((b) => t - b.born < BITE_LIFE);
+        kept = 0;
+        for (let i = 0; i < this.ripples.length; i++) {
+            const r = this.ripples[i];
+            if (t - r.born < rippleLife(r)) this.ripples[kept++] = r;
+        }
+        this.ripples.length = kept;
+        kept = 0;
+        for (let i = 0; i < this.bites.length; i++) {
+            const b = this.bites[i];
+            if (t - b.born < BITE_LIFE) this.bites[kept++] = b;
+        }
+        this.bites.length = kept;
     }
 
     private stepKoi(k: Koi, dt: number) {
@@ -436,9 +451,12 @@ export class World {
 
         const mouthR = L * 0.08 + 6;
         const before = this.pellets.length;
-        this.pellets = this.pellets.filter(
-            (p) => !p.landed || (p.x - nodes[0]) ** 2 + (p.y - nodes[1]) ** 2 > mouthR * mouthR
-        );
+        let kept = 0;
+        for (let i = 0; i < this.pellets.length; i++) {
+            const p = this.pellets[i];
+            if (!p.landed || (p.x - nodes[0]) ** 2 + (p.y - nodes[1]) ** 2 > mouthR * mouthR) this.pellets[kept++] = p;
+        }
+        this.pellets.length = kept;
         if (this.pellets.length < before) {
             this.ripples.push({ x: nodes[0], y: nodes[1], born: time, strength: 0.6 });
             this.bites.push({ x: nodes[0], y: nodes[1], born: time });

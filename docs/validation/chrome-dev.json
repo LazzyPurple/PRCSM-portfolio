@@ -1,0 +1,85 @@
+{
+  "mode": "dev",
+  "url": "http://127.0.0.1:3000",
+  "startedAt": "2026-10-27T21:48:33.048Z",
+  "checks": [
+    "WebGL2 MRT and feeding",
+    "debug pause freezes simulation",
+    "live reduced motion freezes frame and blocks feeding",
+    "reduced-motion initial state is exactly 240 steps",
+    "synthetic visibilitychange stops and resumes RAF",
+    "real IntersectionObserver pauses offscreen canvas",
+    "context loss shows fallback and restores rendering",
+    "portrait 3 koi, touch tap feeds without hover curiosity",
+    "destroy clears observers/listeners/debug reference and disposes GPU resources",
+    "no WebGL2 leaves CSS fallback and skips engine boot"
+  ],
+  "errors": [],
+  "reducedState": {
+    "gpu": {
+      "count": 355,
+      "median": 2.768896,
+      "p95": 3.659776
+    },
+    "cpu": {
+      "count": 356,
+      "median": 0.30000000447034836,
+      "p95": 0.6000000014901161
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 15,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 230.8695950200728,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.516666666666652,
+    "reduced": true,
+    "raf": 0,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "desktop": {
+    "gpu": {
+      "count": 270,
+      "median": 2.786304,
+      "p95": 3.69664
+    },
+    "cpu": {
+      "count": 274,
+      "median": 0.30000000447034836,
+      "p95": 0.7000000029802322
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 14,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 240.01834491574914,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.116666666666654,
+    "reduced": false,
+    "raf": 277,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "passed": true
+}

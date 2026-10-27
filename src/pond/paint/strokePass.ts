@@ -1,5 +1,6 @@
 // Adapted from Ardia apps/site/src/scripts/meadow/shaders.ts (0d16725).
 // https://github.com/mantrakp04/ardia — Copyright 2026 Mantra Patel, Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
 // Modified for Three.js GLSL3 and pond regions; see CREDITS.md.
 import { HEADER, COMMON } from './common.glsl';
 import * as THREE from "three";
@@ -25,6 +26,8 @@ export class PaintPipeline {
   private width = 0;
   private height = 0;
   private dpr = 0;
+  private smearUploaded = false;
+  private cellsChecked = false;
 
   constructor(private renderer: THREE.WebGLRenderer) {
     this.cells = renderer.extensions.has("EXT_color_buffer_float")
@@ -52,6 +55,7 @@ export class PaintPipeline {
     const columns = Math.ceil(width / (CELL_SIZE * dpr)) + CELL_MARGIN * 2 + 1;
     const rows = Math.ceil(height / (CELL_SIZE * dpr)) + CELL_MARGIN * 2 + 1;
     this.cells?.setSize(columns, rows);
+    this.cellsChecked = false;
     this.final.uniforms.uCellCount.value.set(columns, rows);
     this.final.uniforms.uResolution.value.set(width, height);
     this.final.uniforms.uDpr.value = dpr;
@@ -61,7 +65,10 @@ export class PaintPipeline {
   render(color: THREE.Texture, flow: THREE.Texture, cssWidth: number, cssHeight: number, dt: number,
     time: number, pointer: { x: number; y: number; active: boolean }, light: THREE.Vector3, spec: THREE.Color, view: string) {
     this.wet.step(dt, pointer, cssWidth, cssHeight, cssWidth < 700 ? 70 : 90);
-    if (!this.wet.settled || pointer.active) this.smear.needsUpdate = true;
+    if (!this.wet.settled || !this.smearUploaded) {
+      this.smear.needsUpdate = true;
+      this.smearUploaded = this.wet.settled;
+    }
     this.paint.uniforms.uScene.value = color; this.paint.uniforms.uFlow.value = flow;
     this.paint.uniforms.uTexel.value.set(1 / this.width, 1 / this.height);
     this.paint.uniforms.uRadius.value = 2.3 * this.dpr;
@@ -74,6 +81,15 @@ export class PaintPipeline {
       this.renderer.setRenderTarget(this.cells);
       this.fullscreen.mesh.material = this.cellMaterial;
       this.renderer.render(this.fullscreen.scene, this.fullscreen.camera);
+      if (!this.cellsChecked) {
+        const gl = this.renderer.getContext();
+        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+          this.cells.dispose(); this.cells = null;
+          this.final.uniforms.uCellTable.value = false;
+          this.final.uniforms.uCellShape.value = null; this.final.uniforms.uCellStroke.value = null;
+        }
+        this.cellsChecked = true;
+      }
     }
     this.final.uniforms.uTime.value = time;
     this.final.uniforms.uLight.value.copy(light);

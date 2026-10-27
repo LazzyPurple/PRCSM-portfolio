@@ -2,6 +2,7 @@
 
 // Boot timing adapted from Ardia apps/site/src/scripts/meadow/boot.ts.
 // https://github.com/mantrakp04/ardia — Copyright 2026 Mantra Patel, Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
 // Modified for React lifetime and an actual WebGL2 capability check.
 import { useEffect, useRef, useState } from "react";
 import type { PondEngine } from "./engine";

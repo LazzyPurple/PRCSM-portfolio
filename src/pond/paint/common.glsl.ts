@@ -1,5 +1,6 @@
 // Adapted from Ardia apps/site/src/scripts/meadow/shaders.ts (0d16725).
 // https://github.com/mantrakp04/ardia — Copyright 2026 Mantra Patel, Apache-2.0.
+// SPDX-License-Identifier: Apache-2.0
 // Modified for Three.js GLSL3 and pond regions; see CREDITS.md.
 export const HEADER = `precision highp float; precision highp int; precision highp sampler2D;
 `;

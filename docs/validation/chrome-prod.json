@@ -1,0 +1,42 @@
+{
+  "mode": "prod",
+  "url": "http://127.0.0.1:3001",
+  "startedAt": "2026-10-27T21:51:05.421Z",
+  "checks": [
+    "production page has no debug panel",
+    "10 second Chrome GPU timer/RAF capture",
+    "Chrome Performance trace and allocation sampling saved"
+  ],
+  "errors": [],
+  "gpu": {
+    "samples": 2407,
+    "median": 2.736128,
+    "p95": 3.674112
+  },
+  "frameMs": {
+    "samples": 2408,
+    "median": 4.199999999998909,
+    "p95": 4.299999999999272
+  },
+  "fps": 239.96731342242532,
+  "resolution": {
+    "width": 1440,
+    "height": 900,
+    "dpr": 1
+  },
+  "passed": true,
+  "cpuFrameMs": {
+    "samples": 2406,
+    "median": 0.315,
+    "p95": 0.505,
+    "max": 1.99
+  },
+  "gc": {
+    "count": 6,
+    "totalMs": 4.092,
+    "maxMs": 2.63
+  },
+  "estimatedAllocatedBytes": 37366440,
+  "gpuName": "NVIDIA GeForce RTX 4070 SUPER via ANGLE D3D11",
+  "chromeVersion": "156.0.8078.49"
+}

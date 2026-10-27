@@ -20,6 +20,7 @@ export default function DebugPanel({ engine }: { engine: PondEngine }) {
         </select>
       </label>
       <output>{engine.fps.toFixed(0)} FPS · GPU {engine.gpuMs === null ? "n/d" : `${engine.gpuMs.toFixed(2)} ms`} · ×{engine.scale.toFixed(2)}</output>
+      <output>CPU soumission · {engine.cpuMs.toFixed(2)} ms</output>
       <output>{engine.world.koi.length} koï · {engine.world.pellets.length} granulés · {engine.world.time.toFixed(1)} s</output>
       <output>MRT · {engine.mrtReady ? "2 cibles complètes" : "en attente"}</output>
       <label>Heure · jour → crépuscule

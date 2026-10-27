@@ -40,3 +40,20 @@ Régions de koï distinctes et protection bidirectionnelle des frontières.
 WetPaint 64×40, déplacement atténué sur les koï, résorption 0.45 s vérifiée par test.
 Gouache observée dans le navigateur : grandes touches d'eau et relief sur les poissons.
 Typecheck/lint passent, 9 tests passent. Le budget GPU et l'audit de robustesse restent à effectuer.
+
+## Phase 5 — robustesse livrée, qualification partielle
+
+Tiers/pixel budgets et Scaler d'Ardia intégrés, requêtes GPU réutilisées, pauses,
+reduced motion live, secours sans WebGL2, restauration de contexte et dispose.
+Les 10 scénarios Chrome isolés passent sans erreur. 11 tests CPU passent,
+dont comparaison fidèle de World et des décisions du Scaler aux références.
+Build prod/typecheck/lint passent. Le panneau est absent du bundle de production.
+
+Profil Chrome prod 1440×900, DPR 1, échelle 1, RTX 4070 SUPER :
+GPU médian 2.736 ms, p95 3.674 ms ; 239.97 FPS ; callback CPU médian 0.315 ms, p95 0.505 ms.
+Après précalcul du maillage et réutilisation des couleurs : 6 GC/10 s contre 59 initialement.
+Les allocations résiduelles de World/JS/Three restent mesurables : l'absolu zéro allocation
+n'est pas atteint. Portable moyen, mobile physique et autres navigateurs restent non qualifiés.
+Voir PERFORMANCE.md pour les conditions, les preuves et les limites précises.
+
+La phase 6 optionnelle (affiches WebP) n'est pas réalisée ; le secours actuel reste le dégradé CSS.
