@@ -1,0 +1,99 @@
+{
+  "mode": "dev",
+  "url": "http://127.0.0.1:3000",
+  "startedAt": "2026-10-27T22:07:21.174Z",
+  "checks": [
+    "WebGL2 MRT and feeding",
+    "debug pause freezes simulation",
+    "live reduced motion freezes frame and blocks feeding",
+    "reduced-motion initial state is exactly 240 steps",
+    "synthetic visibilitychange stops and resumes RAF",
+    "real IntersectionObserver pauses offscreen canvas",
+    "context loss shows fallback and restores rendering",
+    "portrait 3 koi, touch tap feeds without hover curiosity",
+    "portrait retains 55 degree camera and broad pond; food radius >= 3.5 CSS pixels",
+    "destroy clears observers/listeners/debug reference and disposes GPU resources",
+    "no WebGL2 leaves CSS fallback and skips engine boot"
+  ],
+  "errors": [],
+  "reducedState": {
+    "gpu": {
+      "count": 367,
+      "median": 2.842624,
+      "p95": 3.610624
+    },
+    "cpu": {
+      "count": 368,
+      "median": 0.29999999701976776,
+      "p95": 0.5
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 15,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 231.07898376539364,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.499999999999986,
+    "reduced": true,
+    "raf": 0,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "desktop": {
+    "gpu": {
+      "count": 243,
+      "median": 3.024896,
+      "p95": 3.93728
+    },
+    "cpu": {
+      "count": 249,
+      "median": 0.30000000447034836,
+      "p95": 0.6000000014901161
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 14,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 240.12318714810974,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.016666666666654,
+    "reduced": false,
+    "raf": 252,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "portrait": {
+    "worldWidth": 1139.4,
+    "worldHeight": 844,
+    "fov": 40,
+    "inclination": 55,
+    "pelletRadii": [
+      5.739528081846725,
+      5.726456003664712,
+      5.613957781950192,
+      5.609749733247324,
+      5.58861777562666
+    ]
+  },
+  "passed": true
+}

@@ -2,6 +2,12 @@
 export const TAU = Math.PI * 2;
 export const KOI_NODES = 20;
 export const RIPPLE_SPEED = 52;
+export const POND_SWIM_RADIUS = 0.43;
+const FIN_CLEARANCE = 0.31;
+const SHORE_ITERATIONS = 12;
+const SHORE_TURN_LEAD = 0.65;
+const SHORE_TURN_FORCE = 5;
+const SHORE_INSET_EPSILON = 0.0001;
 
 export const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
@@ -161,21 +167,64 @@ export class World {
     pointer = { x: 0, y: 0, speed: 0, active: false };
     /** Page content the koi steer around, in canvas space. */
     avoid: Box[] = [];
+    /** Optional physical shore; absent for the original, open canvas simulation. */
+    shore?: number;
+    private pondFishLength?: number;
 
-    resize(width: number, height: number) {
+    resize(width: number, height: number, visibleWidth = width, visibleHeight = height) {
         const first = this.width === 0;
+        if (this.shore) {
+            const length = Math.min(clamp(Math.min(visibleWidth, visibleHeight) * 0.5, 170, 420), Math.min(width, height) * 0.5);
+            if (this.pondFishLength) for (const k of this.koi) {
+                const ratio = length / this.pondFishLength;
+                k.length *= ratio;
+                for (let n = 2; n < k.nodes.length; n += 2) {
+                    k.nodes[n] = k.nodes[0] + (k.nodes[n] - k.nodes[0]) * ratio;
+                    k.nodes[n + 1] = k.nodes[1] + (k.nodes[n + 1] - k.nodes[1]) * ratio;
+                }
+            }
+            this.pondFishLength = length;
+        }
         this.width = width;
         this.height = height;
-        if (first) this.seed();
+        if (first) this.seed(visibleWidth, visibleHeight);
+        if (this.shore) this.confine();
     }
 
-    private seed() {
+    contains(x: number, y: number, margin = 0) {
+        if (!this.shore) return x >= margin && y >= margin && x <= this.width - margin && y <= this.height - margin;
+        const inset = Math.max(0.01, 1 - margin / (Math.min(this.width, this.height) * this.shore));
+        return ((x - this.width / 2) / (this.width * this.shore * inset)) ** 2
+            + ((y - this.height / 2) / (this.height * this.shore * inset)) ** 2 <= 1;
+    }
+
+    confine() {
+        if (!this.shore) return;
+        for (const k of this.koi) {
+            const inset = Math.max(0.1, 1 - k.length * FIN_CLEARANCE / (Math.min(this.width, this.height) * this.shore));
+            const rx = this.width * this.shore * inset, ry = this.height * this.shore * inset;
+            // Translate the whole spine so a collision preserves all segment lengths and bends.
+            for (let pass = 0; pass < SHORE_ITERATIONS; pass++) {
+                let farthest = 1, at = -1;
+                for (let n = 0; n < k.nodes.length; n += 2) {
+                    const radius = ((k.nodes[n] - this.width / 2) / rx) ** 2 + ((k.nodes[n + 1] - this.height / 2) / ry) ** 2;
+                    if (radius > farthest) { farthest = radius; at = n; }
+                }
+                if (at < 0) break;
+                const correction = 1 - (1 - SHORE_INSET_EPSILON) / Math.sqrt(farthest);
+                const dx = (k.nodes[at] - this.width / 2) * correction, dy = (k.nodes[at + 1] - this.height / 2) * correction;
+                for (let n = 0; n < k.nodes.length; n += 2) { k.nodes[n] -= dx; k.nodes[n + 1] -= dy; }
+            }
+        }
+    }
+
+    private seed(visibleWidth: number, visibleHeight: number) {
         const { width: W, height: H } = this;
-        const minSide = Math.min(W, H);
-        const baseLength = clamp(minSide * 0.5, 170, 420);
-        const count = clamp(Math.round((W * H) / 240000), 3, 6);
+        const minSide = Math.min(visibleWidth, visibleHeight);
+        const baseLength = this.pondFishLength ?? clamp(minSide * 0.5, 170, 420);
+        const count = clamp(Math.round((visibleWidth * visibleHeight) / 240000), 3, 6);
         // Wide screens also get a couple of young koi that keep to the deep water, for a sense of depth.
-        const young = W >= 1024 ? 2 : 0;
+        const young = visibleWidth >= 1024 ? 2 : 0;
 
         this.koi = [];
         for (let i = 0; i < count + young; i++) {
@@ -224,6 +273,7 @@ export class World {
 
     /** A loose handful thrown at (x, y): each pellet lands a beat apart with its own splash, then drifts and sinks. */
     feed(x: number, y: number) {
+        if (this.shore && !this.contains(x, y, THROW_RADIUS * 1.3)) return;
         this.lastFeed = this.time;
         this.ripples.push({ x, y, born: this.time, strength: 0.35 });
         // A full pond takes no more food, rather than dropping old pellets out from under koi already going for them.
@@ -248,6 +298,7 @@ export class World {
         this.time += dt;
         this.pointer.speed *= Math.exp(-dt * 8);
         for (const k of this.koi) this.stepKoi(k, dt);
+        if (this.shore) this.confine();
         const t = this.time;
         let kept = 0;
         for (let i = 0; i < this.pellets.length; i++) {
@@ -375,10 +426,13 @@ export class World {
         dx += push.x * (chasing || curious ? 0.5 : 1.8);
         dy += push.y * (chasing || curious ? 0.5 : 1.8);
 
-        // Let the body slip off-screen now and then, but always turn back.
-        const over = Math.max(-hx, hx - W, -hy, hy - H);
-        if (over > -L * 0.25) {
-            const w = clamp((over + L * 0.25) / (L * 0.5), 0, 1) * 3.5;
+        // A physical pond turns earlier, leaving room for the fins and turning circle.
+        const over = this.shore
+            ? (Math.hypot((hx - W / 2) / (W * this.shore), (hy - H / 2) / (H * this.shore)) - 1) * Math.min(W, H) * this.shore
+            : Math.max(-hx, hx - W, -hy, hy - H);
+        const lead = this.shore ? SHORE_TURN_LEAD : 0.25;
+        if (over > -L * lead) {
+            const w = clamp((over + L * lead) / (L * 0.5), 0, 1) * (this.shore ? SHORE_TURN_FORCE : 3.5);
             const toX = W / 2 - hx;
             const toY = H / 2 - hy;
             const d = Math.hypot(toX, toY) || 1;

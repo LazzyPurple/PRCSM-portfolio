@@ -1,0 +1,28 @@
+{
+  "mode": "prod",
+  "url": "http://127.0.0.1:3001",
+  "startedAt": "2026-10-27T22:08:28.826Z",
+  "checks": [
+    "production page has no debug panel",
+    "10 second Chrome GPU timer/RAF capture",
+    "Chrome Performance trace and allocation sampling saved"
+  ],
+  "errors": [],
+  "gpu": {
+    "samples": 2407,
+    "median": 2.607104,
+    "p95": 4.258816
+  },
+  "frameMs": {
+    "samples": 2407,
+    "median": 4.199999999998909,
+    "p95": 4.299999999999272
+  },
+  "fps": 239.76730518284,
+  "resolution": {
+    "width": 1440,
+    "height": 900,
+    "dpr": 1
+  },
+  "passed": true
+}

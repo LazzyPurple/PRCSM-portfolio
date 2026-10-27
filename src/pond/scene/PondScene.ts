@@ -9,16 +9,18 @@ import { createWater, fullscreenScene, FULLSCREEN_VS } from "./water";
 import { flatMaterial, REGION, sharedUniforms } from "./flow";
 import { PaintPipeline } from "../paint/strokePass";
 import { GpuClock, Scaler, pickTier } from "../paint/budget";
+import { pondWidth } from "./framing";
 
 const SCALE = 0.01;
 const MAX_DEPTH = 1.5;
 const FOV = 40;
-const PORTRAIT_FOV = 50;
-const LANDSCAPE_FRAMING = 0.73;
-const PORTRAIT_FRAMING = 1;
+const FRAMING = 0.73;
 const INCLINATION = 55 * Math.PI / 180;
 const MAX_PELLETS = 24;
 const MAX_BITES = 24;
+const PELLET_RADIUS = 0.045;
+const PELLET_MIN_PIXELS = 3.5;
+const PELLET_FLOAT_HEIGHT = 0.025;
 
 export class PondScene {
   mrtReady = false;
@@ -98,16 +100,14 @@ export class PondScene {
     this.opaque.setSize(w, h); this.target.setSize(w, h);
     this.paint.resize(w, h, width);
     this.camera.aspect = width / height;
-    this.camera.fov = width < height ? PORTRAIT_FOV : FOV;
     const tangent = Math.tan(this.camera.fov * Math.PI / 360);
-    const framing = width < height ? PORTRAIT_FRAMING : LANDSCAPE_FRAMING;
-    const distance = Math.max(height * SCALE / Math.sin(INCLINATION), width * SCALE / this.camera.aspect) / (2 * tangent) * framing;
+    const distance = height * SCALE / Math.sin(INCLINATION) / (2 * tangent) * FRAMING;
     this.camera.position.set(0, distance * Math.sin(INCLINATION), distance * Math.cos(INCLINATION));
     this.camera.lookAt(0, 0, 0);
     this.camera.updateProjectionMatrix(); this.camera.updateMatrixWorld();
     this.water.uniforms.uInverse.value.multiplyMatrices(this.camera.matrixWorld, this.camera.projectionMatrixInverse);
     this.water.uniforms.uCamera.value.copy(this.camera.position);
-    this.worldWidth = width; this.worldHeight = height;
+    this.worldWidth = pondWidth(width, height); this.worldHeight = height;
   }
 
   rebuild(world: World, seed = this.seed) {
@@ -121,7 +121,7 @@ export class PondScene {
     this.decoration.add(this.lilies.group);
     for (const fish of world.koi) { const koi = createKoi(fish, this.uniforms); this.koi.push(koi); this.decoration.add(koi.mesh); }
     const sphere = new THREE.SphereGeometry(1, 6, 4);
-    const foodMaterial = flatMaterial(palette.food, REGION.food, this.uniforms);
+    const foodMaterial = flatMaterial(palette.food, REGION.food, this.uniforms, 0);
     const biteMaterial = flatMaterial(palette.koi.white, REGION.food, this.uniforms);
     for (let i = 0; i < MAX_PELLETS + MAX_BITES; i++) {
       const mesh = new THREE.Mesh(sphere, i < MAX_PELLETS ? foodMaterial : biteMaterial);
@@ -172,8 +172,11 @@ export class PondScene {
       const mesh = this.pellets[i], p = world.pellets[i]; mesh.visible = !!p;
       if (!p) continue;
       const age = world.time - p.born, sink = smoothstep(PELLET_SINK, PELLET_LIFE, age);
-      mesh.position.set(p.x * SCALE + ox, p.landed ? -sink * MAX_DEPTH : (1 - age / p.landAt) * 0.3, p.y * SCALE + oz);
-      mesh.scale.set(0.027 * (1 - sink * 0.8), 0.012, 0.027 * (1 - sink * 0.8));
+      mesh.position.set(p.x * SCALE + ox, p.landed ? PELLET_FLOAT_HEIGHT - sink * MAX_DEPTH : (1 - age / p.landAt) * 0.3, p.y * SCALE + oz);
+      const view = this.camera.matrixWorldInverse.elements;
+      const depth = -(view[2] * mesh.position.x + view[6] * mesh.position.y + view[10] * mesh.position.z + view[14]);
+      const radius = Math.max(PELLET_RADIUS, PELLET_MIN_PIXELS * 2 * depth * Math.tan(FOV * Math.PI / 360) / this.height) * (1 - sink * 0.8);
+      mesh.scale.set(radius, radius * 0.45, radius);
     }
     for (let i = 0; i < this.bites.length; i++) {
       const mesh = this.bites[i], b = world.bites[i]; mesh.visible = !!b;

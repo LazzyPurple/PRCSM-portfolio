@@ -103,3 +103,12 @@ Artefacts locaux ignorés par Git :
 - `artifacts/validation-dev/desktop-final.png`, `portrait-final.png`, `no-webgl2.png`.
 
 Il n'y a pas d'affiches WebP de chargement générées : la phase 6 facultative est différée.
+
+## Après correction des berges et du cadrage — 27 octobre 2026
+
+Nouvelle mesure production, mêmes 1440×900/DPR 1 et RTX 4070 SUPER :
+2 407 échantillons GPU, médiane 2.607 ms, p95 4.259 ms ; 239.77 FPS sur 10 secondes.
+Les rapports de cette passe sont `docs/validation/chrome-fixes-dev.json` et
+`chrome-fixes-prod.json`. Les mesures initiales ci-dessus restent celles de la phase 5.
+Le portrait 390×844 conserve une caméra 55°/FOV 40°, une mare large et un rayon de
+granulé supérieur à 3.5 px CSS. Aucun test sur téléphone physique n'est revendiqué.

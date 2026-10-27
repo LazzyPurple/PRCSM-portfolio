@@ -9,6 +9,12 @@ export function drawSimulation(ctx: CanvasRenderingContext2D, world: World, widt
   ctx.setTransform(ctx.canvas.width / world.width, 0, 0, ctx.canvas.height / world.height, 0, 0);
   ctx.fillStyle = palette.water.deep;
   ctx.fillRect(0, 0, world.width, world.height);
+  if (world.shore) {
+    ctx.strokeStyle = palette.bank.light;
+    ctx.beginPath();
+    ctx.ellipse(world.width / 2, world.height / 2, world.width * world.shore, world.height * world.shore, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
   ctx.strokeStyle = palette.koi.vermilion;
   ctx.lineWidth = 1 / Math.min(sx, sy);
   for (const box of world.avoid) ctx.strokeRect(box.left, box.top, box.right - box.left, box.bottom - box.top);

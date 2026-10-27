@@ -1,7 +1,8 @@
 // Loop and interaction rules adapted from Dao-Ho/portfolio koi-pond.tsx. See CREDITS.md.
-import { World, type Box } from "./sim/world";
+import { POND_SWIM_RADIUS, World, type Box } from "./sim/world";
 import { drawSimulation } from "./debug/simulation2d";
 import { PondScene } from "./scene/PondScene";
+import { pondWidth } from "./scene/framing";
 
 const STEP = 1 / 60;
 const MAX_STEPS = 4;
@@ -88,7 +89,8 @@ export class PondEngine {
   restart() {
     this.world = new World();
     this.stillPrepared = false;
-    this.world.resize(this.width, this.height);
+    this.world.shore = POND_SWIM_RADIUS;
+    this.world.resize(pondWidth(this.width, this.height), this.height, this.width, this.height);
     this.scene.rebuild(this.world, (Math.random() * 4294967296) >>> 0);
     this.measure();
     this.schedule();
@@ -106,7 +108,8 @@ export class PondEngine {
       this.debugCanvas.width = Math.round(rect.width * dpr);
       this.debugCanvas.height = Math.round(rect.height * dpr);
     }
-    this.world.resize(rect.width, rect.height);
+    this.world.shore = POND_SWIM_RADIUS;
+    this.world.resize(pondWidth(rect.width, rect.height), rect.height, rect.width, rect.height);
     this.scene.resize(rect.width, rect.height, this.scale);
     this.scene.rebuild(this.world);
     this.measure();
@@ -125,7 +128,7 @@ export class PondEngine {
       for (let i = 0; i < 4; i++) {
         const x = (i % 2 ? b.right : b.left) - rect.left;
         const y = (i < 2 ? b.top : b.bottom) - rect.top;
-        const point = this.view === "simulation" ? { x, y } : this.scene.project(x, y);
+        const point = this.view === "simulation" ? { x: x * this.world.width / this.width, y: y * this.world.height / this.height } : this.scene.project(x, y);
         if (!point) continue;
         left = Math.min(left, point.x); right = Math.max(right, point.x);
         top = Math.min(top, point.y); bottom = Math.max(bottom, point.y);
@@ -204,7 +207,7 @@ export class PondEngine {
     this.screenPointer.x = localX; this.screenPointer.y = localY;
     this.screenPointer.active = e.pointerType !== "touch" && localX >= 0 && localY >= 0 && localX <= this.width && localY <= this.height;
     const point = this.view === "simulation" ? this.scene.simulationPoint : this.scene.project(localX, localY);
-    if (this.view === "simulation" && point) { point.x = localX; point.y = localY; }
+    if (this.view === "simulation" && point) { point.x = localX * this.world.width / this.width; point.y = localY * this.world.height / this.height; }
     if (!point) return this.onLeave();
     const { x, y } = point;
     const p = this.world.pointer;
@@ -214,7 +217,7 @@ export class PondEngine {
     this.pointerAt = e.timeStamp;
     p.x = x;
     p.y = y;
-    p.active = x >= 0 && y >= 0 && x <= this.width && y <= this.height && e.pointerType !== "touch";
+    p.active = this.world.contains(x, y) && e.pointerType !== "touch";
   };
   private onDown = (e: PointerEvent) => {
     this.down.x = e.clientX;
@@ -229,10 +232,10 @@ export class PondEngine {
     if (this.down.touch && (Math.hypot(e.clientX - this.down.x, e.clientY - this.down.y) > TAP_DISTANCE || performance.now() - this.down.time > TAP_DURATION_MS)) return;
     const localX = e.clientX - this.originX, localY = e.clientY - this.originY;
     const point = this.view === "simulation" ? this.scene.simulationPoint : this.scene.project(localX, localY);
-    if (this.view === "simulation" && point) { point.x = localX; point.y = localY; }
+    if (this.view === "simulation" && point) { point.x = localX * this.world.width / this.width; point.y = localY * this.world.height / this.height; }
     if (!point) return;
     const { x, y } = point;
-    if (x >= 0 && y >= 0 && x <= this.width && y <= this.height) this.world.feed(x, y);
+    if (localX >= 0 && localY >= 0 && localX <= this.width && localY <= this.height && this.world.contains(x, y)) this.world.feed(x, y);
   };
   private onLeave = () => { this.world.pointer.active = false; this.world.pointer.speed = 0; this.screenPointer.active = false; };
   private onLayout = () => { this.measure(); };

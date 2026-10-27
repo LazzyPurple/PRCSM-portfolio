@@ -59,15 +59,15 @@ export function sharedUniforms() {
 }
 export type SceneUniforms = ReturnType<typeof sharedUniforms>;
 
-export function flatMaterial(color: string, region: number, uniforms: SceneUniforms) {
+export function flatMaterial(color: string, region: number, uniforms: SceneUniforms, strokeScale = 0.55) {
   return new THREE.RawShaderMaterial({
     glslVersion: THREE.GLSL3, vertexShader: SCENE_VS, side: THREE.DoubleSide,
-    uniforms: { ...uniforms, uColor: { value: new THREE.Color(color) }, uRegion: { value: region } },
+    uniforms: { ...uniforms, uColor: { value: new THREE.Color(color) }, uRegion: { value: region }, uStrokeScale: { value: strokeScale } },
     fragmentShader: `${GL_COMMON}
-     uniform vec3 uColor; uniform float uRegion;
+     uniform vec3 uColor; uniform float uRegion,uStrokeScale;
      in vec3 vWorld; in vec3 vNormal; in vec2 vUv;
      layout(location=0) out vec4 outColor; layout(location=1) out vec4 outFlow;
      void main(){outColor=vec4(litColor(uColor*(0.96+0.08*noise(vWorld.xz*8.0)),vNormal,vWorld),1);
-      vec2 d=vec2(dFdx(vWorld.x),dFdy(vWorld.x));outFlow=encodeFlow(d,0.55,uRegion);}`,
+      vec2 d=vec2(dFdx(vWorld.x),dFdy(vWorld.x));outFlow=encodeFlow(d,uStrokeScale,uRegion);}`,
   });
 }

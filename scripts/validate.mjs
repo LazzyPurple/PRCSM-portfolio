@@ -135,6 +135,22 @@ try {
     assert.ok(await evaluate("window.__pond.world.pellets.length") > 0);
     assert.equal(await evaluate("window.__pond.world.pointer.active"), false);
     report.checks.push("portrait 3 koi, touch tap feeds without hover curiosity");
+    await sleep(250);
+    report.portrait = await evaluate(`(() => {
+      const e=window.__pond,s=e.scene,c=s.camera;
+      const radii=s.pellets.filter(m=>m.visible).map(m=>{
+        const a=m.position.clone().project(c),b=m.position.clone();b.x+=m.scale.x;b.project(c);
+        return Math.abs(b.x-a.x)*390/2;
+      });
+      return {worldWidth:e.world.width,worldHeight:e.world.height,fov:c.fov,
+        inclination:Math.atan2(c.position.y,c.position.z)*180/Math.PI,pelletRadii:radii};
+    })()`);
+    assert.ok(report.portrait.worldWidth / report.portrait.worldHeight >= 1.35);
+    assert.equal(report.portrait.fov, 40);
+    assert.ok(Math.abs(report.portrait.inclination - 55) < 0.01);
+    assert.ok(report.portrait.pelletRadii.length > 0 && report.portrait.pelletRadii.every(r => r >= 3.49));
+    report.checks.push("portrait retains 55 degree camera and broad pond; food radius >= 3.5 CSS pixels");
+    await evaluate("document.querySelector('.debug-panel').style.visibility='hidden'");
     await capture("portrait-final");
     await evaluate("window.__previousPond=window.__pond;window.__pond.destroy()");
     assert.equal(await evaluate("window.__pond === undefined && window.__previousPond.raf === 0 || window.__pond === undefined && window.__previousPond.disposed"), true);

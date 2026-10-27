@@ -57,3 +57,26 @@ n'est pas atteint. Portable moyen, mobile physique et autres navigateurs restent
 Voir PERFORMANCE.md pour les conditions, les preuves et les limites précises.
 
 La phase 6 optionnelle (affiches WebP) n'est pas réalisée ; le secours actuel reste le dégradé CSS.
+
+## Corrections visuelles — 27 octobre 2026
+
+La simulation de la mare utilise désormais une rive elliptique : anticipation du virage,
+garde pour les nageoires et translation de la colonne entière en cas de contact.
+Le mode original sans rive reste identique à Dao selon l'oracle. Le nourrissage sur la terre
+est rejeté. Un test de 3 600 pas vérifie tous les sommets animés, les segments de colonne,
+les poursuites, la fuite et les passages paysage → portrait → paysage.
+
+Le portrait recadre une mare large (rapport minimal 1.35), avec les mêmes FOV 40°,
+inclinaison 55° et cadrage que le paysage. Les tailles et effectifs initiaux restent calculés
+à partir du viewport CSS ; les poissons se redimensionnent lors d'un changement de format.
+Ce choix remplace la vue de l'ovale entier initialement prévue, suivant le retour utilisateur.
+Les projections du pointeur et des boîtes de texte suivent les nouvelles dimensions du monde.
+
+Granulés dorés plus gros, touches plus fines, taille minimale de 7 px CSS de diamètre
+avant immersion. Mesure Chrome portrait 390×844 : rayons observés 5.59–5.74 px.
+Captures observées en paysage et portrait ; style peinture conservé.
+
+13 tests CPU, 11 scénarios Chrome, typecheck, lint et build passent, sans erreur navigateur.
+Profil production 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 2.607 ms,
+p95 4.259 ms, 239.77 FPS. Preuves : `docs/validation/chrome-fixes-{dev,prod}.json`.
+Le mobile physique et le portable moyen restent non qualifiés.
