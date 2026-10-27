@@ -12,7 +12,7 @@ const POND_LENGTH_RATIO = 0.38;
 const POND_LENGTH_MIN = 120;
 const POND_LENGTH_MAX = 360;
 const POND_LENGTHS = [0.9, 0.48, 0.7, 0.36, 0.58, 0.8, 0.42, 0.65];
-const POND_VARIETIES: Variety[] = ["kohaku", "yamabuki", "shiro", "asagi", "sanke", "karasu", "tancho"];
+const POND_VARIETIES: Variety[] = ["kohaku", "yamabuki", "shiro", "asagi", "sanke", "showa", "tancho"];
 const SPAWN_ANGLE = 2.399963229728653;
 const SPAWN_RADIUS = 0.23;
 const SPAWN_BODY_CENTER = 0.4;
@@ -53,7 +53,7 @@ export function hash3(x: number, y: number, z: number) {
 
 export type Box = { left: number; top: number; right: number; bottom: number };
 
-export type Variety = "kohaku" | "sanke" | "tancho" | "yamabuki" | "shiro" | "asagi" | "karasu";
+export type Variety = "kohaku" | "sanke" | "tancho" | "yamabuki" | "shiro" | "asagi" | "showa";
 
 const VARIETY_WEIGHTS: [Variety, number][] = [
     ["kohaku", 3],

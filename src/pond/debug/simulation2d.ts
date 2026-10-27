@@ -21,7 +21,7 @@ export function drawSimulation(ctx: CanvasRenderingContext2D, world: World, widt
   for (const koi of world.koi) {
     ctx.globalAlpha = koi.depth;
     ctx.strokeStyle = koi.variety === "yamabuki" ? palette.koi.gold : koi.variety === "asagi" ? palette.koi.slate
-      : koi.variety === "karasu" ? palette.koi.charcoal : koi.variety === "tancho" ? palette.koi.vermilion : palette.koi.white;
+      : koi.variety === "showa" ? palette.koi.charcoal : koi.variety === "tancho" ? palette.koi.vermilion : palette.koi.white;
     ctx.lineWidth = koi.length * 0.065;
     ctx.lineCap = "round";
     ctx.beginPath();

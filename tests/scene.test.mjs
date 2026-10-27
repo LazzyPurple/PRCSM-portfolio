@@ -35,9 +35,16 @@ test("pond schools include gold, black-white, slate and young koi on every seed"
   assert.ok(Math.max(...lengths) / Math.min(...lengths) > 2);
   for (const koi of world.koi) {
     const markings = koiMarkings(koi);
-    assert.ok(markings.red.length <= 4 && markings.black.length <= 6);
+    assert.ok(markings.red.length <= 4 && markings.black.length <= 6 && (markings.white?.length ?? 0) <= 3);
     if (koi.variety === "shiro") assert.ok(markings.black.length > 0 && markings.red.length === 0);
-    if (koi.variety === "yamabuki" || koi.variety === "karasu") assert.deepEqual(markings, { red: [], black: [] });
+    if (koi.variety === "yamabuki") assert.deepEqual(markings, { red: [], black: [] });
+    if (koi.variety === "showa") {
+      assert.ok(markings.red.length >= 2 && markings.white.length >= 2);
+      const model = createKoi(koi, sharedUniforms()), uniforms = model.mesh.material.uniforms;
+      assert.equal(uniforms.uWhiteCount.value, markings.white.length);
+      assert.notEqual(uniforms.uBase.value.getHex(), uniforms.uWhite.value.getHex());
+      model.mesh.geometry.dispose(); model.mesh.material.dispose();
+    }
   }
 });
 

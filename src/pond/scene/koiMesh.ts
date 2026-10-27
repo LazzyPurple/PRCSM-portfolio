@@ -12,6 +12,7 @@ const BODY_END = 0.74;
 const FIN_STEPS = 12;
 const MAX_RED = 4;
 const MAX_BLACK = 6;
+const MAX_WHITE = 3;
 const VS = `precision highp float;
 in vec3 position,normal,tangent; in vec3 body;
 uniform mat4 modelViewMatrix,projectionMatrix;
@@ -77,29 +78,31 @@ export function createKoi(koi: Koi, uniforms: SceneUniforms) {
   geometry.setAttribute("body", new THREE.BufferAttribute(body, 3).setUsage(THREE.DynamicDrawUsage));
   const markings = koiMarkings(koi);
   const coat = koi.variety === "yamabuki" ? palette.koi.gold : koi.variety === "asagi" ? palette.koi.slate
-    : koi.variety === "karasu" ? palette.koi.charcoal : palette.koi.white;
-  const red = new Float32Array(MAX_RED * 4), black = new Float32Array(MAX_BLACK * 4);
+    : koi.variety === "showa" ? palette.koi.charcoal : palette.koi.white;
+  const red = new Float32Array(MAX_RED * 4), black = new Float32Array(MAX_BLACK * 4), white = new Float32Array(MAX_WHITE * 4);
   for (let i = 0; i < markings.red.length; i++) { const p = markings.red[i]; red.set([p.s, p.v, p.rs, p.rv], i * 4); }
   for (let i = 0; i < markings.black.length; i++) { const p = markings.black[i]; black.set([p.s, p.v, p.rs, p.rv], i * 4); }
+  for (let i = 0; i < (markings.white?.length ?? 0); i++) { const p = markings.white![i]; white.set([p.s, p.v, p.rs, p.rv], i * 4); }
   const material = new THREE.RawShaderMaterial({
     glslVersion: THREE.GLSL3, vertexShader: VS, side: THREE.DoubleSide,
-    uniforms: { ...uniforms, uWhite: { value: new THREE.Color(coat) }, uRed: { value: new THREE.Color(palette.koi.vermilion) },
-      uInk: { value: new THREE.Color(palette.koi.ink) }, uRedPatches: { value: red }, uBlackPatches: { value: black },
-      uRedCount: { value: markings.red.length }, uBlackCount: { value: markings.black.length },
+    uniforms: { ...uniforms, uBase: { value: new THREE.Color(coat) }, uWhite: { value: new THREE.Color(palette.koi.white) }, uRed: { value: new THREE.Color(palette.koi.vermilion) },
+      uInk: { value: new THREE.Color(palette.koi.ink) }, uRedPatches: { value: red }, uBlackPatches: { value: black }, uWhitePatches: { value: white },
+      uRedCount: { value: markings.red.length }, uBlackCount: { value: markings.black.length }, uWhiteCount: { value: markings.white?.length ?? 0 },
       uRegion: { value: REGION.koi + (koi.id - 1) * REGION.koiStep }, uId: { value: koi.id } },
     fragmentShader: `${GL_COMMON}
-    uniform vec3 uWhite,uRed,uInk; uniform vec4 uRedPatches[${MAX_RED}],uBlackPatches[${MAX_BLACK}];
-    uniform int uRedCount,uBlackCount; uniform float uRegion,uId;
+    uniform vec3 uBase,uWhite,uRed,uInk; uniform vec4 uRedPatches[${MAX_RED}],uBlackPatches[${MAX_BLACK}],uWhitePatches[${MAX_WHITE}];
+    uniform int uRedCount,uBlackCount,uWhiteCount; uniform float uRegion,uId;
     in vec3 vWorld,vNormal,vBody; in vec2 vDirection;
     layout(location=0) out vec4 outColor; layout(location=1) out vec4 outFlow;
     bool inMarking(vec4 p,vec2 body,float wobble){vec2 d=(body-p.xy)/p.zw;return dot(d,d)<1.0+wobble;}
     void main(){
      float s=vBody.x,v=vBody.y,fin=vBody.z;
      float wobble=(noise(vec2(s*14.0+uId,v*30.0))-0.5)*0.6;
-     vec3 color=uWhite;
+     vec3 color=uBase;
      if(fin<0.5 && abs(v)<0.9*0.135 && s<0.74){
       for(int i=0;i<${MAX_RED};i++){if(i>=uRedCount)break;if(inMarking(uRedPatches[i],vec2(s,v),wobble))color=uRed;}
       for(int i=0;i<${MAX_BLACK};i++){if(i>=uBlackCount)break;if(inMarking(uBlackPatches[i],vec2(s,v),wobble))color=uInk;}
+      for(int i=0;i<${MAX_WHITE};i++){if(i>=uWhiteCount)break;if(inMarking(uWhitePatches[i],vec2(s,v),wobble))color=uWhite;}
      }
      float eye=1.0-smoothstep(0.008,0.016,length(vec2((s-0.085)*1.1,abs(v)-0.067)));
      if(fin<0.5) color=mix(color,uInk,eye);

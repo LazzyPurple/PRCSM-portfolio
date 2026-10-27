@@ -102,3 +102,11 @@ Profil prod 1440×900, DPR 1, RTX 4070 SUPER : médiane GPU 2.748 ms, p95 3.658 
 239.97 FPS sur 10 secondes. Preuves : docs/validation/chrome-school-{dev,prod}.json.
 Le panneau est de nouveau affiché dans l'aperçu de développement : http://127.0.0.1:3000/?debug.
 Les limites de qualification sur mobile physique et portable moyen restent inchangées.
+
+## Robe sombre tricolore — 27 octobre 2026
+
+La robe karasu unie est remplacée par une robe showa : base charbon, deux larges
+taches vermillon et deux taches blanc cassé. Les motifs blancs disposent de leurs
+propres uniformes ; les autres robes gardent leur rendu. Le panneau de debug reste affiché.
+16 tests CPU, 12 scénarios Chrome, typecheck/lint/build passent ; capture paysage observée.
+Le budget GPU de production n'a pas été remesuré pour cette modification de motifs.

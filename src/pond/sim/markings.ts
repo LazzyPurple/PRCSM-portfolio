@@ -3,7 +3,7 @@ import { hash3, type Koi } from './world';
 
 /** A marking in body space: centred at (s, v) along and across the spine, as fractions of length. */
 export type Patch = { s: number; v: number; rs: number; rv: number };
-export type Markings = { red: Patch[]; black: Patch[] };
+export type Markings = { red: Patch[]; black: Patch[]; white?: Patch[] };
 
 /**
  * Each koi gets a fixed set of markings, seeded by its id, so every fish carries a clear pattern:
@@ -12,7 +12,14 @@ export type Markings = { red: Patch[]; black: Patch[] };
  */
 export function koiMarkings(k: Koi): Markings {
     const r = (j: number) => hash3(k.id, j, 41);
-    if (k.variety === "yamabuki" || k.variety === "karasu") return { red: [], black: [] };
+    if (k.variety === "yamabuki") return { red: [], black: [] };
+    if (k.variety === "showa") return { red: [
+        { s: 0.1, v: 0.015, rs: 0.075, rv: 0.11 },
+        { s: 0.43, v: 0.02, rs: 0.095, rv: 0.13 },
+    ], black: [], white: [
+        { s: 0.26, v: -0.01, rs: 0.075, rv: 0.15 },
+        { s: 0.61, v: -0.015, rs: 0.075, rv: 0.14 },
+    ] };
     if (k.variety === "shiro") return { red: [], black: [
         { s: 0.12, v: 0.025, rs: 0.07, rv: 0.14 },
         { s: 0.34, v: -0.02, rs: 0.1, rv: 0.16 },
