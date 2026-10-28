@@ -1,0 +1,263 @@
+{
+  "mode": "dev",
+  "url": "http://127.0.0.1:3000",
+  "startedAt": "2026-10-28T01:19:48.619Z",
+  "checks": [
+    "poster paints before engine on slow connection; 600 ms fade and no layout shift",
+    "WebGL2 MRT and feeding",
+    "visible sun/moon discs and moving solar reflection verified by GPU pixels; fish/pads/banks untouched",
+    "180 second cycle advances and wraps midnight; manual dawn/day/dusk/night stay readable with vegetation",
+    "debug pause freezes simulation",
+    "live reduced motion freezes frame and blocks feeding",
+    "reduced-motion initial state is exactly 240 steps",
+    "synthetic visibilitychange stops and resumes RAF",
+    "real IntersectionObserver pauses offscreen canvas",
+    "context loss shows fallback and restores rendering",
+    "seven coat varieties, >2x size range and fish shadows verified by GPU pixel comparison",
+    "portrait 3 koi, touch tap feeds without hover curiosity",
+    "portrait retains 55 degree camera and broad pond; food radius >= 3.5 CSS pixels",
+    "destroy clears observers/listeners/debug reference and disposes GPU resources",
+    "no WebGL2 shows the mobile poster and skips engine boot",
+    "server-rendered responsive posters work without JavaScript in all five framings; one image per visit"
+  ],
+  "errors": [],
+  "loadingPoster": {
+    "source": "http://127.0.0.1:3000/pond/wide-1440.webp",
+    "opacity": "0"
+  },
+  "posterRequests": [
+    "http://127.0.0.1:3000/pond/wide-1440.webp"
+  ],
+  "cycle": {
+    "hour": 10.197777777777809,
+    "time": 1.483333333333333,
+    "running": true,
+    "seconds": 180
+  },
+  "lighting": [
+    {
+      "name": "dawn",
+      "hour": 6,
+      "running": false,
+      "luminance": 96.3473814269025,
+      "water": [
+        0.07421356837213867,
+        0.14702726648767014,
+        0.1912016827303171
+      ],
+      "reflection": null,
+      "plants": [
+        "shore-flowers",
+        "pond-algae"
+      ]
+    },
+    {
+      "name": "day",
+      "hour": 12,
+      "running": false,
+      "luminance": 118.24574311089049,
+      "water": [
+        0.054480276435339814,
+        0.158960835050774,
+        0.14126329113044458
+      ],
+      "reflection": {
+        "changed": 129493,
+        "protectedPixels": 0,
+        "discPixels": 8353,
+        "sun": 1,
+        "moon": 0
+      },
+      "plants": [
+        "shore-flowers",
+        "pond-algae"
+      ]
+    },
+    {
+      "name": "dusk",
+      "hour": 18,
+      "running": false,
+      "luminance": 88.51695557080377,
+      "water": [
+        0.13843161502267545,
+        0.09305896283800832,
+        0.158960835050774
+      ],
+      "reflection": null,
+      "plants": [
+        "shore-flowers",
+        "pond-algae"
+      ]
+    },
+    {
+      "name": "night",
+      "hour": 0,
+      "running": false,
+      "luminance": 55.111843742650116,
+      "water": [
+        0.008568125615105716,
+        0.036889450395083165,
+        0.059511238155621766
+      ],
+      "reflection": {
+        "changed": 65385,
+        "protectedPixels": 0,
+        "discPixels": 6338,
+        "sun": 0,
+        "moon": 1
+      },
+      "plants": [
+        "shore-flowers",
+        "pond-algae"
+      ]
+    }
+  ],
+  "reflectionPath": [
+    {
+      "hour": 9,
+      "x": 301.7558961327722,
+      "width": 1440,
+      "count": 12593
+    },
+    {
+      "hour": 15,
+      "x": 1146.7909928970832,
+      "width": 1440,
+      "count": 6617
+    }
+  ],
+  "reducedState": {
+    "gpu": {
+      "count": 500,
+      "median": 2.41152,
+      "p95": 4.212736
+    },
+    "cpu": {
+      "count": 503,
+      "median": 0.3999999985098839,
+      "p95": 0.8000000044703484
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 17,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 240.30430041205068,
+    "koi": 7,
+    "pellets": 2,
+    "time": 5.999999999999984,
+    "hour": 10,
+    "cycleRunning": true,
+    "cycleSeconds": 180,
+    "reduced": true,
+    "raf": 0,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "school": {
+    "varieties": [
+      "kohaku",
+      "yamabuki",
+      "shiro",
+      "asagi",
+      "sanke",
+      "showa",
+      "tancho"
+    ],
+    "sizeRatio": 2.6715443369361003,
+    "shadows": 7,
+    "shadowPixels": 47306
+  },
+  "desktop": {
+    "gpu": {
+      "count": 264,
+      "median": 2.46272,
+      "p95": 4.150272
+    },
+    "cpu": {
+      "count": 270,
+      "median": 0.4000000059604645,
+      "p95": 1.2999999970197678
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 1440,
+    "height": 900,
+    "cssWidth": 1440,
+    "cssHeight": 900,
+    "memory": {
+      "geometries": 17,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 224.10982891505458,
+    "koi": 7,
+    "pellets": 0,
+    "time": 5.099999999999987,
+    "hour": 10.14666666666669,
+    "cycleRunning": true,
+    "cycleSeconds": 180,
+    "reduced": false,
+    "raf": 271,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  },
+  "portrait": {
+    "worldWidth": 1139.4,
+    "worldHeight": 844,
+    "fov": 40,
+    "inclination": 55,
+    "pelletRadii": [
+      5.6335108518429005,
+      5.558115599808403,
+      5.647711872186151,
+      5.596023988052107,
+      5.556474528848994,
+      5.6293952604701225,
+      5.566377745575081
+    ]
+  },
+  "staticPosters": [
+    {
+      "width": 2400,
+      "height": 1000,
+      "source": "http://127.0.0.1:3000/pond/ultrawide-2400.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "source": "http://127.0.0.1:3000/pond/wide-1440.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "source": "http://127.0.0.1:3000/pond/mid-1280.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "source": "http://127.0.0.1:3000/pond/tablet-768.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "source": "http://127.0.0.1:3000/pond/phone-390.webp",
+      "font": "Arial, Helvetica, sans-serif"
+    }
+  ],
+  "passed": true
+}

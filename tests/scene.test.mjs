@@ -54,9 +54,12 @@ test("lighting stays finite, continuous at midnight and reuses every color", () 
     assert.ok(light.direction.toArray().every(Number.isFinite));
     assert.ok(light.direction.y > 0.25 && Math.abs(light.direction.length() - 1) < 1e-8);
     assert.ok(light.light.toArray().every(n => Number.isFinite(n) && n >= 0));
+    assert.ok(light.sunVisibility >= 0 && light.sunVisibility <= 1 && light.moonVisibility >= 0 && light.moonVisibility <= 1);
   }
   light.update(12); const day = light.light.r + light.light.g + light.light.b;
+  assert.equal(light.sunVisibility, 1); assert.equal(light.moonVisibility, 0);
   light.update(0); const night = light.light.toArray();
+  assert.equal(light.sunVisibility, 0); assert.equal(light.moonVisibility, 1);
   assert.ok(night.reduce((a, b) => a + b) < day * 0.45);
   light.update(24); assert.deepEqual(light.light.toArray(), night);
   light.update(23.999); assert.ok(light.light.toArray().every((value, i) => Math.abs(value - night[i]) < 0.0001));

@@ -3,14 +3,14 @@ import { palette } from "../palette";
 import { wrapHour } from "../cycle";
 
 const STOPS = [
-  { hour: 0, phase: "night", ambient: 0.075, strength: 0.32, shadow: 0.4, direction: [-0.35, 0.85, -0.25] },
-  { hour: 5, phase: "night", ambient: 0.09, strength: 0.32, shadow: 0.4, direction: [-0.45, 0.7, -0.1] },
-  { hour: 6, phase: "dawn", ambient: 0.23, strength: 0.68, shadow: 0.7, direction: [-0.9, 0.38, 0.3] },
-  { hour: 9, phase: "day", ambient: 0.38, strength: 1, shadow: 1, direction: [-0.55, 0.85, 0.3] },
-  { hour: 15, phase: "day", ambient: 0.38, strength: 1, shadow: 1, direction: [0.55, 0.85, 0.3] },
-  { hour: 18, phase: "dusk", ambient: 0.22, strength: 0.65, shadow: 0.75, direction: [0.9, 0.38, 0.3] },
-  { hour: 20, phase: "night", ambient: 0.09, strength: 0.34, shadow: 0.4, direction: [-0.1, 0.7, -0.6] },
-  { hour: 24, phase: "night", ambient: 0.075, strength: 0.32, shadow: 0.4, direction: [-0.35, 0.85, -0.25] },
+  { hour: 0, phase: "night", ambient: 0.075, strength: 0.32, shadow: 0.4, direction: [0, 0.85, -0.82] },
+  { hour: 5, phase: "night", ambient: 0.09, strength: 0.32, shadow: 0.4, direction: [0.45, 0.7, -0.82] },
+  { hour: 6, phase: "dawn", ambient: 0.23, strength: 0.68, shadow: 0.7, direction: [-0.9, 0.38, -0.82] },
+  { hour: 9, phase: "day", ambient: 0.38, strength: 1, shadow: 1, direction: [-0.4, 0.85, -0.82] },
+  { hour: 15, phase: "day", ambient: 0.38, strength: 1, shadow: 1, direction: [0.4, 0.85, -0.82] },
+  { hour: 18, phase: "dusk", ambient: 0.22, strength: 0.65, shadow: 0.75, direction: [0.9, 0.38, -0.82] },
+  { hour: 20, phase: "night", ambient: 0.09, strength: 0.34, shadow: 0.4, direction: [-0.25, 0.7, -0.82] },
+  { hour: 24, phase: "night", ambient: 0.075, strength: 0.32, shadow: 0.4, direction: [0, 0.85, -0.82] },
 ] as const;
 
 export class Daylight {
@@ -20,12 +20,16 @@ export class Daylight {
   readonly direction = new THREE.Vector3();
   ambient = 0.38;
   shadow = 1;
+  sunVisibility = 1;
+  moonVisibility = 0;
   private stops = STOPS.map(stop => ({ ...stop, light: new THREE.Color(palette.light[stop.phase]),
     water: new THREE.Color(palette.water[stop.phase === "day" ? "middle" : stop.phase]),
     sky: palette.sky[stop.phase].map(color => new THREE.Color(color)) }));
 
   update(hour: number) {
     hour = wrapHour(hour);
+    this.sunVisibility = THREE.MathUtils.smoothstep(hour, 5.5, 7.5) * (1 - THREE.MathUtils.smoothstep(hour, 17, 19));
+    this.moonVisibility = 1 - THREE.MathUtils.smoothstep(hour, 4.5, 6.5) + THREE.MathUtils.smoothstep(hour, 18.5, 20.5);
     let index = 0;
     while (index < this.stops.length - 2 && hour >= this.stops[index + 1].hour) index++;
     const a = this.stops[index], b = this.stops[index + 1];

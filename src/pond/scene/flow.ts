@@ -5,7 +5,7 @@
 import * as THREE from "three";
 import { palette } from "../palette";
 
-export const REGION = { water: 0.15, bank: 0.9, lily: 0.8, flowers: 0.84, algae: 0.74, food: 0.96, koi: 0.4, koiStep: 0.035 } as const;
+export const REGION = { water: 0.15, reflection: 0.24, bank: 0.9, lily: 0.8, flowers: 0.84, algae: 0.74, food: 0.96, koi: 0.4, koiStep: 0.035 } as const;
 export const GL_COMMON = `
 precision highp float;
 precision highp int;

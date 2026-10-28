@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T00:47:55.302Z",
-  "baseRevision": "ba7abaec27b72b6ec9feb643d800e60c7d91d4f4",
+  "generatedAt": "2026-10-28T01:18:02.330Z",
+  "baseRevision": "d2862cf23928a1402c721dc035cc97334b3c89e3",
   "seed": 80210,
   "browser": "Chrome/156.0.8078.49",
   "frames": [
@@ -11,29 +11,29 @@
       "height": 1000,
       "captureWidth": 2400,
       "captureHeight": 1000,
-      "captureSha256": "d184bc6ea92c85b36e47530ea1cc2a6df58d77bbabef9b12652feed33c6577e9",
+      "captureSha256": "3f6cec423c43fdc9de93a0b1d083b9c1976f6fc504228a7a0445c801289f0fd2",
       "budget": 163840,
       "files": [
         {
           "file": "/pond/ultrawide-1280.webp",
           "width": 1280,
           "height": 533,
-          "bytes": 41262,
-          "quality": 70
+          "bytes": 53982,
+          "quality": 53
         },
         {
           "file": "/pond/ultrawide-1920.webp",
           "width": 1920,
           "height": 800,
-          "bytes": 91456,
-          "quality": 70
+          "bytes": 122068,
+          "quality": 53
         },
         {
           "file": "/pond/ultrawide-2400.webp",
           "width": 2400,
           "height": 1000,
-          "bytes": 136322,
-          "quality": 70
+          "bytes": 163576,
+          "quality": 53
         }
       ]
     },
@@ -44,29 +44,29 @@
       "height": 900,
       "captureWidth": 1960,
       "captureHeight": 1225,
-      "captureSha256": "12810a24c405552e794bc5bed3339ccd51a6e1b2f90ab1b0c87d05ae09dd8db7",
+      "captureSha256": "1fdfbdf4fa3d86ea34f9c44a32c115741992efd84afa0b9919b778ff4a995390",
       "budget": 143360,
       "files": [
         {
           "file": "/pond/wide-960.webp",
           "width": 960,
           "height": 600,
-          "bytes": 30544,
-          "quality": 70
+          "bytes": 36608,
+          "quality": 52
         },
         {
           "file": "/pond/wide-1440.webp",
           "width": 1440,
           "height": 900,
-          "bytes": 64760,
-          "quality": 70
+          "bytes": 87488,
+          "quality": 52
         },
         {
           "file": "/pond/wide-1920.webp",
           "width": 1920,
           "height": 1200,
-          "bytes": 110822,
-          "quality": 70
+          "bytes": 142070,
+          "quality": 52
         }
       ]
     },
@@ -77,29 +77,29 @@
       "height": 900,
       "captureWidth": 1638,
       "captureHeight": 1440,
-      "captureSha256": "973431a666ee6b026f4df971b202b91771ac3ad53718238c3f92533b364b82a9",
+      "captureSha256": "390e7054bf9497bb7b9ad8d71de85f2f2def3df4290d8e1e3b7d485b1970fe83",
       "budget": 122880,
       "files": [
         {
           "file": "/pond/mid-768.webp",
           "width": 768,
           "height": 675,
-          "bytes": 26282,
-          "quality": 70
+          "bytes": 28674,
+          "quality": 48
         },
         {
           "file": "/pond/mid-1280.webp",
           "width": 1280,
           "height": 1125,
-          "bytes": 66668,
-          "quality": 70
+          "bytes": 83130,
+          "quality": 48
         },
         {
           "file": "/pond/mid-1600.webp",
           "width": 1600,
           "height": 1407,
-          "bytes": 99804,
-          "quality": 70
+          "bytes": 122224,
+          "quality": 48
         }
       ]
     },
@@ -110,22 +110,22 @@
       "height": 1024,
       "captureWidth": 1229,
       "captureHeight": 1638,
-      "captureSha256": "edbb464582dece5e22980b29f040b2c875923cc0bde5fa94ce8a2357c98ef8f0",
+      "captureSha256": "0cf70520cf2a645bc58a216f76c82e14e48027a040a4a7d4c06967ca714c4955",
       "budget": 102400,
       "files": [
         {
           "file": "/pond/tablet-768.webp",
           "width": 768,
           "height": 1024,
-          "bytes": 30950,
-          "quality": 70
+          "bytes": 44450,
+          "quality": 52
         },
         {
           "file": "/pond/tablet-1200.webp",
           "width": 1200,
           "height": 1599,
-          "bytes": 73104,
-          "quality": 70
+          "bytes": 101618,
+          "quality": 52
         }
       ]
     },
@@ -136,22 +136,22 @@
       "height": 844,
       "captureWidth": 713,
       "captureHeight": 1543,
-      "captureSha256": "9bf192f93cb6e625677b678710f45b03c93167d500f0070e73ca41ce058b5910",
+      "captureSha256": "846b51b7359321f2bccfbbc86bde64d925c0b64ebcc52b743a913123833cbaff",
       "budget": 61440,
       "files": [
         {
           "file": "/pond/phone-390.webp",
           "width": 390,
           "height": 844,
-          "bytes": 11782,
-          "quality": 70
+          "bytes": 20122,
+          "quality": 62
         },
         {
           "file": "/pond/phone-700.webp",
           "width": 700,
           "height": 1515,
-          "bytes": 35344,
-          "quality": 70
+          "bytes": 61346,
+          "quality": 62
         }
       ]
     }

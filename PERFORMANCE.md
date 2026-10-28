@@ -189,3 +189,25 @@ Les affiches actualisées pèsent 799.9 Kio au total, dont un seul fichier est t
 11.5–34.5 Kio sur téléphone, 133.1 Kio maximum en ultralarge. Les budgets restent inchangés.
 Elles représentent le premier état de jour ; la variation temporelle nécessite le moteur.
 Les vérifications sur Safari, téléphone physique et portable moyen restent à effectuer.
+
+## Soleil et lune réfléchis — 28 octobre 2026
+
+Deux disques stylisés et agrandis pour la lisibilité : soleil doré, pleine lune texturée
+par bruit et zones grises, sans texture externe. Le rayon réfléchi situe l'astre à partir
+de la même direction que les ombres. Les ondes déforment son image et produisent des glints.
+Une région de flux distincte protège le contour pendant les passes de peinture ;
+les masques de scène limitent l'ajout à l'eau libre. Aucun draw call ni render target ajouté.
+
+Validation avec/sans effet par lecture des pixels GPU : 129 493 pixels modifiés le jour,
+65 385 la nuit, dont respectivement 8 353 et 6 338 pixels de disque ; aucun pixel modifié
+sur les koï, les nénuphars ou les berges. Les captures montrent des disques reconnaissables.
+Le reflet solaire traverse la mare entre 9 h et 15 h. Les portions proches de l'horizon
+peuvent sortir du cadrage, notamment en portrait. Le cycle automatique reste de 3 minutes.
+
+Profil production 1440×900/DPR 1 sur RTX 4070 SUPER : 2 434 échantillons,
+GPU médian 2.609 ms, p95 4.344 ms, 239.97 FPS sur 10 s.
+Rapports : docs/validation/chrome-reflections-dev.json et chrome-reflections-prod.json.
+Affiches régénérées dans les budgets existants : téléphone 19.7–59.9 Kio,
+maximum 159.7 Kio en ultralarge ; qualités adaptées de 48 à 62, 1 042.3 Kio au total,
+un seul fichier chargé par visite. Les poids des sections précédentes sont historiques.
+Safari, téléphone physique et portable moyen restent à qualifier.

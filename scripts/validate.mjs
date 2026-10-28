@@ -65,7 +65,24 @@ try {
         const e=window.__pond,s=e.scene,w=s.target.width,h=s.target.height,pixels=new Uint8Array(w*h*4);
         s.renderer.readRenderTargetPixels(s.target,0,0,w,h,pixels);
         let sum=0;for(let i=0;i<pixels.length;i+=4)sum+=pixels[i]*0.2126+pixels[i+1]*0.7152+pixels[i+2]*0.0722;
+        let reflection=null;
+        if(e.hour===12||e.hour===0){
+          const mask=new Uint8Array(pixels.length),off=new Uint8Array(pixels.length),regions=new Uint8Array(pixels.length);
+          s.renderer.readRenderTargetPixels(s.opaque,0,0,w,h,mask,undefined,1);
+          s.renderer.readRenderTargetPixels(s.target,0,0,w,h,regions,undefined,1);
+          s.water.uniforms.uReflectionStrength.value=0;e.setHour(e.hour);
+          s.renderer.readRenderTargetPixels(s.target,0,0,w,h,off);
+          let changed=0,protectedPixels=0,discPixels=0;
+          for(let i=0;i<pixels.length;i+=4){
+            const delta=Math.abs(pixels[i]-off[i])+Math.abs(pixels[i+1]-off[i+1])+Math.abs(pixels[i+2]-off[i+2]);
+            if(delta>6){changed++;if(mask[i+3]>80)protectedPixels++}
+            if(Math.abs(regions[i+3]/255-0.24)<0.01)discPixels++;
+          }
+          reflection={changed,protectedPixels,discPixels,sun:s.water.uniforms.uSunVisibility.value,moon:s.water.uniforms.uMoonVisibility.value};
+          s.water.uniforms.uReflectionStrength.value=1;e.setHour(e.hour);
+        }
         return {hour:e.hour,running:e.cycleRunning,luminance:sum/(w*h),water:s.uniforms.uWater.value.toArray(),
+          reflection,
           plants:s.decoration.children.filter(m=>m.name==='shore-flowers'||m.name==='pond-algae').map(m=>m.name)};
       })()`);
       assert.equal(state.hour, hour); assert.equal(state.running, false);
@@ -76,6 +93,22 @@ try {
     assert.ok(report.lighting[3].luminance < report.lighting[1].luminance * 0.75);
     assert.ok(report.lighting[3].luminance > report.lighting[1].luminance * 0.1);
     assert.equal(new Set(report.lighting.map(s=>s.water.join(','))).size, 4);
+    for(const state of [report.lighting[1],report.lighting[3]]){
+      assert.ok(state.reflection.changed>100 && state.reflection.discPixels>100);
+      assert.equal(state.reflection.protectedPixels,0,"Celestial reflections must stay off fish, pads and banks");
+    }
+    assert.equal(report.lighting[1].reflection.sun,1);assert.equal(report.lighting[3].reflection.moon,1);
+    report.reflectionPath=[];
+    for(const hour of [9,15]){
+      await evaluate(`window.__pond.setHour(${hour})`);
+      const center=await evaluate(`(()=>{const s=window.__pond.scene,w=s.target.width,h=s.target.height,p=new Uint8Array(w*h*4);
+        s.renderer.readRenderTargetPixels(s.target,0,0,w,h,p,undefined,1);let sum=0,count=0;
+        for(let i=0;i<p.length;i+=4)if(Math.abs(p[i+3]/255-0.24)<0.01){sum+=(i/4)%w;count++}
+        return {x:sum/count,width:w,count};})()`);
+      assert.ok(center.count>100);report.reflectionPath.push({hour,...center});
+    }
+    assert.ok(report.reflectionPath[1].x-report.reflectionPath[0].x>report.reflectionPath[0].width*0.2);
+    report.checks.push("visible sun/moon discs and moving solar reflection verified by GPU pixels; fish/pads/banks untouched");
     await evaluate("window.__pond.setHour(23.99);window.__pond.toggleCycle();window.__pond.togglePause()");
     await sleep(500);
     assert.ok(await evaluate("window.__pond.hour") < 1);

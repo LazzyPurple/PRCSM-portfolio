@@ -18,6 +18,7 @@ export const palette = {
     charcoal: "#424c4a",
   },
   shadow: "#203b36",
+  reflection: { sun: "#ffda91", sunCore: "#fff3ce", moon: "#dbe8ef", moonShade: "#8196ac" },
   bottom: { silt: "#7e8f70", pebble: "#b0b39b", algae: "#314f3f" },
   bank: { dark: "#525f4c", light: "#a1a48a", grass: "#637b45", tip: "#b4b876" },
   lily: { dark: "#365b35", light: "#91a15d", vein: "#b3ba75" },

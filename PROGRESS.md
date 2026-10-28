@@ -166,3 +166,27 @@ du rendu scène : jour 120.98/255, nuit 55.25/255, soit 46 % environ.
 Profil production 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 2.826 ms,
 p95 3.678 ms, 239.87 FPS sur 10 s. Preuves : docs/validation/chrome-cycle-{dev,prod}.json.
 Safari, téléphone physique et portable moyen restent non qualifiés.
+
+## Disques réfléchis du soleil et de la lune — 28 octobre 2026
+
+Le soleil est reconnaissable comme un disque doré, la lune comme un disque pâle
+avec des zones grises et du grain procédural. Leurs reflets suivent la direction lumineuse,
+avec une déformation modérée par les ondes et des bandes mouvantes à la surface.
+Les miroitements utilisent les normales complètes de l'eau autour du disque.
+La trajectoire lumineuse passe du côté opposé de la mare pour rendre le reflet visible ;
+les ombres suivent la même direction. Un remplissage frontal adoucit le relief de peinture.
+
+Le disque a sa propre région de touches pour rester lisible dans la gouache.
+L'effet est limité à l'eau libre : il ne recouvre ni les motifs des koï, ni les nénuphars,
+ni les berges. Disques et miroitements sont calculés dans la passe d'eau existante,
+sans image de ciel, texture lunaire externe, nouveau maillage ni cible GPU.
+Les apparitions/disparitions suivent le cycle de 180 s ; le cadrage peut masquer l'astre
+quand il est bas. Les 13 affiches ont été actualisées.
+
+20 tests CPU/actifs et 16 scénarios Chrome dev passent, ainsi que typecheck/lint/build.
+Comparaison GPU avec/sans effet : 8 353 pixels de disque solaire et 6 338 lunaires,
+zéro pixel de poisson/nénuphar/berge modifié par le reflet. Le centre du reflet solaire
+se déplace de x=302 à x=1 147 entre 9 h et 15 h sur un viewport 1440×900.
+Profil prod RTX 4070 SUPER : médiane GPU 2.609 ms, p95 4.344 ms, 239.97 FPS.
+Preuves : docs/validation/chrome-reflections-{dev,prod}.json ; captures cycle-day/night.
+Safari, mobile physique et portable moyen restent non qualifiés.

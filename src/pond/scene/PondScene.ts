@@ -24,6 +24,7 @@ const MAX_BITES = 24;
 const PELLET_RADIUS = 0.045;
 const PELLET_MIN_PIXELS = 3.5;
 const PELLET_FLOAT_HEIGHT = 0.025;
+const PAINT_LIGHT_FILL = 0.65;
 
 export class PondScene {
   mrtReady = false;
@@ -170,6 +171,8 @@ export class PondScene {
     this.uniforms.uWater.value.copy(this.daylight.water);
     this.uniforms.uAmbient.value = this.daylight.ambient;
     this.uniforms.uShadowStrength.value = this.daylight.shadow;
+    this.water.uniforms.uSunVisibility.value = this.daylight.sunVisibility;
+    this.water.uniforms.uMoonVisibility.value = this.daylight.moonVisibility;
     this.sun.position.copy(this.uniforms.uLight.value).multiplyScalar(20);
     this.sun.color.copy(this.uniforms.uLightColor.value);
     this.hemisphere.intensity = this.daylight.ambient;
@@ -213,7 +216,8 @@ export class PondScene {
     }
     if (view === "final" || view === "paint") {
       this.screenLight.copy(this.uniforms.uLight.value).transformDirection(this.camera.matrixWorldInverse);
-      this.screenLight.z = Math.abs(this.screenLight.z);
+      // Keep a frontal fill on the painted relief when the scene light moves behind the pond.
+      this.screenLight.z = Math.max(PAINT_LIGHT_FILL, Math.abs(this.screenLight.z));
       this.screenLight.normalize();
       const result = this.paint.render(this.target.textures[0], this.target.textures[1], this.width, this.height, dt,
         world.time, pointer, this.screenLight, this.uniforms.uLightColor.value, view);
