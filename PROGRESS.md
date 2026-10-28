@@ -348,3 +348,32 @@ suivant et retour, HTML prérendu. Régression mobile 390×844, 320×740, 768×1
 844×390 : aimantation par projet, menu animé, clavier et reduced motion passent.
 Aucun log d'erreur navigateur. Rapports : docs/validation/chrome-cephalee*.json.
 Les contrôles portent sur Chrome Windows ; Safari et téléphone physique non vérifiés.
+
+## 2026-10-28 — Mousse, projet personnel du quotidien
+
+Intervalle est remplacé par Mousse dans la sélection, la route /projects/mousse et
+les liens précédent/suivant. La dernière précision de Nathan guide le récit : projet
+personnel utilisé quotidiennement comme assistant IA sur Mac, plutôt que cas de
+produit commercial. La page décrit l'encoche, l'IA locale Gemma E4B à 12B selon la
+configuration, les actions et la navigation web, les rappels/habitudes/widgets et le
+second brain. Aucun entretien, résultat d'adoption ou benchmark matériel n'est inventé.
+Le récit reprend les indications actuelles de Nathan ; ce travail ne modifie pas
+l'application Mousse elle-même.
+
+Les cinq visuels fournis sont conservés sans recadrage dans le récit, encodés en
+WebP à leurs dimensions originales (2 005 238 octets au total). Le visuel des trois
+formats de l'encoche reste en 3840×2880 ; Next Image sert des tailles responsives.
+Les quatre figures s'ouvrent en grand. Le bandeau utilise un point de cadrage propre
+à la photo de Mousse pour garder l'encoche visible ; les cadrages des autres cas sont
+conservés. Aucun changement du moteur de la mare ni nouvelle dépendance.
+
+Les tirets cadratins du paragraphe signalé de Céphalée sont retirés, ainsi que ceux
+des liens et libellés du récit. Boussole reste le seul placeholder fictif.
+
+Vérification : typecheck, lint, 23 tests et build standard Turbopack passent. Chrome :
+Mousse et Céphalée à 1440/390/320 px, clair et sombre, images intégrales chargées,
+ouverture en grand, aucun débordement, navigation précédent/suivant et retour à la
+landing, prérendu des trois routes et 404 inconnu. Version de production de Mousse
+contrôlée avec et sans JavaScript, thème sombre initial et aucune erreur navigateur.
+Rapport : docs/validation/chrome-mousse.json. Captures : artifacts/portfolio-v2/mousse*
+et artifacts/mousse-production/. Safari et téléphone physique non vérifiés.

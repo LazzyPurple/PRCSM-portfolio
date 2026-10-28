@@ -96,8 +96,8 @@ articles mobiles sont propres à cette adaptation.
 L'icône `public/icons/squares-four.svg` est le fichier fourni par Nathan, conservé sans
 modification et utilisé comme masque CSS pour suivre la couleur du thème.
 
-Les projets Intervalle et Boussole sont entièrement fictifs. Lisière était le premier
-placeholder, désormais remplacé par Céphalée. Les visuels des placeholders ont été
+Le projet Boussole est entièrement fictif. Lisière et Intervalle étaient les premiers
+placeholders, désormais remplacés par Céphalée et Mousse. Les visuels des placeholders ont été
 générés avec l'outil intégré `image_gen`, puis encodés en WebP.
 Les prompts et les chemins des fichiers sont consignés dans
 [docs/portfolio-assets.md](docs/portfolio-assets.md).
@@ -106,3 +106,8 @@ Les cinq visuels de Céphalée et les faits relatifs au projet ont été fournis
 Les images sont encodées en WebP, sans recadrage ni génération de contenu. La provenance
 et les sources documentaires du cas sont consignées dans
 [docs/cephalee-sources.md](docs/cephalee-sources.md).
+
+Les cinq visuels de Mousse et la description de son usage personnel quotidien ont été
+fournis par Nathan. Les images sont encodées en WebP à leurs dimensions originales,
+sans recadrage ni génération de contenu. Leur provenance figure dans
+[docs/mousse-assets.md](docs/mousse-assets.md).

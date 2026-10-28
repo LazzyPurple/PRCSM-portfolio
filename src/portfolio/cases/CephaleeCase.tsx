@@ -44,7 +44,7 @@ export default function CephaleeCase() {
       <section aria-labelledby="cephalee-research">
         <h2 id="cephalee-research" className={HEADING}>Confronter le constat aux usages</h2>
         <p className={BODY}>J’ai conduit un sondage auprès de la cible pour confronter ces constats à nos propres utilisateurs : démographie, diagnostic et attentes vis-à-vis d’un outil de suivi. En parallèle, j’ai mené un benchmark fonctionnel de Migraine Buddy, Apo et Manage My Pain.</p>
-        <p className={`${BODY} mt-5`}>Ce travail a servi à distinguer les besoins de deux publics — les patients et les professionnels de santé — et à cadrer un périmètre pour chacun. J’ai ensuite dessiné les parcours et les écrans des deux interfaces, du rapport de crise au tableau de bord praticien.</p>
+        <p className={`${BODY} mt-5`}>Ce travail a servi à distinguer les besoins des patients et des professionnels de santé, puis à cadrer un périmètre pour chacun. J’ai ensuite dessiné les parcours et les écrans des deux interfaces, du rapport de crise au tableau de bord praticien.</p>
       </section>
 
       <section aria-labelledby="cephalee-decision">
@@ -64,7 +64,7 @@ export default function CephaleeCase() {
         <div className="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2">
           {screens.map(screen => (
             <figure key={screen.file}>
-              <a href={`/projects/cephalee/${screen.file}.webp`} target="_blank" rel="noreferrer" aria-label={`${screen.title} — ouvrir la capture en grand (nouvel onglet)`} className="block rounded-[6px] focus-visible:outline-2 focus-visible:outline-offset-4">
+              <a href={`/projects/cephalee/${screen.file}.webp`} target="_blank" rel="noreferrer" aria-label={`${screen.title} : ouvrir la capture en grand (nouvel onglet)`} className="block rounded-[6px] focus-visible:outline-2 focus-visible:outline-offset-4">
                 <Image src={`/projects/cephalee/${screen.file}.webp`} alt={screen.alt} width={1067} height={1600} sizes="(min-width: 1024px) 27rem, (min-width: 640px) 50vw, 100vw" className="block h-auto w-full rounded-[6px]" />
               </a>
               <figcaption className="mt-5"><h3 className="mb-2 text-[16px] font-medium">{screen.title}</h3><p className={`${BODY} text-[14px]`}>{screen.caption}</p></figcaption>
@@ -76,7 +76,7 @@ export default function CephaleeCase() {
       <section aria-labelledby="cephalee-privacy">
         <h2 id="cephalee-privacy" className={HEADING}>Intégrer les données de santé au cadrage</h2>
         <p className={BODY}>J’ai également étudié le cadre réglementaire : RGPD, obligations françaises, formalités CNIL applicables et conditions d’un hébergement certifié HDS. Ces contraintes ont été étudiées au stade de la conception.</p>
-        <p className="mt-4 text-[12px] leading-[1.6] text-[var(--muted-color)]">Repères : <a className={SOURCE} href="https://www.cnil.fr/fr/quelles-formalites-pour-les-traitements-de-donnees-de-sante">CNIL — formalités selon le traitement</a> · <a className={SOURCE} href="https://esante.gouv.fr/labels-certifications/hebergement-des-donnees-de-sante">Agence du Numérique en Santé — hébergement HDS</a>.</p>
+        <p className="mt-4 text-[12px] leading-[1.6] text-[var(--muted-color)]">Repères : <a className={SOURCE} href="https://www.cnil.fr/fr/quelles-formalites-pour-les-traitements-de-donnees-de-sante">CNIL : formalités selon le traitement</a> · <a className={SOURCE} href="https://esante.gouv.fr/labels-certifications/hebergement-des-donnees-de-sante">Agence du Numérique en Santé : hébergement HDS</a>.</p>
       </section>
     </div>
   );

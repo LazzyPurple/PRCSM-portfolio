@@ -132,16 +132,40 @@ try {
   const caseHtml = await fetch(url+"/projects/cephalee").then(response=>response.text());
   assert.ok(caseHtml.includes("Deux interfaces, un même fil de suivi."));
   assert.ok(caseHtml.includes("/projects/cephalee/partage.webp"));
+  assert.equal(await evaluate("document.querySelector('main').textContent.includes('—')"),false);
   report.checks.push("Céphalée: real cover, four uncropped supplied screens, full-size links, external sources, server-rendered decision narrative; 1440/390/320 px, dark/light, no overflow");
   await evaluate("document.querySelector('.project-pager').scrollIntoView({behavior:'instant'})");
-  await click('.project-pager a[href="/projects/intervalle"]');
-  await waitFor("location.pathname==='/projects/intervalle' && document.querySelector('h1')?.textContent==='Intervalle'");
+  await click('.project-pager a[href="/projects/mousse"]');
+  await waitFor("location.pathname==='/projects/mousse' && document.querySelector('h1')?.textContent==='Mousse'");
   await waitFor("!document.documentElement.dataset.transition");
+  for (const [width,height,theme] of [[1440,900,"dark"],[390,844,"dark"],[390,844,"light"],[320,740,"dark"]]) {
+    await page("Emulation.setDeviceMetricsOverride",{width,height,deviceScaleFactor:1,mobile:width<1024});
+    await evaluate(`document.documentElement.dataset.theme=${JSON.stringify(theme)};window.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('main img').forEach(el=>el.loading='eager')`);
+    await waitFor("[...document.querySelectorAll('main img')].every(el=>el.complete && el.naturalWidth>0)");
+    const story = await evaluate(`({width:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,
+      title:document.querySelector('h1').textContent,note:document.querySelector('main header').textContent,
+      body:document.querySelector('main').textContent,fullViews:document.querySelectorAll('figure a[target="_blank"]').length,
+      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.width/el.height,sourceRatio:Number(el.getAttribute('width'))/Number(el.getAttribute('height')),fit:getComputedStyle(el).objectFit}))})`);
+    assert.equal(story.client,story.scroll); assert.equal(story.title,"Mousse");
+    assert.ok(story.note.includes("projet personnel") && story.note.includes("quotidien"));
+    assert.ok(!story.note.includes("fictif")); assert.equal(story.fullViews,4); assert.equal(story.screens.length,4);
+    assert.ok(story.screens.every(screen=>screen.alt.length>30 && Math.abs(screen.ratio-screen.sourceRatio)<0.005 && screen.fit!=="cover"));
+    assert.ok(story.body.includes("Gemma E4B") && story.body.includes("Gemma 12B") && story.body.includes("second brain"));
+    assert.ok(!story.body.includes("—"));
+    report.cases.push({width,height,theme,...story});
+    await capture(`mousse-${width}-${theme}-intro`);
+    await capture(`mousse-${width}-${theme}`,true);
+  }
+  const mousseHtml = await fetch(url+"/projects/mousse").then(response=>response.text());
+  assert.ok(mousseHtml.includes("Un projet qui part de mon quotidien"));
+  assert.ok(mousseHtml.includes("/projects/mousse/second-brain.webp"));
+  report.checks.push("Mousse: personal daily-use project, five supplied visuals, four uncropped full-size figures, local Gemma, reminders/habits/widgets/second brain; 1440/390/320 px, dark/light, server-rendered story, no overflow; Céphalée em dashes removed");
+  await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
   await click('.project-page main header a[href="/#projets"]');
   await waitFor("location.pathname==='/' && location.hash==='#projets' && Math.abs(document.querySelector('#projets').getBoundingClientRect().top)<2");
   assert.ok(await evaluate("document.querySelector('canvas')!==null"));
   report.checks.push("Real project routes, previous/next, gallery return, engine disposal, persistent theme across reload and navigation");
-  for(const slug of ["cephalee","intervalle","boussole"]) assert.equal((await fetch(url+"/projects/"+slug)).status,200);
+  for(const slug of ["cephalee","mousse","boussole"]) assert.equal((await fetch(url+"/projects/"+slug)).status,200);
   assert.equal((await fetch(url+"/projects/unknown")).status,404);
   await page("Emulation.setScriptExecutionDisabled",{value:true}); await page("Page.navigate",{url}); await sleep(900);
   assert.equal(await evaluate("document.documentElement.dataset.theme"),"dark");

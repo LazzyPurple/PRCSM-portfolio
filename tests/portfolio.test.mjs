@@ -32,12 +32,22 @@ test("project covers preserve their dimensions and distinguish the real case fro
   }
   assert.equal(projects[0].slug, "cephalee");
   assert.equal(projects[0].label, "Cadrage & conception");
-  assert.ok(projects.slice(1).every(project => project.label === "Concept fictif"));
+  assert.equal(projects[1].slug, "mousse");
+  assert.equal(projects[1].label, "Projet personnel");
+  assert.ok(projects[1].note.includes("Utilisé au quotidien"));
+  assert.equal(projects[2].label, "Concept fictif");
   for (const screen of ["resume", "rapport", "intensite", "partage"]) {
     const image = await sharp(`public/projects/cephalee/${screen}.webp`).metadata();
     assert.equal(image.format, "webp");
     assert.equal(image.width, 1067);
     assert.equal(image.height, 1600);
+    assert.equal(image.hasAlpha, true);
+  }
+  for (const screen of ["journee", "conversation", "encoche", "second-brain"]) {
+    const image = await sharp(`public/projects/mousse/${screen}.webp`).metadata();
+    assert.equal(image.format, "webp");
+    assert.equal(image.width, screen === "encoche" ? 3840 : 1600);
+    assert.equal(image.height, screen === "encoche" ? 2880 : 1067);
     assert.equal(image.hasAlpha, true);
   }
 });

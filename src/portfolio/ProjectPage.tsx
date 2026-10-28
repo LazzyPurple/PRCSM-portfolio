@@ -68,7 +68,7 @@ export default function ProjectPage({ project, children }: { project: Project; c
       <a className="skip-link" href="#project-content">Aller au projet</a>
       <div className="pt-20 lg:pt-0">
         <div ref={coverRef} className="relative h-[clamp(180px,26vw,440px)] w-full overflow-hidden">
-          <Image src={project.cover.src} alt="" fill preload sizes="100vw" className="object-cover object-[78%_35%]" />
+          <Image src={project.cover.src} alt="" fill preload sizes="100vw" className="object-cover" style={{ objectPosition: project.cover.position }} />
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(to_bottom,transparent,var(--background-color))]" />
         </div>
       </div>

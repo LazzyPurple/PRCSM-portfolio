@@ -4,11 +4,11 @@ export const contact = {
   email: "nathan.toto@proton.me",
 };
 
-// The remaining fictional cases will be replaced with Mousse and CareerOS.
+// The remaining fictional case will be replaced with CareerOS.
 export const projects = [
   {
     slug: "cephalee", name: "Céphalée", category: "Santé · Application mobile & interface praticien",
-    cover: { src: "/projects/cephalee/cover.webp", width: 1600, height: 1067 },
+    cover: { src: "/projects/cephalee/cover.webp", width: 1600, height: 1067, position: "78% 35%" },
     label: "Cadrage & conception",
     note: "Recherche utilisateur · Benchmark · Périmètre produit · Parcours & écrans",
     alt: "Céphalée : un téléphone posé sur un bureau ensoleillé présente l’accueil de l’application et sa mascotte violette.",
@@ -16,19 +16,17 @@ export const projects = [
     problem: "Céphalée permet de consigner ses maux de tête pour en partager le suivi avec son praticien. J’ai travaillé sur la recherche utilisateur, le cadrage fonctionnel et la conception des parcours, avec une décision centrale : penser ensemble l’expérience du patient et celle du professionnel de santé.",
   },
   {
-    slug: "intervalle", name: "Intervalle", category: "Services · Réservation",
-    cover: { src: "/projects/intervalle.webp", width: 1536, height: 1024 },
-    label: "Concept fictif",
-    note: "Concept fictif · scénario de démonstration, sans résultat réel revendiqué.",
-    alt: "Concept d’un calendrier de réservation d’ateliers, dans une composition lilas et terre cuite.",
-    description: "Passer de « j’aimerais essayer » à son premier atelier créatif, sans détour.",
-    problem: "Entre les horaires, les places disponibles et le niveau attendu, réserver un atelier peut devenir plus compliqué que prévu. Ce cas fictif part de cette hésitation.",
-    approach: "Cartographier le parcours avec les participants et les animateurs, puis construire un premier périmètre centré sur la disponibilité, le bon niveau et une réservation explicite.",
-    validation: "Observer des réservations sur prototype, vérifier la compréhension des conditions et confronter le parcours aux contraintes réelles des animateurs avant d’élargir le service.",
+    slug: "mousse", name: "Mousse", category: "Projet personnel · Assistant IA sur Mac",
+    cover: { src: "/projects/mousse/cover.webp", width: 1600, height: 1067, position: "50% 10%" },
+    label: "Projet personnel",
+    note: "IA locale · Compagnon dans l’encoche · Utilisé au quotidien",
+    alt: "Mousse dans l’encoche d’un MacBook posé dans un café, avec les commandes musicales ouvertes au-dessus du bureau.",
+    description: "Un compagnon IA local, à portée d’encoche.",
+    problem: "Mousse est un projet personnel que j’utilise au quotidien comme assistant IA sur Mac. Il vit dans l’encoche de l’écran et rassemble la conversation, la navigation web, les actions sur l’ordinateur et les outils qui m’aident à organiser ma journée.",
   },
   {
     slug: "boussole", name: "Boussole", category: "Équipes produit · Outil collaboratif",
-    cover: { src: "/projects/boussole.webp", width: 1536, height: 1024 },
+    cover: { src: "/projects/boussole.webp", width: 1536, height: 1024, position: "78% 35%" },
     label: "Concept fictif",
     note: "Concept fictif · scénario de démonstration, sans résultat réel revendiqué.",
     alt: "Concept d’une feuille de route produit, avec des cartes crème, corail et ambre sur un fond vert profond.",
