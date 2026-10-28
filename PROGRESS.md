@@ -190,3 +190,35 @@ se déplace de x=302 à x=1 147 entre 9 h et 15 h sur un viewport 1440×900.
 Profil prod RTX 4070 SUPER : médiane GPU 2.609 ms, p95 4.344 ms, 239.97 FPS.
 Preuves : docs/validation/chrome-reflections-{dev,prod}.json ; captures cycle-day/night.
 Safari, mobile physique et portable moyen restent non qualifiés.
+
+## Portfolio onepage — 28 octobre 2026
+
+Public prioritaire : recruteurs, avec une lecture accessible aux autres équipes produit.
+Le hero présente Nathan Toto, Product Owner, avec un grand titre sombre le jour et crème
+la nuit, synchronisé au cycle existant de 180 s sans rendu React à chaque image.
+Un voile discret assure la lisibilité devant les poissons et la végétation.
+La transition vers les projets utilise une bordure SVG originale de papier peint.
+
+Le header comporte La mare, Mes projets, LinkedIn, GitHub et Contact. Les profils fournis
+sont branchés ; l'adresse e-mail reste à fournir. En attendant, Contact rejoint le pied
+de page et propose LinkedIn, sans inventer d'adresse.
+Pas de page À propos. Les liens internes défilent doucement, sauf mouvement réduit.
+
+La galerie reprend la disposition de Dao : grandes images côte à côte sur ordinateur,
+puis liste sur mobile. Le défilement horizontal reste local et natif ; aucune capture
+globale de la molette. Les cas se lisent dans des détails HTML accessibles, sans changer
+de page et même sans JavaScript. Les trois cas Lisière, Intervalle et Boussole et leurs
+visuels sont explicitement fictifs ; Mousse, Céphalée et CareerOS ne reçoivent aucun faux
+résultat. Les contenus sont regroupés dans src/portfolio/content.ts et les prompts dans
+docs/portfolio-assets.md. Les trois WebP totalisent 310 306 octets.
+
+22 tests, typecheck, lint et compilation production passent. Contrôles Chrome aux formats
+1440×900, 390×844, 320×740 et 844×390 : aucun débordement horizontal, navigation, cas,
+galerie mobile/desktop, pause réelle hors écran, reprise et mouvement réduit vérifiés.
+108 contrôles de contraste sur captures : minimum 5,36:1 pour le titre, 7,23:1 pour les
+petits textes du hero, aux phases testées (0, 6, 12 et 18 h sur desktop et mobile).
+Ces mesures couvrent les images capturées, pas chaque état possible de la simulation.
+Les 16 scénarios de régression de la mare et les cinq cadrages sans JavaScript passent.
+Production : médiane GPU 2,670 ms, p95 3,606 ms, 239,97 FPS sur RTX 4070 SUPER,
+viewport 1440×900, canvas 1425×900, DPR 1 ; téléphone physique et portable moyen non testés.
+Rapports : docs/validation/chrome-portfolio*.json. Captures : artifacts/portfolio/.

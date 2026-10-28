@@ -55,7 +55,7 @@ export class PondEngine {
     this.schedule();
   });
 
-  constructor(private canvas: HTMLCanvasElement, readonly debug: boolean) {
+  constructor(private canvas: HTMLCanvasElement, readonly debug: boolean, private onHour?: (hour: number) => void) {
     this.scene = new PondScene(canvas);
     if (debug) {
       this.debugCanvas = document.createElement("canvas");
@@ -155,6 +155,7 @@ export class PondEngine {
 
   private draw(dt = 0) {
     if (this.lost || this.disposed) return;
+    this.onHour?.(this.hour);
     if (this.ctx && this.view === "simulation") {
       drawSimulation(this.ctx, this.world, this.width, this.height);
       if (this.debugCanvas && this.debugCanvas.dataset.ready !== "true") this.debugCanvas.dataset.ready = "true";
@@ -222,7 +223,7 @@ export class PondEngine {
     this.pointerAt = e.timeStamp;
     p.x = x;
     p.y = y;
-    p.active = this.world.contains(x, y) && e.pointerType !== "touch";
+    p.active = this.screenPointer.active && this.world.contains(x, y);
   };
   private onDown = (e: PointerEvent) => {
     this.down.x = e.clientX;

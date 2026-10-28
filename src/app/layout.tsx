@@ -4,8 +4,8 @@ import { palette } from "@/pond/palette";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "La mare — Portfolio",
-  description: "Une mare de koï peinte et interactive, générée en code.",
+  title: "Nathan Toto — Product Owner",
+  description: "Du besoin au produit : le portfolio de Nathan Toto, Product Owner. Une sélection de projets au fil de l’eau.",
   icons: { icon: `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="${palette.water.deep}"/><ellipse cx="16" cy="16" rx="5" ry="10" fill="${palette.koi.white}"/><circle cx="16" cy="11" r="3" fill="${palette.koi.vermilion}"/></svg>`)}` },
 };
 
@@ -15,6 +15,11 @@ const colors = {
   "--water-deep": palette.water.deep,
   "--paper": palette.paper,
   "--ink": palette.ink,
+  "--portfolio-ink": palette.portfolio.ink,
+  "--muted": palette.portfolio.muted,
+  "--project-sage": palette.portfolio.sage,
+  "--project-lilac": palette.portfolio.lilac,
+  "--project-forest": palette.portfolio.forest,
 } as CSSProperties;
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -1,0 +1,972 @@
+{
+  "contrast": [
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 13.33
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "La mare",
+      "minimum": 13.35
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "Mes projets",
+      "minimum": 12.5
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 13.01
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 12.85
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "Contact ↗",
+      "minimum": 12.83
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "Du besoin au produit",
+      "minimum": 12.01
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "De l’idée",
+      "minimum": 8.96
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "à l’usage.",
+      "minimum": 8.8
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 10.34
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 0,
+      "tone": "night",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 11.53
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 12.99
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "La mare",
+      "minimum": 12.98
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "Mes projets",
+      "minimum": 11.58
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 11.99
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 11.84
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "Contact ↗",
+      "minimum": 11.68
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "Du besoin au produit",
+      "minimum": 10.62
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "De l’idée",
+      "minimum": 8.51
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "à l’usage.",
+      "minimum": 6.06
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 7.89
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 6,
+      "tone": "night",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 8.79
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 12.35
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "La mare",
+      "minimum": 11.71
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "Mes projets",
+      "minimum": 11.13
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 9.77
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 9.44
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "Contact ↗",
+      "minimum": 9.57
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "Du besoin au produit",
+      "minimum": 9.45
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "De l’idée",
+      "minimum": 7.65
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "à l’usage.",
+      "minimum": 7.8
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 8.08
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 12,
+      "tone": "day",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 8.35
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 12.21
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "La mare",
+      "minimum": 11.49
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "Mes projets",
+      "minimum": 10.66
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 9.16
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 8.94
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "Contact ↗",
+      "minimum": 9.23
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "Du besoin au produit",
+      "minimum": 9.04
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "De l’idée",
+      "minimum": 7.09
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "à l’usage.",
+      "minimum": 7.4
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 7.72
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "hour": 18,
+      "tone": "day",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 7.83
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 10.65
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "La mare",
+      "minimum": 11.36
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "Mes projets",
+      "minimum": 10.88
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 10.93
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 10.93
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "Contact ↗",
+      "minimum": 11.21
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "Du besoin au produit",
+      "minimum": 11.5
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "De l’idée",
+      "minimum": 5.36
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "à l’usage.",
+      "minimum": 5.36
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 11.07
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 0,
+      "tone": "night",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 11.71
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 8.39
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "La mare",
+      "minimum": 9.1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "Mes projets",
+      "minimum": 8.9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 8.76
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 8.76
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "Contact ↗",
+      "minimum": 8.96
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "Du besoin au produit",
+      "minimum": 8.89
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "De l’idée",
+      "minimum": 8.85
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "à l’usage.",
+      "minimum": 7.34
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 9.2
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 6,
+      "tone": "night",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 9.05
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 7.91
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "La mare",
+      "minimum": 8.29
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "Mes projets",
+      "minimum": 9.18
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 8.71
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 9.03
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "Contact ↗",
+      "minimum": 8.96
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "Du besoin au produit",
+      "minimum": 8.72
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "De l’idée",
+      "minimum": 8.4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "à l’usage.",
+      "minimum": 7.75
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 8.04
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 12,
+      "tone": "day",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 8.2
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 7.23
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "La mare",
+      "minimum": 7.61
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "Mes projets",
+      "minimum": 8.39
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 7.86
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 8.24
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "Contact ↗",
+      "minimum": 8.18
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "Du besoin au produit",
+      "minimum": 8.24
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "De l’idée",
+      "minimum": 7.56
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "à l’usage.",
+      "minimum": 7.19
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 7.57
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "hour": 18,
+      "tone": "day",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 7.57
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 7.76
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "La mare",
+      "minimum": 8.87
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "Mes projets",
+      "minimum": 8.81
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 8.62
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 8.96
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "Contact ↗",
+      "minimum": 8.96
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "Du besoin au produit",
+      "minimum": 8.68
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "De l’idée",
+      "minimum": 8.35
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "à l’usage.",
+      "minimum": 8.09
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "Product Owner, je relie les besoins, les décisions et les équipes pour faire avancer des produits utiles.",
+      "minimum": 8.35
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "hour": 12,
+      "tone": "day",
+      "text": "Découvrir mes projets ↓",
+      "minimum": 8.51
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "Nathan TotoProduct Owner",
+      "minimum": 12.31
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "La mare",
+      "minimum": 12.43
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "Mes projets",
+      "minimum": 12.29
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "LinkedIn ↗ (nouvel onglet)",
+      "minimum": 9.89
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "GitHub ↗ (nouvel onglet)",
+      "minimum": 9.6
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "Contact ↗",
+      "minimum": 9.6
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "Du besoin au produit",
+      "minimum": 10.69
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "De l’idée",
+      "minimum": 7.58
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "hour": 12,
+      "tone": "day",
+      "text": "à l’usage.",
+      "minimum": 7.62
+    }
+  ],
+  "layouts": [
+    {
+      "width": 1440,
+      "height": 900,
+      "clientWidth": 1425,
+      "documentWidth": 1425,
+      "headings": 1,
+      "links": [
+        "#mare",
+        "#projets",
+        "https://www.linkedin.com/in/nathan-toto/",
+        "https://github.com/LazzyPurple",
+        "#contact"
+      ],
+      "hero": 900
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "clientWidth": 375,
+      "documentWidth": 375,
+      "headings": 1,
+      "links": [
+        "#mare",
+        "#projets",
+        "https://www.linkedin.com/in/nathan-toto/",
+        "https://github.com/LazzyPurple",
+        "#contact"
+      ],
+      "hero": 844
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "clientWidth": 305,
+      "documentWidth": 305,
+      "headings": 1,
+      "links": [
+        "#mare",
+        "#projets",
+        "https://www.linkedin.com/in/nathan-toto/",
+        "https://github.com/LazzyPurple",
+        "#contact"
+      ],
+      "hero": 808.6875
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "clientWidth": 829,
+      "documentWidth": 829,
+      "headings": 1,
+      "links": [
+        "#mare",
+        "#projets",
+        "https://www.linkedin.com/in/nathan-toto/",
+        "https://github.com/LazzyPurple",
+        "#contact"
+      ],
+      "hero": 718.5
+    }
+  ],
+  "checks": [
+    "No horizontal page overflow at 320, 390, 844 and 1440px; 5 header links; desktop strip and mobile list; cases expand; pond pauses offscreen and resumes",
+    "Reduced motion stops the pond and disables smooth scrolling",
+    "Hero, poster, links and cases work without JavaScript"
+  ],
+  "errors": [],
+  "reducedState": {
+    "gpu": {
+      "count": 56,
+      "median": 2.371584,
+      "p95": 3.64544
+    },
+    "cpu": {
+      "count": 57,
+      "median": 0.30000000447034836,
+      "p95": 0.7999999970197678
+    },
+    "gpuName": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 SUPER (0x00002783) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "timerAvailable": true,
+    "scale": 1,
+    "width": 829,
+    "height": 719,
+    "cssWidth": 829,
+    "cssHeight": 718.5,
+    "memory": {
+      "geometries": 12,
+      "textures": 8
+    },
+    "calls": 1,
+    "fps": 223.38231994616385,
+    "koi": 3,
+    "pellets": 0,
+    "time": 4.19999999999999,
+    "hour": 12,
+    "cycleRunning": false,
+    "cycleSeconds": 180,
+    "reduced": true,
+    "raf": 0,
+    "visible": true,
+    "hidden": false,
+    "disposed": false
+  }
+}

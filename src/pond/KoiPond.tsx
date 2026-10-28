@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import type { PondEngine } from "./engine";
 import type { ComponentType } from "react";
 import posters from "./posters.json";
+import { heroTone } from "@/portfolio/tone";
 
 const posterSources = posters.frames.map(frame => ({ ...frame, srcSet: frame.files.map(file => `${file.file} ${file.width}w`).join(", ") }));
 const phonePoster = posterSources[posterSources.length - 1];
@@ -32,7 +33,11 @@ export default function KoiPond() {
         const { PondEngine } = await import("./engine");
         if (cancelled) return;
         const isDebug = process.env.NODE_ENV === "development" && new URLSearchParams(location.search).has("debug");
-        engine = new PondEngine(canvas, isDebug);
+        const hero = canvas.closest<HTMLElement>("[data-pond-hero]");
+        engine = new PondEngine(canvas, isDebug, hour => {
+          const tone = heroTone(hour);
+          if (hero && hero.dataset.tone !== tone) hero.dataset.tone = tone;
+        });
         if (isDebug) {
           const { default: Panel } = await import("./debug/DebugPanel");
           if (!cancelled && engine) setDebug({ Panel, engine });

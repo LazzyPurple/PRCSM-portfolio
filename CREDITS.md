@@ -64,3 +64,17 @@ sans texte ni panneau de debug ; `src/pond/posters.json` consigne leur provenanc
 
 Les images, textures, palettes, modèles de terrain, personnages et analytics d'Ardia
 ne sont pas repris. La palette de cette mare et ses éléments visuels sont propres au projet.
+
+## Composition du portfolio
+
+Le grand titre et l'organisation du hero s'inspirent de
+`apps/site/src/components/Hero.astro` dans Ardia. La galerie horizontale sur ordinateur,
+avec image, nom et description, puis sa disposition verticale mobile, s'inspirent de
+`src/app/projects/page.tsx` dans le portfolio de Dao Ho.
+Le HTML et le CSS du portfolio sont écrits pour cette page ; le défilement reste natif,
+sans reprendre le gestionnaire de molette global de Dao.
+
+Les trois projets Lisière, Intervalle et Boussole sont entièrement fictifs.
+Leurs visuels ont été générés avec l'outil intégré `image_gen`, puis encodés en WebP.
+Les prompts et les chemins des fichiers sont consignés dans
+[docs/portfolio-assets.md](docs/portfolio-assets.md).
