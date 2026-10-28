@@ -1,6 +1,7 @@
 /references/
 /node_modules/
 /.next/
+/.netlify/
 /out/
 /coverage/
 *.tsbuildinfo

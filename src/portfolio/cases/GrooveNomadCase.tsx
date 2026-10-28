@@ -2,13 +2,24 @@ import Image from "next/image";
 
 const HEADING = "mb-4 text-[20px] font-medium leading-[1.4] tracking-[-0.015em]";
 const BODY = "text-[16px] leading-[1.7] text-[var(--muted-color)] [text-wrap:pretty]";
-const slides = [
+const screens = [
   {
-    file: "fonctionnalites", width: 1987, height: 1102,
-    title: "Du goût musical à une proposition de séjour",
-    alt: "Périmètre GrooveNomad : assistance IA, parcours bilingue, recommandations de festivals via Spotify et circuits personnalisés.",
-    caption: "Le périmètre envisagé associe un chatbot de recommandation, des devis PDF, un catalogue de festivals et des séjours combinant festival, hébergement et activités. Le parcours est pensé pour le mobile, en français et en anglais.",
+    file: "itineraire", title: "Composer un itinéraire avec l’IA",
+    alt: "GrooveNomad : conversation avec l’assistant et itinéraire de trois jours aux Pays-Bas, organisé par étapes modifiables.",
+    caption: "Le voyageur décrit ses envies dans la conversation. L’assistant propose un séjour personnalisé, avec dates, nombre de voyageurs et étapes jour par jour : musique, culture, restauration et détente. L’itinéraire peut être ajusté ; la génération d’un devis PDF fait aussi partie du périmètre envisagé.",
   },
+  {
+    file: "exploration", title: "Découvrir des festivals et des destinations",
+    alt: "GrooveNomad : recherche par destination et genre musical, catalogue de festivals et fiche de séjour aux Pays-Bas.",
+    caption: "La recherche associe destination, dates et préférences musicales. Le catalogue rapproche festivals et découvertes locales, tandis qu’une fiche détaille les activités, restaurants et hébergements. La personnalisation selon les goûts musicaux était notamment pensée autour d’une intégration Spotify.",
+  },
+  {
+    file: "carte", title: "Situer les lieux et préparer ses déplacements",
+    alt: "GrooveNomad : festivals et destinations à gauche, carte d’Amsterdam avec lieux culturels et hébergements à droite.",
+    caption: "La vue cartographique complète l’exploration : le voyageur repère les lieux proposés et les hébergements autour de sa destination. Elle permet de remettre les recommandations dans leur contexte géographique avant de composer le séjour.",
+  },
+] as const;
+const slides = [
   {
     file: "automatisation", width: 1980, height: 1110,
     title: "Relier les étapes du service",
@@ -39,9 +50,24 @@ export default function GrooveNomadCase() {
         <p className={`${BODY} mt-5`}>La réflexion couvrait aussi l’authentification, le consentement, l’export et la suppression des données, les conditions d’utilisation et de vente, ainsi que l’hébergement.</p>
       </section>
 
+      <section aria-labelledby="groovenomad-features">
+        <h2 id="groovenomad-features" className={HEADING}>Du souhait au séjour, trois vues complémentaires</h2>
+        <p className={BODY}>Le parcours relie recommandations, découverte et organisation du voyage. Il est pensé pour le mobile, avec une interface en français et en anglais. Chaque écran ci-dessous illustre une partie du service envisagé.</p>
+        <div className="mt-10 space-y-16">
+          {screens.map(screen => (
+            <figure key={screen.file}>
+              <figcaption className="mb-6"><h3 className="mb-3 text-[18px] font-medium">{screen.title}</h3><p className={BODY}>{screen.caption}</p></figcaption>
+              <a href={`/projects/groovenomad/${screen.file}.webp`} target="_blank" rel="noreferrer" aria-label={`${screen.title} : ouvrir l’écran en grand (nouvel onglet)`} className="block rounded-[6px] focus-visible:outline-2 focus-visible:outline-offset-4">
+                <Image src={`/projects/groovenomad/${screen.file}.webp`} alt={screen.alt} width={3840} height={2880} sizes="(min-width: 1024px) 56rem, 100vw" className="block h-auto w-full rounded-[6px]" />
+              </a>
+            </figure>
+          ))}
+        </div>
+      </section>
+
       <section aria-labelledby="groovenomad-work">
         <h2 id="groovenomad-work" className={HEADING}>De l’expérience au fonctionnement du service</h2>
-        <p className={BODY}>Trois extraits de notre présentation pour montrer le lien entre le périmètre, l’automatisation et le pilotage. Les slides s’ouvrent en grand.</p>
+        <p className={BODY}>Deux extraits de notre présentation pour montrer comment les demandes circulent entre les outils et comment suivre l’activité. Les visuels s’ouvrent en grand.</p>
         <div className="mt-8 space-y-16">
           {slides.map(slide => (
             <figure key={slide.file}>

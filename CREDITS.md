@@ -113,6 +113,6 @@ sans recadrage ni génération de contenu. Leur provenance figure dans
 [docs/mousse-assets.md](docs/mousse-assets.md).
 
 Les captures de la présentation GrooveNomad et le contexte du projet d'école collectif
-ont été fournis par Nathan. Quatre visuels sont retenus et encodés en WebP sans
+ont été fournis par Nathan. Six visuels sont retenus et encodés en WebP sans
 recadrage ni ajout de contenu. La sélection et ses limites sont décrites dans
 [docs/groovenomad-assets.md](docs/groovenomad-assets.md).

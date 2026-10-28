@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { stripTypeScriptTypes } from "node:module";
 import { test } from "node:test";
 import sharp from "sharp";
@@ -53,7 +53,8 @@ test("project covers preserve their dimensions and identify each project's conte
     assert.equal(image.height, screen === "encoche" ? 2880 : 1067);
     assert.equal(image.hasAlpha, true);
   }
-  for (const [screen, width, height] of [["fonctionnalites",1987,1102],["automatisation",1980,1110],["dashboard",1991,1117]]) {
+  assert.equal(existsSync("public/projects/groovenomad/fonctionnalites.webp"), false);
+  for (const [screen, width, height] of [["itineraire",3840,2880],["exploration",3840,2880],["carte",3840,2880],["automatisation",1980,1110],["dashboard",1991,1117]]) {
     const image = await sharp(`public/projects/groovenomad/${screen}.webp`).metadata();
     assert.equal(image.format, "webp");
     assert.equal(image.width, width);

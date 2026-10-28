@@ -414,3 +414,31 @@ navigateur. Les ratios sont mesurés via DOMRect pour éviter les arrondis entie
 attributs DOM width/height sur les petites slides. Rapport :
 docs/validation/chrome-groovenomad.json. Captures : artifacts/portfolio-v2/groovenomad*
 et artifacts/groovenomad-production/. Safari et téléphone physique non vérifiés.
+
+## 2026-10-28 — Parcours GrooveNomad et préparation Netlify
+
+La slide des fonctionnalités comportant une faute est supprimée du récit et de
+public/. Les fonctionnalités sont reformulées avec les trois nouveaux écrans :
+itinéraire en premier (conversation IA, étapes modifiables et devis PDF envisagé),
+exploration (destination, festivals, préférences musicales, fiche de séjour), puis
+carte (lieux et hébergements dans leur contexte géographique). Chaque figure associe
+son titre et son texte à l'écran correspondant. Images intégrales WebP 3840×2880,
+avec lien grand format. Automatisation et dashboard sont conservés plus bas.
+
+Préparation Netlify : netlify.toml indique npm run build et .next ; .node-version
+sélectionne Node 24 ; .netlify/ est ignoré. Pas de dépendance d'adaptateur ajoutée :
+Netlify installe automatiquement son adaptateur Next.js. Les variantes natives
+Linux x64 de Next, Sharp et Tailwind sont présentes dans le lockfile. Aucun secret
+ou variable d'environnement requis pour le portfolio actuel. Le guide
+/docs/deploy-netlify.md décrit l'import Git, les réglages et les vérifications après
+publication. Aucun dépôt distant n'est configuré ; aucun site n'a été créé ou publié.
+Documentation Netlify/OpenNext actuelle consultée, sans export statique ni redirection SPA.
+
+Validation : typecheck, lint, 23 tests et build standard passent. Chrome à
+1440/390/320 px, clair/sombre : ordre des trois écrans, présence du texte associé,
+cinq figures du récit, absence de la slide fautive, images complètes, navigation et
+absence de débordement. Production locale : les quatre pages répondent 200, l'URL
+inconnue et l'ancienne image répondent 404, récit disponible sans JavaScript.
+Aucune erreur navigateur. Rapport : docs/validation/chrome-netlify-preparation.json.
+Captures : artifacts/netlify-preparation/. Le build cloud Netlify, son CDN, Safari et
+un téléphone physique restent à vérifier après le premier déploiement.

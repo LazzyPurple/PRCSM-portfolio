@@ -172,9 +172,13 @@ try {
     const story = await evaluate(`({client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,
       note:document.querySelector('main header').textContent,body:document.querySelector('main').textContent,
       phases:[...document.querySelectorAll('#groovenomad-roadmap + p + ol h3')].map(el=>el.textContent),
+      features:[...document.querySelectorAll('[aria-labelledby="groovenomad-features"] figure')].map(el=>({href:el.querySelector('a').getAttribute('href'),title:el.querySelector('h3').textContent,text:el.querySelector('figcaption p').textContent})),
       fullViews:document.querySelectorAll('figure a[target="_blank"]').length,
       screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.getBoundingClientRect().width/el.getBoundingClientRect().height,sourceRatio:Number(el.getAttribute('width'))/Number(el.getAttribute('height')),fit:getComputedStyle(el).objectFit}))})`);
-    assert.equal(story.client,story.scroll); assert.equal(story.fullViews,3); assert.equal(story.screens.length,3);
+    assert.equal(story.client,story.scroll); assert.equal(story.fullViews,5); assert.equal(story.screens.length,5);
+    assert.deepEqual(story.features.map(feature=>feature.href),["itineraire","exploration","carte"].map(file=>`/projects/groovenomad/${file}.webp`));
+    assert.ok(story.features.every(feature=>feature.title.length>15 && feature.text.length>100));
+    assert.ok(!await evaluate("[...document.querySelectorAll('main img')].some(img=>decodeURIComponent(img.src).includes('fonctionnalites.webp'))"));
     assert.ok(story.note.includes("projet d’école") && story.note.includes("équipe") && !story.note.includes("fictif"));
     assert.ok(story.body.includes("trois personas") && story.body.includes("KPI") && story.body.includes("Make"));
     assert.deepEqual(story.phases,["Lancement","Croissance et structuration","Expansion et leadership"]);
@@ -186,7 +190,7 @@ try {
   }
   const grooveHtml = await fetch(url+"/projects/groovenomad").then(response=>response.text());
   assert.ok(grooveHtml.includes("trois personas") && grooveHtml.includes("Expansion et leadership"));
-  report.checks.push("GrooveNomad: school team project, cover and three complete slides, three personas, exactly three roadmap phases, KPI scope without commercial results; 1440/390/320 px dark/light, no overflow, server-rendered story");
+  report.checks.push("GrooveNomad: itinerary first, exploration and map paired with feature text; incorrect slide removed; five full-size figures, three personas and three roadmap phases; 1440/390/320 px dark/light, no overflow, server-rendered story");
   await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
   await click('.project-page main header a[href="/#projets"]');
   await waitFor("location.pathname==='/' && location.hash==='#projets' && Math.abs(document.querySelector('#projets').getBoundingClientRect().top)<2");
