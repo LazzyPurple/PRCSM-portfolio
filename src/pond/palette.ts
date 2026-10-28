@@ -9,7 +9,7 @@ export const palette = {
   },
   paper: "#f3ebda",
   ink: "#283c36",
-  portfolio: { ink: "#17221e", muted: "#526055", sage: "#d1d9c8", lilac: "#ded5e7", forest: "#26473c" },
+  portfolio: { ink: "#17221e", muted: "#526055", dark: "#19191d", cream: "#f1ece5", mutedDark: "#aaa6ac", footer: "#d8ccee", footerInk: "#2e263b" },
   koi: {
     white: "#f4ebd5",
     vermilion: "#d94c32",

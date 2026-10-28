@@ -24,7 +24,7 @@ Portages Dao : simulation, formes, motifs, règles de moteur et déformation du 
 | `koi-pond.tsx`, règles de boucle et d'interaction | `src/pond/engine.ts` et `src/pond/KoiPond.tsx` |
 | `renderer.ts`, onde corporelle et ouverture des nageoires | `src/pond/scene/koiMesh.ts` |
 
-Le rendu ASCII, ses palettes, les images, les polices et les analytics ne sont pas repris.
+Le rendu ASCII, ses palettes, les images et les analytics ne sont pas repris.
 
 ## Peinture — Ardia
 
@@ -67,12 +67,26 @@ ne sont pas repris. La palette de cette mare et ses éléments visuels sont prop
 
 ## Composition du portfolio
 
-Le grand titre et l'organisation du hero s'inspirent de
-`apps/site/src/components/Hero.astro` dans Ardia. La galerie horizontale sur ordinateur,
-avec image, nom et description, puis sa disposition verticale mobile, s'inspirent de
-`src/app/projects/page.tsx` dans le portfolio de Dao Ho.
-Le HTML et le CSS du portfolio sont écrits pour cette page ; le défilement reste natif,
-sans reprendre le gestionnaire de molette global de Dao.
+La galerie et les pages dédiées sont désormais portées depuis le portfolio de Dao Ho,
+avec ses dimensions, ses espacements, son glissement horizontal et sa navigation.
+
+| Source Dao | Destination |
+| --- | --- |
+| `src/app/projects/page.tsx`, `DesktopStrip`, `StripTile`, `MobileLayout` | `src/portfolio/Projects.tsx` |
+| `src/app/projects/[slug]/page.tsx` | `src/app/projects/[slug]/page.tsx` |
+| `src/app/projects/[slug]/project-page.tsx`, cadre, récit, couverture, glide, `PagerLink` | `src/portfolio/ProjectPage.tsx` |
+| `src/lib/view-transition.ts` et animations de `src/app/globals.css` | `src/portfolio/navigation.ts`, `src/app/globals.css` |
+
+Adaptations : section de landing aimantée, sortie de la galerie vers les sections voisines,
+correction de l'arrondi de `scrollLeft` pour terminer le RAF, liens et contenus propres au
+portfolio. Les vidéos et galeries de captures ne sont pas incluses dans ces cas fictifs.
+Les transitions natives et CSS remplacent Motion ; aucun paquet de rendu supplémentaire.
+
+Les trois fichiers Geist Sans 400/500 et Geist Mono 400 sont repris sans modification
+depuis `src/app/fonts/` de cette référence. Copyright 2024 The Geist Project Authors,
+[vercel/geist-font](https://github.com/vercel/geist-font), SIL Open Font License 1.1.
+La licence originale est conservée dans [licenses/GEIST-OFL.txt](licenses/GEIST-OFL.txt).
+Ils sont servis localement par Next.js, sans requête à Google Fonts.
 
 Les trois projets Lisière, Intervalle et Boussole sont entièrement fictifs.
 Leurs visuels ont été générés avec l'outil intégré `image_gen`, puis encodés en WebP.

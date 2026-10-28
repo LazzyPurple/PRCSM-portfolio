@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
+import localFont from "next/font/local";
 import { palette } from "@/pond/palette";
 import "./globals.css";
+
+const sans = localFont({ src: [
+  { path: "./fonts/geist-sans-latin-400-normal.woff2", weight: "400" },
+  { path: "./fonts/geist-sans-latin-500-normal.woff2", weight: "500" },
+], variable: "--font-geist-sans", display: "swap" });
+const mono = localFont({ src: "./fonts/geist-mono-latin-400-normal.woff2", weight: "400", variable: "--font-geist-mono", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Nathan Toto — Product Owner",
@@ -16,16 +23,22 @@ const colors = {
   "--paper": palette.paper,
   "--ink": palette.ink,
   "--portfolio-ink": palette.portfolio.ink,
-  "--muted": palette.portfolio.muted,
-  "--project-sage": palette.portfolio.sage,
-  "--project-lilac": palette.portfolio.lilac,
-  "--project-forest": palette.portfolio.forest,
+  "--muted-light": palette.portfolio.muted,
+  "--page-dark": palette.portfolio.dark,
+  "--text-dark": palette.portfolio.cream,
+  "--muted-dark": palette.portfolio.mutedDark,
+  "--footer-lilac": palette.portfolio.footer,
+  "--footer-ink": palette.portfolio.footerInk,
 } as CSSProperties;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" style={colors}>
-      <body>{children}</body>
+    <html lang="fr" data-theme="dark" suppressHydrationWarning style={colors}>
+      <head>
+        <script id="theme-init" dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('pond-theme')==='light')document.documentElement.dataset.theme='light'}catch{}" }} />
+        <noscript><style>{".theme-toggle{display:none}"}</style></noscript>
+      </head>
+      <body className={`${sans.variable} ${mono.variable}`}>{children}</body>
     </html>
   );
 }

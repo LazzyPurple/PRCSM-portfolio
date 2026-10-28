@@ -37,7 +37,8 @@ function withSeed(seed, callback) {
   try { return callback(); } finally { Math.random = original; }
 }
 
-test("three-minute clock wraps continuously through dawn, day, dusk and night", () => {
+test("eight-minute clock wraps continuously through dawn, day, dusk and night", () => {
+  assert.equal(CYCLE_SECONDS, 480);
   let hour = START_HOUR;
   for (let i = 0; i < CYCLE_SECONDS * 60; i++) hour = advanceHour(hour, 1 / 60);
   assert.ok(Math.abs(hour - START_HOUR) < 1e-8);

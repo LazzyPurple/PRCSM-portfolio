@@ -5,12 +5,18 @@ import { test } from "node:test";
 import sharp from "sharp";
 
 const load = file => import(`data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(readFileSync(file, "utf8"))).toString("base64")}`);
-const { heroTone } = await load("src/portfolio/tone.ts");
 const { contact, projects } = await load("src/portfolio/content.ts");
+const { palette } = await load("src/pond/palette.ts");
 
-test("hero has dark text by day and cream text during night and dawn", () => {
-  for (const hour of [0, 6, 6.999, 19, 23.999]) assert.equal(heroTone(hour), "night");
-  for (const hour of [7, 12, 18.999]) assert.equal(heroTone(hour), "day");
+test("both UI themes and the pale violet footer meet AA text contrast", () => {
+  const luminance = hex => hex.slice(1).match(/../g).map(value => parseInt(value, 16) / 255)
+    .map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
+    .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+  const ui = palette.portfolio;
+  for (const [text, background] of [[ui.cream, ui.dark], [ui.mutedDark, ui.dark], [ui.ink, palette.paper], [ui.muted, palette.paper], [ui.footerInk, ui.footer]]) {
+    const a = luminance(text), b = luminance(background);
+    assert.ok((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) >= 4.5);
+  }
 });
 
 test("fictional cases have readable local covers and the requested profile links", async () => {

@@ -42,9 +42,9 @@ try {
     assert.equal(await evaluate("getComputedStyle(document.querySelector('canvas')).transitionDuration"), "0.6s");
     assert.ok(await evaluate("window.__cls") < 0.001);
     report.cycle = await evaluate("({hour:window.__pond.hour,time:window.__pond.world.time,running:window.__pond.cycleRunning,seconds:window.__pond.stats().cycleSeconds})");
-    assert.equal(report.cycle.seconds, 180);
+    assert.equal(report.cycle.seconds, 480);
     assert.equal(report.cycle.running, true);
-    assert.ok(Math.abs(report.cycle.hour - 10 - report.cycle.time * 24 / 180) < 0.00001);
+    assert.ok(Math.abs(report.cycle.hour - 10 - report.cycle.time * 24 / 480) < 0.00001);
     report.checks.push("poster paints before engine on slow connection; 600 ms fade and no layout shift");
     assert.equal(await evaluate("window.__pond.mrtReady"), true);
     const before = await evaluate("window.__pond.world.pellets.length");
@@ -113,7 +113,7 @@ try {
     await sleep(500);
     assert.ok(await evaluate("window.__pond.hour") < 1);
     await evaluate("window.__pond.setHour(10);window.__pond.toggleCycle()");
-    report.checks.push("180 second cycle advances and wraps midnight; manual dawn/day/dusk/night stay readable with vegetation");
+    report.checks.push("480 second cycle advances and wraps midnight; manual dawn/day/dusk/night stay readable with vegetation");
     report.checks.push("debug pause freezes simulation");
     await page("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
     await sleep(200);

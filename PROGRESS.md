@@ -222,3 +222,42 @@ Les 16 scénarios de régression de la mare et les cinq cadrages sans JavaScript
 Production : médiane GPU 2,670 ms, p95 3,606 ms, 239,97 FPS sur RTX 4070 SUPER,
 viewport 1440×900, canvas 1425×900, DPR 1 ; téléphone physique et portable moyen non testés.
 Rapports : docs/validation/chrome-portfolio*.json. Captures : artifacts/portfolio/.
+
+## Correction de la composition et portage des pages Dao — 28 octobre 2026
+
+Cette version remplace la première interprétation de la galerie. DesktopStrip, StripTile,
+MobileLayout, la page dédiée, son cadre 56rem, sa couverture, son récit et ses liens
+précédent/suivant sont portés du code Dao. Les fichiers et adaptations sont listés dans
+CREDITS.md ; Geist Sans/Mono sont servis localement avec leur licence OFL conservée.
+Les trois routes /projects/lisiere, /projects/intervalle et /projects/boussole sont
+prérendues. Plus de cas dépliants sur la landing ni de compteur à côté de Mes projets.
+
+Après la dernière précision de Nathan, le titre « Hi, I’m Nathan TOTO » est réduit et
+placé en bas à gauche. Aucun fond, voile ou pseudo-élément ne couvre le texte : seules
+les lettres ont une ombre fine. Sous-titre : « Product Owner, je laisse la créativité
+faire des ricochets, puis je donne aux idées un cap. » Le header n'a plus de nom ni
+de fond. La mare reste le centre visuel, dans une section exactement égale au viewport,
+avec un léger débord et une bordure peinte visibles en haut de la section projets.
+
+Les trois sections font chacune 100svh et s'aimantent au scroll. Sur desktop, le glide
+de Dao fait défiler la galerie à la molette avant de passer au footer ; sur mobile,
+sa liste défile à l'intérieur du même viewport. La correction d'un arrondi scrollLeft
+évite de laisser tourner un RAF à l'extrémité de la galerie. Les transitions natives
+remplacent Motion sans nouvelle dépendance. Le thème sombre est la valeur initiale,
+le bouton soleil/lune conserve le choix clair/sombre en local, indépendamment de
+l'heure de la mare. Le footer est violet pâle opaque dans les deux thèmes.
+Le cycle complet de lumière passe de 180 à 480 secondes (8 minutes).
+
+Vérification : 22 tests CPU/actifs, typecheck, lint et build passent. Contrôles Chrome
+1440×900, 390×844, 320×740 et 844×390 : sections de la bonne hauteur, absence de débordement,
+texte sans fond à gauche, navigation réelle, sortie de galerie, footer, thème persistant,
+précédent/suivant, retour à la galerie, libération du moteur et pages sans JavaScript.
+Huit captures de thème/heure (jour/nuit, clair/sombre, desktop/mobile) ont été observées.
+Les anciens chiffres de contraste du hero avec voile ne s'appliquent plus à cette version.
+Les couleurs des deux thèmes et du footer respectent 4,5:1 pour le texte ; les ombres des
+lettres aident la lecture sur l'eau, sans garantie chiffrée pour chaque fond animé possible.
+Les 16 scénarios de régression de la mare passent, ainsi que les cinq affiches sans JS.
+Profil production RTX 4070 SUPER, viewport 1440×900/DPR 1, canvas 1425×980 avec débord :
+GPU médian 2,758 ms, p95 3,642 ms, 239,97 FPS sur 10 secondes. Aucun log d'erreur navigateur.
+Rapports : docs/validation/chrome-portfolio-v2*.json. Captures : artifacts/portfolio-v2/.
+Safari, téléphone physique et portable moyen restent non qualifiés.

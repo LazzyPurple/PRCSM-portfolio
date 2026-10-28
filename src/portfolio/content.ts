@@ -31,3 +31,5 @@ export const projects = [
     validation: "Vérifier que l’équipe peut expliquer les priorités et leurs compromis, puis ajuster les informations affichées pour éviter de créer une nouvelle charge de documentation.",
   },
 ] as const;
+
+export type Project = (typeof projects)[number];

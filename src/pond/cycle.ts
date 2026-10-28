@@ -1,4 +1,4 @@
-export const CYCLE_SECONDS = 180;
+export const CYCLE_SECONDS = 480;
 export const START_HOUR = 10;
 const HOURS_PER_DAY = 24;
 

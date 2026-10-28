@@ -1,0 +1,61 @@
+{
+  "mode": "prod",
+  "url": "http://127.0.0.1:3003",
+  "startedAt": "2026-10-28T03:26:04.596Z",
+  "checks": [
+    "production page has no debug panel",
+    "10 second Chrome GPU timer/RAF capture",
+    "Chrome Performance trace and allocation sampling saved",
+    "server-rendered responsive posters work without JavaScript in all five framings; one image per visit"
+  ],
+  "errors": [],
+  "gpu": {
+    "samples": 2408,
+    "median": 2.757632,
+    "p95": 3.642368
+  },
+  "frameMs": {
+    "samples": 2408,
+    "median": 4.199999999998909,
+    "p95": 4.299999999999272
+  },
+  "fps": 239.96731342242512,
+  "resolution": {
+    "width": 1425,
+    "height": 980,
+    "dpr": 1
+  },
+  "staticPosters": [
+    {
+      "width": 2400,
+      "height": 1000,
+      "source": "http://127.0.0.1:3003/pond/ultrawide-2400.webp",
+      "font": "mono, \"mono Fallback\", monospace"
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "source": "http://127.0.0.1:3003/pond/wide-1440.webp",
+      "font": "mono, \"mono Fallback\", monospace"
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "source": "http://127.0.0.1:3003/pond/mid-1280.webp",
+      "font": "mono, \"mono Fallback\", monospace"
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "source": "http://127.0.0.1:3003/pond/tablet-768.webp",
+      "font": "mono, \"mono Fallback\", monospace"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "source": "http://127.0.0.1:3003/pond/phone-390.webp",
+      "font": "mono, \"mono Fallback\", monospace"
+    }
+  ],
+  "passed": true
+}
