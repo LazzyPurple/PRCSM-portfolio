@@ -200,8 +200,8 @@ Un voile discret assure la lisibilité devant les poissons et la végétation.
 La transition vers les projets utilise une bordure SVG originale de papier peint.
 
 Le header comporte La mare, Mes projets, LinkedIn, GitHub et Contact. Les profils fournis
-sont branchés ; l'adresse e-mail reste à fournir. En attendant, Contact rejoint le pied
-de page et propose LinkedIn, sans inventer d'adresse.
+sont branchés ; Contact et Écrivez-moi ouvrent la messagerie vers
+nathan.toto@proton.me, adresse fournie par Nathan.
 Pas de page À propos. Les liens internes défilent doucement, sauf mouvement réduit.
 
 La galerie reprend la disposition de Dao : grandes images côte à côte sur ordinateur,

@@ -28,7 +28,7 @@ try {
       headings:document.querySelectorAll('h1').length,links:[...document.querySelectorAll('nav a')].map(a=>a.getAttribute('href')),
       hero:document.querySelector('.hero').getBoundingClientRect().height})`);
     assert.equal(layout.width, width); assert.equal(layout.documentWidth, layout.clientWidth); assert.equal(layout.headings, 1);
-    assert.deepEqual(layout.links.slice(0, 4), ["#mare", "#projets", "https://www.linkedin.com/in/nathan-toto/", "https://github.com/LazzyPurple"]);
+    assert.deepEqual(layout.links, ["#mare", "#projets", "https://www.linkedin.com/in/nathan-toto/", "https://github.com/LazzyPurple", "mailto:nathan.toto@proton.me"]);
     report.layouts.push(layout);
     for (const hour of width > 800 && height < 500 || width === 320 ? [12] : [0, 6, 12, 18]) {
       await evaluate(`window.__pond.setHour(${hour})`);

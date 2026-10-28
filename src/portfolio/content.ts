@@ -1,7 +1,7 @@
 export const contact = {
   linkedin: "https://www.linkedin.com/in/nathan-toto/",
   github: "https://github.com/LazzyPurple",
-  email: "",
+  email: "nathan.toto@proton.me",
 };
 
 // Fictional cases only; the real selection will be Mousse, Céphalée and CareerOS.
