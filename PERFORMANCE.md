@@ -124,6 +124,9 @@ Les contacts utilisent les buffers de colonne existants sans allocation par pair
 
 ## Affiches de chargement — 28 octobre 2026
 
+Les poids de cette section correspondent à la livraison initiale de la phase 6,
+avant la végétation ajoutée ci-dessous ; le manifeste donne les poids courants.
+
 13 fichiers générés depuis notre premier canvas prêt, sans UI ni textures externes.
 Le navigateur télécharge une seule variante avec picture/srcset/sizes ; les fichiers sont
 préencodés, sans réencodage Next au chargement. Sharp est un outil de génération en dev,
@@ -163,3 +166,26 @@ Nouveau profil production : 1440×900/DPR 1, RTX 4070 SUPER, 2 408 échantillons
 médiane 3.265 ms, p95 4.483 ms ; 239.97 FPS sur 10 secondes.
 Rapports : docs/validation/chrome-posters-dev.json et chrome-posters-prod.json.
 Ces contrôles ne qualifient pas Safari, un téléphone physique ou un portable moyen.
+
+## Cycle de 3 minutes, fleurs et algues — 28 octobre 2026
+
+Horloge sur 24 h, un tour en 180 s de simulation active ; la pause et les règles de
+visibilité/mouvement réduit figent aussi l'éclairage. Le réglage manuel du debug suspend
+l'avance automatique, qui reprend depuis l'heure choisie. Les couleurs/vecteurs de lumière
+sont précalculés et interpolés dans des objets réutilisés. Les fleurs et algues ajoutent
+deux lots de rendu (3 156 triangles au total), avec déformation GPU et buffers statiques.
+
+20 tests passent, dont un tour complet d'horloge en pas fixes, la continuité de minuit,
+la validité des directions lumineuses et la génération répétable des plantes.
+Chrome vérifie l'avance, la pause, le réglage manuel et le passage de minuit. Les quatre
+phases sont capturées dans artifacts/validation-dev/cycle-{dawn,day,dusk,night}.png.
+La luminance moyenne du rendu scène descend de 120.98/255 le jour à 55.25/255 la nuit,
+en conservant les koï lisibles ; ce n'est pas une mesure photométrique physique.
+
+Nouveau profil production 1440×900/DPR 1, RTX 4070 SUPER : 2 414 échantillons GPU,
+médiane 2.826 ms, p95 3.678 ms ; 239.87 FPS sur 10 s.
+Rapports : docs/validation/chrome-cycle-dev.json et chrome-cycle-prod.json.
+Les affiches actualisées pèsent 799.9 Kio au total, dont un seul fichier est téléchargé :
+11.5–34.5 Kio sur téléphone, 133.1 Kio maximum en ultralarge. Les budgets restent inchangés.
+Elles représentent le premier état de jour ; la variation temporelle nécessite le moteur.
+Les vérifications sur Safari, téléphone physique et portable moyen restent à effectuer.

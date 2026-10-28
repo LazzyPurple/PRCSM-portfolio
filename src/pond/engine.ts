@@ -3,6 +3,7 @@ import { POND_SWIM_RADIUS, World, type Box } from "./sim/world";
 import { drawSimulation } from "./debug/simulation2d";
 import { PondScene } from "./scene/PondScene";
 import { pondWidth } from "./scene/framing";
+import { advanceHour, CYCLE_SECONDS, START_HOUR, wrapHour } from "./cycle";
 
 const STEP = 1 / 60;
 const MAX_STEPS = 4;
@@ -17,13 +18,15 @@ export type PondView = "scene" | "flow" | "paint" | "final" | "simulation";
 export class PondEngine {
   world = new World();
   view: PondView = "final";
-  hour = 0;
+  hour = START_HOUR;
+  cycleRunning = true;
   paused = false;
   fps = 0;
   get gpuMs() { return this.scene.gpuMs; }
   get scale() { return this.scene.scaler.scale; }
   get cpuMs() { return this.scene.cpuMs; }
   stats() { return { ...this.scene.stats(), fps: this.fps, koi: this.world.koi.length, pellets: this.world.pellets.length, time: this.world.time,
+    hour: this.hour, cycleRunning: this.cycleRunning, cycleSeconds: CYCLE_SECONDS,
     reduced: this.reduced.matches, raf: this.raf, visible: this.visible, hidden: document.hidden, disposed: this.disposed }; }
   get mrtReady() { return this.scene.mrtReady; }
   private ctx: CanvasRenderingContext2D | null;
@@ -84,7 +87,8 @@ export class PondEngine {
     if (this.debugCanvas) this.debugCanvas.style.display = view === "simulation" ? "block" : "none";
     this.measure(); this.draw();
   }
-  setHour(hour: number) { this.hour = hour; this.draw(); }
+  setHour(hour: number) { if (!Number.isFinite(hour)) return; this.hour = wrapHour(hour); this.cycleRunning = false; this.draw(); }
+  toggleCycle() { this.cycleRunning = !this.cycleRunning; this.draw(); }
   togglePause() { this.paused = !this.paused; this.schedule(); }
   restart() {
     this.world = new World();
@@ -187,6 +191,7 @@ export class PondEngine {
     let steps = 0;
     while (this.acc >= STEP && steps < MAX_STEPS) {
       this.world.step(STEP);
+      if (this.cycleRunning) this.hour = advanceHour(this.hour, STEP);
       this.acc -= STEP;
       steps++;
     }

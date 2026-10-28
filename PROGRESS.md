@@ -136,3 +136,33 @@ Poids téléphone 10.6–33.9 Kio ; paysage 27.4–103.6 Kio ; maximum 129.2 Kio
 Profil prod 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 3.265 ms, p95 4.483 ms,
 239.97 FPS sur 10 secondes. Preuves : docs/validation/chrome-posters-{dev,prod}.json.
 Safari, téléphone réel et portable moyen restent à qualifier.
+
+## Cycle complet et végétation — 28 octobre 2026
+
+Un tour aube → jour → crépuscule → nuit dure 180 secondes de simulation active,
+comme demandé. Démarrage à 10 h ; l'heure est désormais exprimée sur 24 h.
+La direction de lumière, son intensité/couleur, l'ambiante, l'eau, le ciel reflété
+et les ombres suivent des transitions lissées, continues au passage de minuit.
+La nuit reste bleutée et lisible. Pas de rattrapage pendant la pause, l'onglet caché,
+le canvas hors écran ou le mouvement réduit. Le debug affiche HH:MM et la phase ;
+le curseur arrête le cycle automatique, le bouton le reprend depuis l'heure choisie.
+La durée se règle dans CYCLE_SECONDS de src/pond/cycle.ts.
+
+90 fleurs en 30 petits groupes sur les berges, cinq couleurs de pétales ;
+14 massifs d'algues et 98 rubans colorés sous l'eau. Graine fixe, deux maillages
+regroupés avec couleurs par sommet ; leur oscillation se fait dans le vertex shader.
+Les couleurs sont dans palette.ts ; aucun asset externe ni dépendance de rendu ajoutée.
+Les 13 affiches ont été régénérées à l'état initial de jour avec les nouvelles plantes.
+
+Un test a révélé un débordement ancien de nageoires pectorales entièrement ouvertes
+après redimensionnement : la garde autour de la colonne passe de 0.31 à 0.4 longueur.
+Régression reproductible avec la graine 1, 3 600 pas et deux changements de format ;
+huit scénarios à graines différentes passent aussi. Le comportement Dao sans rive
+physique reste conforme à l'oracle.
+
+20 tests CPU/actifs, 15 scénarios Chrome dev, matrice prod sans JS, typecheck/lint/build
+passent sans erreur navigateur. Captures des quatre phases observées. Luminance moyenne
+du rendu scène : jour 120.98/255, nuit 55.25/255, soit 46 % environ.
+Profil production 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 2.826 ms,
+p95 3.678 ms, 239.87 FPS sur 10 s. Preuves : docs/validation/chrome-cycle-{dev,prod}.json.
+Safari, téléphone physique et portable moyen restent non qualifiés.

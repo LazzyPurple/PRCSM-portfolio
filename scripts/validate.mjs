@@ -41,6 +41,10 @@ try {
     assert.equal(new Set(report.posterRequests).size, 1, "Download only the matching poster, without a second fallback image");
     assert.equal(await evaluate("getComputedStyle(document.querySelector('canvas')).transitionDuration"), "0.6s");
     assert.ok(await evaluate("window.__cls") < 0.001);
+    report.cycle = await evaluate("({hour:window.__pond.hour,time:window.__pond.world.time,running:window.__pond.cycleRunning,seconds:window.__pond.stats().cycleSeconds})");
+    assert.equal(report.cycle.seconds, 180);
+    assert.equal(report.cycle.running, true);
+    assert.ok(Math.abs(report.cycle.hour - 10 - report.cycle.time * 24 / 180) < 0.00001);
     report.checks.push("poster paints before engine on slow connection; 600 ms fade and no layout shift");
     assert.equal(await evaluate("window.__pond.mrtReady"), true);
     const before = await evaluate("window.__pond.world.pellets.length");
@@ -49,18 +53,43 @@ try {
     report.checks.push("WebGL2 MRT and feeding");
     await evaluate("window.__pond.togglePause()");
     const pausedAt = await evaluate("window.__pond.world.time");
+    const pausedHour = await evaluate("window.__pond.hour");
     await sleep(500);
     assert.equal(await evaluate("window.__pond.world.time"), pausedAt);
-    await evaluate("window.__pond.togglePause()");
+    assert.equal(await evaluate("window.__pond.hour"), pausedHour);
+    report.lighting = [];
+    for (const [name, hour] of [["dawn",6],["day",12],["dusk",18],["night",0]]) {
+      await evaluate(`window.__pond.setHour(${hour})`);
+      await sleep(450);
+      const state = await evaluate(`(() => {
+        const e=window.__pond,s=e.scene,w=s.target.width,h=s.target.height,pixels=new Uint8Array(w*h*4);
+        s.renderer.readRenderTargetPixels(s.target,0,0,w,h,pixels);
+        let sum=0;for(let i=0;i<pixels.length;i+=4)sum+=pixels[i]*0.2126+pixels[i+1]*0.7152+pixels[i+2]*0.0722;
+        return {hour:e.hour,running:e.cycleRunning,luminance:sum/(w*h),water:s.uniforms.uWater.value.toArray(),
+          plants:s.decoration.children.filter(m=>m.name==='shore-flowers'||m.name==='pond-algae').map(m=>m.name)};
+      })()`);
+      assert.equal(state.hour, hour); assert.equal(state.running, false);
+      assert.equal(state.plants.length, 2);
+      report.lighting.push({ name, ...state });
+      await capture(`cycle-${name}`);
+    }
+    assert.ok(report.lighting[3].luminance < report.lighting[1].luminance * 0.75);
+    assert.ok(report.lighting[3].luminance > report.lighting[1].luminance * 0.1);
+    assert.equal(new Set(report.lighting.map(s=>s.water.join(','))).size, 4);
+    await evaluate("window.__pond.setHour(23.99);window.__pond.toggleCycle();window.__pond.togglePause()");
+    await sleep(500);
+    assert.ok(await evaluate("window.__pond.hour") < 1);
+    await evaluate("window.__pond.setHour(10);window.__pond.toggleCycle()");
+    report.checks.push("180 second cycle advances and wraps midnight; manual dawn/day/dusk/night stay readable with vegetation");
     report.checks.push("debug pause freezes simulation");
     await page("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
     await sleep(200);
     report.reducedState = await evaluate("window.__pond.stats()");
     await waitFor("window.__pond.stats().reduced && window.__pond.stats().raf === 0");
     assert.equal(await evaluate("getComputedStyle(document.querySelector('canvas')).transitionDuration"), "0s");
-    const still = await evaluate("({time:window.__pond.world.time,pellets:window.__pond.world.pellets.length})");
+    const still = await evaluate("({time:window.__pond.world.time,hour:window.__pond.hour,pellets:window.__pond.world.pellets.length})");
     await click(420, 280); await sleep(500);
-    assert.deepEqual(await evaluate("({time:window.__pond.world.time,pellets:window.__pond.world.pellets.length})"), still);
+    assert.deepEqual(await evaluate("({time:window.__pond.world.time,hour:window.__pond.hour,pellets:window.__pond.world.pellets.length})"), still);
     report.checks.push("live reduced motion freezes frame and blocks feeding");
     await page("Page.reload");
     await waitFor("!!window.__pond && document.querySelector('canvas').dataset.ready === 'true'");

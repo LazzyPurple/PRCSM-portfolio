@@ -2,6 +2,7 @@
 
 import { useEffect, useReducer } from "react";
 import type { PondEngine, PondView } from "../engine";
+import { CYCLE_SECONDS, formatHour, phaseAt } from "../cycle";
 
 export default function DebugPanel({ engine }: { engine: PondEngine }) {
   const [, refresh] = useReducer(n => n + 1, 0);
@@ -23,9 +24,12 @@ export default function DebugPanel({ engine }: { engine: PondEngine }) {
       <output>CPU soumission · {engine.cpuMs.toFixed(2)} ms</output>
       <output>{engine.world.koi.length} koï · {engine.world.pellets.length} granulés · {engine.world.time.toFixed(1)} s</output>
       <output>MRT · {engine.mrtReady ? "2 cibles complètes" : "en attente"}</output>
-      <label>Heure · jour → crépuscule
-        <input type="range" min="0" max="1" step="0.01" value={engine.hour} onChange={e => { engine.setHour(e.target.valueAsNumber); refresh(); }} />
+      <label>Heure · {formatHour(engine.hour)} · {phaseAt(engine.hour)}
+        <input type="range" min="0" max="24" step="0.05" value={engine.hour} onChange={e => { engine.setHour(e.target.valueAsNumber); refresh(); }} />
       </label>
+      <button type="button" aria-pressed={engine.cycleRunning} onClick={() => { engine.toggleCycle(); refresh(); }}>
+        {engine.cycleRunning ? "Cycle automatique" : "Reprendre le cycle"} · {CYCLE_SECONDS / 60} min
+      </button>
       <div><button onClick={() => { engine.togglePause(); refresh(); }}>{engine.paused ? "Reprendre" : "Pause"}</button>
         <button onClick={() => { engine.restart(); refresh(); }}>Relancer la mare</button></div>
     </aside>

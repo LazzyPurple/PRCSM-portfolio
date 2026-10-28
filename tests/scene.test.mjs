@@ -22,11 +22,63 @@ function moduleUrl(file) {
 const { World } = await import(moduleUrl("src/pond/sim/world.ts"));
 const { sharedUniforms } = await import(moduleUrl("src/pond/scene/flow.ts"));
 const { createKoi } = await import(moduleUrl("src/pond/scene/koiMesh.ts"));
-const { createLilyPads } = await import(moduleUrl("src/pond/scene/lilyPads.ts"));
+const { createLilyPads, randomSeed } = await import(moduleUrl("src/pond/scene/lilyPads.ts"));
 const { POND_SWIM_RADIUS } = await import(moduleUrl("src/pond/sim/world.ts"));
 const { pondWidth } = await import(moduleUrl("src/pond/scene/framing.ts"));
 const { createKoiShadow } = await import(moduleUrl("src/pond/scene/shadows.ts"));
 const { koiMarkings } = await import(moduleUrl("src/pond/sim/markings.ts"));
+const { advanceHour, CYCLE_SECONDS, START_HOUR, phaseAt, formatHour } = await import(moduleUrl("src/pond/cycle.ts"));
+const { Daylight } = await import(moduleUrl("src/pond/scene/daylight.ts"));
+const { createFlowers, createAlgae } = await import(moduleUrl("src/pond/scene/vegetation.ts"));
+
+function withSeed(seed, callback) {
+  const original = Math.random;
+  Math.random = randomSeed(seed);
+  try { return callback(); } finally { Math.random = original; }
+}
+
+test("three-minute clock wraps continuously through dawn, day, dusk and night", () => {
+  let hour = START_HOUR;
+  for (let i = 0; i < CYCLE_SECONDS * 60; i++) hour = advanceHour(hour, 1 / 60);
+  assert.ok(Math.abs(hour - START_HOUR) < 1e-8);
+  assert.deepEqual([0, 6, 12, 18].map(phaseAt), ["Nuit", "Aube", "Jour", "Crépuscule"]);
+  assert.equal(formatHour(24), "00:00"); assert.equal(formatHour(-1), "23:00");
+  assert.equal(formatHour(6.5), "06:30");
+});
+
+test("lighting stays finite, continuous at midnight and reuses every color", () => {
+  const light = new Daylight(), color = light.light, sky = light.sky[0];
+  for (let hour = 0; hour <= 24; hour += 0.05) {
+    light.update(hour);
+    assert.equal(light.light, color); assert.equal(light.sky[0], sky);
+    assert.ok(light.direction.toArray().every(Number.isFinite));
+    assert.ok(light.direction.y > 0.25 && Math.abs(light.direction.length() - 1) < 1e-8);
+    assert.ok(light.light.toArray().every(n => Number.isFinite(n) && n >= 0));
+  }
+  light.update(12); const day = light.light.r + light.light.g + light.light.b;
+  light.update(0); const night = light.light.toArray();
+  assert.ok(night.reduce((a, b) => a + b) < day * 0.45);
+  light.update(24); assert.deepEqual(light.light.toArray(), night);
+  light.update(23.999); assert.ok(light.light.toArray().every((value, i) => Math.abs(value - night[i]) < 0.0001));
+});
+
+test("flowers and algae are deterministic batches, rooted on shore and below water", () => {
+  const uniforms = sharedUniforms();
+  for (const create of [createFlowers, createAlgae]) {
+    const a = create(14.4, 9, 90210, uniforms), b = create(14.4, 9, 90210, uniforms);
+    assert.deepEqual(a.geometry.attributes.position.array, b.geometry.attributes.position.array);
+    assert.deepEqual(a.geometry.attributes.color.array, b.geometry.attributes.color.array);
+    assert.ok(a.geometry.attributes.position.count > 3000);
+    assert.equal(a.material.uniforms.uTime, uniforms.uTime);
+    for (const attribute of Object.values(a.geometry.attributes)) assert.ok(attribute.array.every(Number.isFinite));
+    const positions = a.geometry.attributes.position;
+    for (let i = 0; i < positions.count; i++) {
+      if (a.name === "pond-algae") assert.ok(positions.getY(i) < -0.7 && positions.getY(i) > -1.5);
+      else assert.ok(positions.getY(i) >= 0);
+    }
+    a.geometry.dispose(); a.material.dispose(); b.geometry.dispose(); b.material.dispose();
+  }
+});
 
 test("pond schools include gold, black-white, slate and young koi on every seed", () => {
   const world = new World(); world.shore = POND_SWIM_RADIUS; world.resize(1440, 900);
@@ -77,7 +129,7 @@ test("portrait crops a broad pond while fish sizes and population follow the vie
   assert.ok(world.pellets.length >= 5);
 });
 
-test("shore contains the complete animated mesh during feeding, flight and resize", () => {
+test("shore contains fully flared fins during feeding, flight and resize", () => withSeed(1, () => {
   const world = new World(); world.shore = POND_SWIM_RADIUS;
   world.resize(1440, 900);
   const uniforms = sharedUniforms();
@@ -106,7 +158,7 @@ test("shore contains the complete animated mesh during feeding, flight and resiz
     }
   }
   dispose();
-});
+}));
 
 test("koi deformation reuses buffers and keeps all positions and normals finite", () => {
   const world = new World(); world.resize(1440, 900);

@@ -3,7 +3,8 @@ export const TAU = Math.PI * 2;
 export const KOI_NODES = 20;
 export const RIPPLE_SPEED = 52;
 export const POND_SWIM_RADIUS = 0.43;
-const FIN_CLEARANCE = 0.31;
+// Fully flared pectorals reach over 0.37 body lengths from the spine.
+const FIN_CLEARANCE = 0.4;
 const SHORE_ITERATIONS = 12;
 const SHORE_TURN_LEAD = 0.65;
 const SHORE_TURN_FORCE = 5;

@@ -11,6 +11,8 @@ import { PaintPipeline } from "../paint/strokePass";
 import { GpuClock, Scaler, pickTier } from "../paint/budget";
 import { pondWidth } from "./framing";
 import { createKoiShadow } from "./shadows";
+import { Daylight } from "./daylight";
+import { createFlowers, createAlgae } from "./vegetation";
 
 const SCALE = 0.01;
 const MAX_DEPTH = 1.5;
@@ -63,11 +65,8 @@ export class PondScene {
   private worldWidth = 1;
   private worldHeight = 1;
   private seed = 90210;
-  private daylight = new THREE.Color(palette.light.day);
-  private dusk = new THREE.Color(palette.light.dusk);
-  private duskSky = palette.sky.dusk.map(color => new THREE.Color(color));
-  private daySky = palette.sky.day.map(color => new THREE.Color(color));
-  private sun = new THREE.DirectionalLight(palette.light.day, 2);
+  private daylight = new Daylight();
+  private sun = new THREE.DirectionalLight(palette.light.day, 1);
   private hemisphere = new THREE.HemisphereLight(palette.light.hemisphere, palette.light.ground, 1);
   private paint: PaintPipeline;
   private screenLight = new THREE.Vector3();
@@ -118,6 +117,7 @@ export class PondScene {
     const w = world.width * SCALE, h = world.height * SCALE;
     this.worldWidth = world.width; this.worldHeight = world.height;
     this.decoration.add(createBottom(w, h, this.uniforms), createBank(w, h, seed, this.uniforms));
+    this.decoration.add(createFlowers(w, h, seed, this.uniforms), createAlgae(w, h, seed, this.uniforms));
     this.lilies = createLilyPads(w, h, seed, this.uniforms);
     this.decoration.add(this.lilies.group);
     for (const fish of world.koi) {
@@ -164,11 +164,17 @@ export class PondScene {
 
   private renderFrame(world: World, hour: number, view: string, dt: number, pointer: { x: number; y: number; active: boolean }) {
     this.uniforms.uTime.value = world.time;
-    this.uniforms.uLight.value.set(-0.5 + hour * 0.85, 0.9 - hour * 0.55, 0.3).normalize();
-    this.uniforms.uLightColor.value.copy(this.daylight).lerp(this.dusk, hour);
+    this.daylight.update(hour);
+    this.uniforms.uLight.value.copy(this.daylight.direction);
+    this.uniforms.uLightColor.value.copy(this.daylight.light);
+    this.uniforms.uWater.value.copy(this.daylight.water);
+    this.uniforms.uAmbient.value = this.daylight.ambient;
+    this.uniforms.uShadowStrength.value = this.daylight.shadow;
     this.sun.position.copy(this.uniforms.uLight.value).multiplyScalar(20);
     this.sun.color.copy(this.uniforms.uLightColor.value);
-    for (let i = 0; i < 3; i++) this.water.uniforms.uSky.value[i].copy(this.daySky[i]).lerp(this.duskSky[i], hour);
+    this.hemisphere.intensity = this.daylight.ambient;
+    this.hemisphere.color.copy(this.daylight.sky[1]);
+    for (let i = 0; i < 3; i++) this.water.uniforms.uSky.value[i].copy(this.daylight.sky[i]);
     const ox = -world.width * SCALE / 2, oz = -world.height * SCALE / 2;
     for (const k of this.koi) k.update(SCALE, ox, oz);
     this.lilies?.update(world.time);

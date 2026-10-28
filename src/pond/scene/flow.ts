@@ -5,7 +5,7 @@
 import * as THREE from "three";
 import { palette } from "../palette";
 
-export const REGION = { water: 0.15, bank: 0.9, lily: 0.8, food: 0.96, koi: 0.4, koiStep: 0.035 } as const;
+export const REGION = { water: 0.15, bank: 0.9, lily: 0.8, flowers: 0.84, algae: 0.74, food: 0.96, koi: 0.4, koiStep: 0.035 } as const;
 export const GL_COMMON = `
 precision highp float;
 precision highp int;
@@ -14,6 +14,8 @@ uniform vec3 uLightColor;
 uniform vec3 uWater;
 uniform float uTime;
 uniform float uMaxDepth;
+uniform float uAmbient;
+uniform float uShadowStrength;
 uniform vec4 uPads[20];
 float hash(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123); }
 float noise(vec2 p) {
@@ -35,11 +37,11 @@ float leafShadow(vec3 p) {
   float mask=(1.0-smoothstep(1.0-softness,1.0+softness,length(d)))*(1.0-notch);
   shade=max(shade,mask*0.48*(1.0-smoothstep(-0.04,0.01,p.y)));
  }
- return 1.0-shade;
+ return 1.0-shade*uShadowStrength;
 }
 vec3 litColor(vec3 albedo,vec3 n,vec3 p) {
  float diffuse=0.55+0.45*max(dot(normalize(n),uLight),0.0);
- vec3 color=albedo*(vec3(0.38)+uLightColor*diffuse*0.7);
+ vec3 color=albedo*(vec3(uAmbient)+uLightColor*diffuse*0.7);
  float fog=1.0-exp(-max(-p.y,0.0)*1.2);
  return mix(color,uWater,fog*0.72)*leafShadow(p);
 }
@@ -58,6 +60,7 @@ export function sharedUniforms() {
     uTime: { value: 0 }, uLight: { value: new THREE.Vector3(-0.5, 0.8, 0.3).normalize() },
     uLightColor: { value: new THREE.Color(palette.light.day) }, uWater: { value: new THREE.Color(palette.water.middle) },
     uMaxDepth: { value: 1.5 }, uPads: { value: new Float32Array(20 * 4) },
+    uAmbient: { value: 0.38 }, uShadowStrength: { value: 1 },
     uTargetSize: { value: new THREE.Vector2(1, 1) },
   };
 }
