@@ -17,7 +17,7 @@ const GLIDE = 0.18;
 const CARD_GAP = 18;
 const CARD_FOLLOW = 0.25;
 
-export default function ProjectPage({ project, children }: { project: Project; children?: ReactNode }) {
+export default function ProjectPage({ project, children }: { project: Project; children: ReactNode }) {
   const router = useRouter();
   const coverRef = useRef<HTMLDivElement>(null);
   const [overCover, setOverCover] = useState(true);
@@ -86,12 +86,7 @@ export default function ProjectPage({ project, children }: { project: Project; c
         <div className="mt-16">
           <Image src={project.cover.src} alt={project.alt} width={project.cover.width} height={project.cover.height} sizes="(min-width: 1024px) 56rem, 100vw" className="block h-auto w-full rounded-[6px]" />
         </div>
-        {children ?? ("approach" in project && <div className="mt-24 flex flex-col">
-          <h2 className="mb-3 text-[16px] font-medium leading-[1.6]">Le parti pris</h2>
-          <p className={`${BODY} ${MUTED}`}>{project.approach}</p>
-          <h2 className="mt-16 mb-3 text-[16px] font-medium leading-[1.6]">Ce qu’on chercherait à valider</h2>
-          <p className={`${BODY} ${MUTED}`}>{project.validation}</p>
-        </div>)}
+        {children}
         <nav aria-label="Autres projets" className="project-pager mt-24 flex items-start justify-between gap-6 pt-6">
           <PagerLink project={prev} direction="back" />
           <PagerLink project={next} direction="forward" />

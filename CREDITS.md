@@ -79,7 +79,7 @@ avec ses dimensions, ses espacements, son glissement horizontal et sa navigation
 
 Adaptations : section de landing aimantée, sortie de la galerie vers les sections voisines,
 correction de l'arrondi de `scrollLeft` pour terminer le RAF, liens et contenus propres au
-portfolio. Les vidéos et galeries de captures ne sont pas incluses dans ces cas fictifs.
+portfolio. Les captures des projets sont celles fournies par Nathan.
 Les transitions natives et CSS remplacent Motion ; aucun paquet de rendu supplémentaire.
 
 Les trois fichiers Geist Sans 400/500 et Geist Mono 400 sont repris sans modification
@@ -96,8 +96,8 @@ articles mobiles sont propres à cette adaptation.
 L'icône `public/icons/squares-four.svg` est le fichier fourni par Nathan, conservé sans
 modification et utilisé comme masque CSS pour suivre la couleur du thème.
 
-Le projet Boussole est entièrement fictif. Lisière et Intervalle étaient les premiers
-placeholders, désormais remplacés par Céphalée et Mousse. Les visuels des placeholders ont été
+Lisière, Intervalle et Boussole étaient les placeholders fictifs initiaux, désormais
+remplacés par Céphalée, Mousse et GrooveNomad. Les visuels des placeholders ont été
 générés avec l'outil intégré `image_gen`, puis encodés en WebP.
 Les prompts et les chemins des fichiers sont consignés dans
 [docs/portfolio-assets.md](docs/portfolio-assets.md).
@@ -111,3 +111,8 @@ Les cinq visuels de Mousse et la description de son usage personnel quotidien on
 fournis par Nathan. Les images sont encodées en WebP à leurs dimensions originales,
 sans recadrage ni génération de contenu. Leur provenance figure dans
 [docs/mousse-assets.md](docs/mousse-assets.md).
+
+Les captures de la présentation GrooveNomad et le contexte du projet d'école collectif
+ont été fournis par Nathan. Quatre visuels sont retenus et encodés en WebP sans
+recadrage ni ajout de contenu. La sélection et ses limites sont décrites dans
+[docs/groovenomad-assets.md](docs/groovenomad-assets.md).

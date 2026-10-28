@@ -109,7 +109,7 @@ try {
     await waitFor("[...document.querySelectorAll('main img')].every(el=>el.complete && el.naturalWidth>0)");
     const story = await evaluate(`({width:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,
       title:document.querySelector('h1').textContent,figures:document.querySelectorAll('figure').length,
-      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.width/el.height,fit:getComputedStyle(el).objectFit})),
+      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.getBoundingClientRect().width/el.getBoundingClientRect().height,fit:getComputedStyle(el).objectFit})),
       fullViews:document.querySelectorAll('figure a[target="_blank"]').length,
       sources:[...document.querySelectorAll('main section a')].map(el=>el.href),
       note:document.querySelector('main header').textContent})`);
@@ -145,7 +145,7 @@ try {
     const story = await evaluate(`({width:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,
       title:document.querySelector('h1').textContent,note:document.querySelector('main header').textContent,
       body:document.querySelector('main').textContent,fullViews:document.querySelectorAll('figure a[target="_blank"]').length,
-      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.width/el.height,sourceRatio:Number(el.getAttribute('width'))/Number(el.getAttribute('height')),fit:getComputedStyle(el).objectFit}))})`);
+      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.getBoundingClientRect().width/el.getBoundingClientRect().height,sourceRatio:Number(el.getAttribute('width'))/Number(el.getAttribute('height')),fit:getComputedStyle(el).objectFit}))})`);
     assert.equal(story.client,story.scroll); assert.equal(story.title,"Mousse");
     assert.ok(story.note.includes("projet personnel") && story.note.includes("quotidien"));
     assert.ok(!story.note.includes("fictif")); assert.equal(story.fullViews,4); assert.equal(story.screens.length,4);
@@ -161,19 +161,46 @@ try {
   assert.ok(mousseHtml.includes("/projects/mousse/second-brain.webp"));
   report.checks.push("Mousse: personal daily-use project, five supplied visuals, four uncropped full-size figures, local Gemma, reminders/habits/widgets/second brain; 1440/390/320 px, dark/light, server-rendered story, no overflow; Céphalée em dashes removed");
   await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  await evaluate("document.querySelector('.project-pager').scrollIntoView({behavior:'instant'})");
+  await click('.project-pager a[href="/projects/groovenomad"]');
+  await waitFor("location.pathname==='/projects/groovenomad' && document.querySelector('h1')?.textContent==='GrooveNomad'");
+  await waitFor("!document.documentElement.dataset.transition");
+  for (const [width,height,theme] of [[1440,900,"dark"],[390,844,"dark"],[390,844,"light"],[320,740,"dark"]]) {
+    await page("Emulation.setDeviceMetricsOverride",{width,height,deviceScaleFactor:1,mobile:width<1024});
+    await evaluate(`document.documentElement.dataset.theme=${JSON.stringify(theme)};window.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('main img').forEach(el=>el.loading='eager')`);
+    await waitFor("[...document.querySelectorAll('main img')].every(el=>el.complete && el.naturalWidth>0)");
+    const story = await evaluate(`({client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,
+      note:document.querySelector('main header').textContent,body:document.querySelector('main').textContent,
+      phases:[...document.querySelectorAll('#groovenomad-roadmap + p + ol h3')].map(el=>el.textContent),
+      fullViews:document.querySelectorAll('figure a[target="_blank"]').length,
+      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.getBoundingClientRect().width/el.getBoundingClientRect().height,sourceRatio:Number(el.getAttribute('width'))/Number(el.getAttribute('height')),fit:getComputedStyle(el).objectFit}))})`);
+    assert.equal(story.client,story.scroll); assert.equal(story.fullViews,3); assert.equal(story.screens.length,3);
+    assert.ok(story.note.includes("projet d’école") && story.note.includes("équipe") && !story.note.includes("fictif"));
+    assert.ok(story.body.includes("trois personas") && story.body.includes("KPI") && story.body.includes("Make"));
+    assert.deepEqual(story.phases,["Lancement","Croissance et structuration","Expansion et leadership"]);
+    assert.ok(story.screens.every(screen=>screen.alt.length>30 && Math.abs(screen.ratio-screen.sourceRatio)<0.005 && screen.fit!=="cover"));
+    assert.ok(!story.body.includes("—"));
+    report.cases.push({project:"groovenomad",width,height,theme,...story});
+    await capture(`groovenomad-${width}-${theme}-intro`);
+    await capture(`groovenomad-${width}-${theme}`,true);
+  }
+  const grooveHtml = await fetch(url+"/projects/groovenomad").then(response=>response.text());
+  assert.ok(grooveHtml.includes("trois personas") && grooveHtml.includes("Expansion et leadership"));
+  report.checks.push("GrooveNomad: school team project, cover and three complete slides, three personas, exactly three roadmap phases, KPI scope without commercial results; 1440/390/320 px dark/light, no overflow, server-rendered story");
+  await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
   await click('.project-page main header a[href="/#projets"]');
   await waitFor("location.pathname==='/' && location.hash==='#projets' && Math.abs(document.querySelector('#projets').getBoundingClientRect().top)<2");
   assert.ok(await evaluate("document.querySelector('canvas')!==null"));
   report.checks.push("Real project routes, previous/next, gallery return, engine disposal, persistent theme across reload and navigation");
-  for(const slug of ["cephalee","mousse","boussole"]) assert.equal((await fetch(url+"/projects/"+slug)).status,200);
+  for(const slug of ["cephalee","mousse","groovenomad"]) assert.equal((await fetch(url+"/projects/"+slug)).status,200);
   assert.equal((await fetch(url+"/projects/unknown")).status,404);
   await page("Emulation.setScriptExecutionDisabled",{value:true}); await page("Page.navigate",{url}); await sleep(900);
   assert.equal(await evaluate("document.documentElement.dataset.theme"),"dark");
   assert.equal(await evaluate("document.querySelector('.pond-poster img').naturalWidth>0"),true);
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.theme-toggle')).display"),"none");
   await capture("no-javascript");
-  await page("Page.navigate",{url:url+"/projects/boussole"}); await sleep(900);
-  assert.equal(await evaluate("document.querySelector('h1').textContent"),"Boussole");
+  await page("Page.navigate",{url:url+"/projects/groovenomad"}); await sleep(900);
+  assert.equal(await evaluate("document.querySelector('h1').textContent"),"GrooveNomad");
   report.checks.push("All projects prerender, invalid slug is 404, landing/poster and project pages work without JavaScript");
   assert.deepEqual(errors,[]);
   console.log(JSON.stringify({layouts:report.layouts.length,themes:report.themes.length,checks:report.checks,errors},null,2));

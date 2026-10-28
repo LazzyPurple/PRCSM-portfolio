@@ -388,3 +388,29 @@ avec une légende adaptée, ce qui conserve les cinq visuels sans répétition s
 Typecheck, lint, 23 tests et build passent. Contrôle Chrome à 1440×900 et 390×844 :
 nouvelle source chargée dans la sélection, page dédiée avec ratio 4:3, aucun
 débordement ni erreur navigateur. Captures : artifacts/mousse-cover/projects-*.png.
+
+## 2026-10-28 — GrooveNomad, troisième projet réel
+
+Boussole est remplacé par GrooveNomad, projet d'école collectif, à la route
+/projects/groovenomad. Le récit emploie « nous » et reprend les éléments fournis :
+positionnement voyage/musique/IA, analyse de marché, trois personas, périmètre,
+automatisation, tableaux de bord, KPI et roadmap. La précision directe de Nathan
+sur trois phases (lancement ; croissance et structuration ; expansion et leadership)
+prime sur la slide produit en quatre étapes, non affichée. Pas de détail inventé
+sur les personas, le rôle individuel, les cibles de KPI ou les résultats commerciaux.
+
+Quatre visuels sélectionnés parmi les neuf fournis : couverture, fonctionnalités,
+scénario Make et dashboard décisionnel. Encodage WebP aux dimensions originales,
+sans retouche ni recadrage des slides, avec liens vers les grands formats. Les autres
+slides ont servi de contexte. Provenance : docs/groovenomad-assets.md. Les trois
+projets actifs sont désormais Céphalée, Mousse et GrooveNomad ; le rendu générique
+des placeholders est supprimé de ProjectPage, qui reçoit toujours son récit serveur.
+
+Validation : typecheck, lint, 23 tests et build Turbopack passent. Chrome vérifie les
+trois cas à 1440/390/320 px en clair/sombre, les slides complètes, les trois phases,
+la navigation, le retour à la sélection et l'absence de débordement. Production
+GrooveNomad vérifiée avec et sans JavaScript, thème sombre initial et aucune erreur
+navigateur. Les ratios sont mesurés via DOMRect pour éviter les arrondis entiers des
+attributs DOM width/height sur les petites slides. Rapport :
+docs/validation/chrome-groovenomad.json. Captures : artifacts/portfolio-v2/groovenomad*
+et artifacts/groovenomad-production/. Safari et téléphone physique non vérifiés.

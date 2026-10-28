@@ -4,7 +4,6 @@ export const contact = {
   email: "nathan.toto@proton.me",
 };
 
-// The remaining fictional case will be replaced with CareerOS.
 export const projects = [
   {
     slug: "cephalee", name: "Céphalée", category: "Santé · Application mobile & interface praticien",
@@ -25,15 +24,13 @@ export const projects = [
     problem: "Mousse est un projet personnel que j’utilise au quotidien comme assistant IA sur Mac. Il vit dans l’encoche de l’écran et rassemble la conversation, la navigation web, les actions sur l’ordinateur et les outils qui m’aident à organiser ma journée.",
   },
   {
-    slug: "boussole", name: "Boussole", category: "Équipes produit · Outil collaboratif",
-    cover: { src: "/projects/boussole.webp", width: 1536, height: 1024, position: "78% 35%" },
-    label: "Concept fictif",
-    note: "Concept fictif · scénario de démonstration, sans résultat réel revendiqué.",
-    alt: "Concept d’une feuille de route produit, avec des cartes crème, corail et ambre sur un fond vert profond.",
-    description: "Partager les raisons d’une priorité, pas seulement sa place dans le backlog.",
-    problem: "Une liste ordonnée ne raconte pas les arbitrages qui l’ont construite. Ce scénario explore un espace commun pour rendre les décisions produit compréhensibles.",
-    approach: "Relier chaque sujet à un besoin, une hypothèse et une décision. Tester d’abord un rituel de priorisation avec une équipe avant d’en faire un outil plus ambitieux.",
-    validation: "Vérifier que l’équipe peut expliquer les priorités et leurs compromis, puis ajuster les informations affichées pour éviter de créer une nouvelle charge de documentation.",
+    slug: "groovenomad", name: "GrooveNomad", category: "Projet d’école · Voyage & musique",
+    cover: { src: "/projects/groovenomad/cover.webp", width: 3840, height: 2880, position: "50% 40%" },
+    label: "Projet d’école",
+    note: "Projet collectif · Analyse de marché · Personas · Roadmap & KPI",
+    alt: "Interface GrooveNomad : assistant de voyage personnalisé, navigation violette et illustration de festival sur un fond coloré.",
+    description: "Imaginer un voyage au rythme de ses goûts musicaux.",
+    problem: "GrooveNomad est un projet d’école mené en équipe. Nous avons imaginé un site de voyage pour les jeunes, qui combine musique, découverte et recommandations personnalisées par IA. Le travail relie analyse de marché, conception du service, automatisation et pilotage.",
   },
 ] as const;
 

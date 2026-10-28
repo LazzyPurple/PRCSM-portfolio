@@ -19,7 +19,7 @@ test("both UI themes and the pale violet footer meet AA text contrast", () => {
   }
 });
 
-test("project covers preserve their dimensions and distinguish the real case from placeholders", async () => {
+test("project covers preserve their dimensions and identify each project's context", async () => {
   assert.equal(contact.linkedin, "https://www.linkedin.com/in/nathan-toto/");
   assert.equal(contact.github, "https://github.com/LazzyPurple");
   assert.equal(new Set(projects.map(p => p.slug)).size, 3);
@@ -35,7 +35,10 @@ test("project covers preserve their dimensions and distinguish the real case fro
   assert.equal(projects[1].slug, "mousse");
   assert.equal(projects[1].label, "Projet personnel");
   assert.ok(projects[1].note.includes("Utilisé au quotidien"));
-  assert.equal(projects[2].label, "Concept fictif");
+  assert.equal(projects[2].slug, "groovenomad");
+  assert.equal(projects[2].label, "Projet d’école");
+  assert.ok(projects[2].note.includes("Projet collectif"));
+  assert.ok(projects.every(project => !project.note.includes("fictif")));
   for (const screen of ["resume", "rapport", "intensite", "partage"]) {
     const image = await sharp(`public/projects/cephalee/${screen}.webp`).metadata();
     assert.equal(image.format, "webp");
@@ -49,5 +52,11 @@ test("project covers preserve their dimensions and distinguish the real case fro
     assert.equal(image.width, screen === "encoche" ? 3840 : 1600);
     assert.equal(image.height, screen === "encoche" ? 2880 : 1067);
     assert.equal(image.hasAlpha, true);
+  }
+  for (const [screen, width, height] of [["fonctionnalites",1987,1102],["automatisation",1980,1110],["dashboard",1991,1117]]) {
+    const image = await sharp(`public/projects/groovenomad/${screen}.webp`).metadata();
+    assert.equal(image.format, "webp");
+    assert.equal(image.width, width);
+    assert.equal(image.height, height);
   }
 });
