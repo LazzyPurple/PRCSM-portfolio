@@ -377,3 +377,14 @@ landing, prérendu des trois routes et 404 inconnu. Version de production de Mou
 contrôlée avec et sans JavaScript, thème sombre initial et aucune erreur navigateur.
 Rapport : docs/validation/chrome-mousse.json. Captures : artifacts/portfolio-v2/mousse*
 et artifacts/mousse-production/. Safari et téléphone physique non vérifiés.
+
+## 2026-10-28 — Couverture Mousse choisie par Nathan
+
+La composition des trois formats autour de l'encoche remplace la photo du café en
+couverture de Mousse : sélection, bandeau, image d'introduction et aperçus des liens.
+L'encodage WebP existant est réutilisé ; dimensions 3840×2880 et texte alternatif
+corrigés dans les données partagées. La photo du café prend sa place dans le récit
+avec une légende adaptée, ce qui conserve les cinq visuels sans répétition supplémentaire.
+Typecheck, lint, 23 tests et build passent. Contrôle Chrome à 1440×900 et 390×844 :
+nouvelle source chargée dans la sélection, page dédiée avec ratio 4:3, aucun
+débordement ni erreur navigateur. Captures : artifacts/mousse-cover/projects-*.png.

@@ -17,10 +17,10 @@ export const projects = [
   },
   {
     slug: "mousse", name: "Mousse", category: "Projet personnel · Assistant IA sur Mac",
-    cover: { src: "/projects/mousse/cover.webp", width: 1600, height: 1067, position: "50% 10%" },
+    cover: { src: "/projects/mousse/encoche.webp", width: 3840, height: 2880, position: "50% 40%" },
     label: "Projet personnel",
     note: "IA locale · Compagnon dans l’encoche · Utilisé au quotidien",
-    alt: "Mousse dans l’encoche d’un MacBook posé dans un café, avec les commandes musicales ouvertes au-dessus du bureau.",
+    alt: "Composition des trois formats de Mousse dans l’encoche : mascotte, commandes musicales et tableau de bord sur un fond abstrait.",
     description: "Un compagnon IA local, à portée d’encoche.",
     problem: "Mousse est un projet personnel que j’utilise au quotidien comme assistant IA sur Mac. Il vit dans l’encoche de l’écran et rassemble la conversation, la navigation web, les actions sur l’ordinateur et les outils qui m’aident à organiser ma journée.",
   },

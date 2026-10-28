@@ -17,7 +17,11 @@ l'application Mousse ou de son exécution sur différents Mac.
 Encodage Sharp en WebP, qualité 92, alpha 100. Dimensions et contenu conservés.
 Aucun recadrage, aucun ajout et aucune nouvelle génération d'image. Le portfolio
 affiche les quatre visuels du récit dans leur intégralité avec un lien vers le fichier
-en grand ; la couverture est aussi utilisée dans la sélection et les aperçus.
+en grand. La composition `encoche.webp` est la couverture choisie par Nathan, également
+utilisée dans la sélection et les aperçus. La photo `cover.webp`, ancienne couverture,
+reste dans le récit pour illustrer les commandes musicales. Le fichier transmis à
+nouveau (`1a95a8fc-6a9e-4a43-b928-eb8d7de8cce3.png`, 3840 × 2880) reprend cette composition :
+l'encodage existant est réutilisé.
 
 | Fichier fourni (codex-clipboard) | Destination dans public/projects/mousse | Dimensions |
 | --- | --- | --- |

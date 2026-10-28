@@ -33,10 +33,10 @@ export default function MousseCase() {
         <h2 id="mousse-notch" className={HEADING}>Une présence qui s’adapte au moment</h2>
         <p className={BODY}>La mascotte, les commandes musicales et le tableau de bord occupent différents formats autour de l’encoche. L’idée est de garder Mousse à portée de main, tout en laissant de la place à ce que je suis en train de faire.</p>
         <figure className="mt-8">
-          <a href="/projects/mousse/encoche.webp" target="_blank" rel="noreferrer" aria-label="Les formats de Mousse : ouvrir le visuel en grand (nouvel onglet)" className="block rounded-[6px] focus-visible:outline-2 focus-visible:outline-offset-4">
-            <Image src="/projects/mousse/encoche.webp" alt="Trois formats de Mousse autour de l’encoche : mascotte compacte, commandes musicales et tableau de bord étendu." width={3840} height={2880} sizes="(min-width: 1024px) 56rem, 100vw" className="block h-auto w-full rounded-[6px]" />
+          <a href="/projects/mousse/cover.webp" target="_blank" rel="noreferrer" aria-label="Les commandes de Mousse : ouvrir le visuel en grand (nouvel onglet)" className="block rounded-[6px] focus-visible:outline-2 focus-visible:outline-offset-4">
+            <Image src="/projects/mousse/cover.webp" alt="Mousse dans l’encoche d’un MacBook posé dans un café, avec les commandes musicales ouvertes au-dessus du bureau." width={1600} height={1067} sizes="(min-width: 1024px) 56rem, 100vw" className="block h-auto w-full rounded-[6px]" />
           </a>
-          <figcaption className={`${BODY} mt-4 text-[14px]`}>D’une petite présence dans l’encoche à un espace complet pour le quotidien.</figcaption>
+          <figcaption className={`${BODY} mt-4 text-[14px]`}>Les commandes musicales s’ouvrent depuis l’encoche, au-dessus du bureau.</figcaption>
         </figure>
       </section>
 
