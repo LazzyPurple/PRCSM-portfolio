@@ -29,13 +29,13 @@ export default function MobileNav() {
 
   return (
     <div className="mobile-nav" data-koi-ignore>
-      <button ref={trigger} type="button" className="mobile-menu-bar" aria-haspopup="dialog" aria-expanded={open} aria-controls="mobile-menu" onClick={() => { dialog.current?.showModal(); setOpen(true); }}>
-        <span>Menu</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg>
+      <button ref={trigger} type="button" className="mobile-menu-bar" aria-label="Ouvrir le menu de navigation" aria-haspopup="dialog" aria-expanded={open} aria-controls="mobile-menu" onClick={() => { dialog.current?.showModal(); setOpen(true); }}>
+        <span>Nathan TOTO</span>
+        <span className="mobile-menu-grid" aria-hidden="true" />
       </button>
-      <dialog ref={dialog} id="mobile-menu" className="mobile-menu" aria-labelledby="mobile-menu-title" onClose={() => { setOpen(false); trigger.current?.focus({ preventScroll: true }); }}>
+      <dialog ref={dialog} id="mobile-menu" className="mobile-menu" aria-label="Menu de navigation" onClose={() => { setOpen(false); trigger.current?.focus({ preventScroll: true }); }}>
         <div className="mobile-menu-bar mobile-menu-heading">
-          <span id="mobile-menu-title">Navigation</span>
+          <span>Nathan TOTO</span>
           <button type="button" onClick={close} aria-label="Fermer le menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19" /></svg></button>
         </div>
         <nav className="mobile-menu-links" aria-label="Navigation mobile">

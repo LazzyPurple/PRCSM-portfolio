@@ -208,6 +208,23 @@ Les 16 scénarios de régression de la mare passent également, sans erreur navi
 Rapports : docs/validation/chrome-mobile*.json ; captures : artifacts/mobile/.
 Safari et appareil tactile physique restent à qualifier.
 
+## Identité et ouverture animée du menu mobile — 28 octobre 2026
+
+La capsule fermée et celle du menu affichent Nathan TOTO. Le bouton d'ouverture utilise
+le SVG squares-four fourni, copié sans modification dans public/icons/ ; son masque CSS
+hérite de la couleur du thème. La croix reste le bouton de fermeture.
+L'entrée combine descente de 36px et fondu sur 380ms ; les liens descendent à leur tour
+avec des départs à 80, 140 et 200ms, sur 280ms chacun. Le verre reste constant, sans animer
+le flou ni ajouter de boucle JavaScript. La capsule fermée est masquée pendant l'entrée
+de son équivalent modal pour éviter le dédoublement du nom. Le mouvement réduit annule
+l'ensemble des animations et des délais. Desktop inchangé.
+
+Typecheck, lint et build passent. Les contrôles Chrome mobile passent aux quatre formats
+existants, avec vérification du SVG, du label, des keyframes et délais, du focus, d'Échap,
+des liens et du mode mouvement réduit. Captures intermédiaires observées à 120 et 260ms.
+Rapport : docs/validation/chrome-mobile-menu-motion.json ; captures : artifacts/mobile/.
+Safari et téléphone physique non testés.
+
 ## Disques réfléchis du soleil et de la lune — 28 octobre 2026
 
 Le soleil est reconnaissable comme un disque doré, la lune comme un disque pâle

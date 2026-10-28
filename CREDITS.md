@@ -93,6 +93,9 @@ la capture fournie par Nathan ; il ne reprend pas les dépendances Motion ou nex
 du menu mobile Dao. Le placement initial des koï dans le viewport et l'aimantation des
 articles mobiles sont propres à cette adaptation.
 
+L'icône `public/icons/squares-four.svg` est le fichier fourni par Nathan, conservé sans
+modification et utilisé comme masque CSS pour suivre la couleur du thème.
+
 Les trois projets Lisière, Intervalle et Boussole sont entièrement fictifs.
 Leurs visuels ont été générés avec l'outil intégré `image_gen`, puis encodés en WebP.
 Les prompts et les chemins des fichiers sont consignés dans

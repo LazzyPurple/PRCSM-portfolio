@@ -25,6 +25,7 @@ const flick = async (width,height) => {
 };
 try {
   await page("Page.enable"); await page("Runtime.enable"); await page("Log.enable");
+  await page("Emulation.setEmulatedMedia",{features:[{name:"prefers-reduced-motion",value:"no-preference"}]});
   await page("Page.addScriptToEvaluateOnNewDocument", { source: `
     window.__opening=null;
     new MutationObserver(()=>{
@@ -66,9 +67,24 @@ try {
     assert.equal(await evaluate("document.documentElement.scrollWidth===document.documentElement.clientWidth"),true);
     assert.equal(await evaluate("getComputedStyle(document.querySelector('.site-header')).display"),"none");
     assert.notEqual(await evaluate("getComputedStyle(document.querySelector('.mobile-menu-bar')).backdropFilter"),"none");
+    assert.equal(await evaluate("document.querySelector('.mobile-nav > button > span').textContent"),"Nathan TOTO");
+    assert.ok(await evaluate("getComputedStyle(document.querySelector('.mobile-menu-grid')).maskImage.includes('/icons/squares-four.svg')"));
     await click(".mobile-nav > button");
     await waitFor("document.querySelector('dialog').open && document.body.style.overflow==='hidden'");
     assert.equal(await evaluate("document.querySelector('dialog').contains(document.activeElement)"),true);
+    const motion=await evaluate("({name:getComputedStyle(document.querySelector('dialog')).animationName,delays:[...document.querySelectorAll('.mobile-menu-links > a')].map(el=>parseFloat(getComputedStyle(el).animationDelay)),frames:document.querySelector('dialog').getAnimations()[0].effect.getKeyframes().map(frame=>frame.transform)})");
+    assert.equal(motion.name,"mobile-menu-enter");
+    assert.ok(motion.delays[0]<motion.delays[1] && motion.delays[1]<motion.delays[2]);
+    assert.ok(motion.frames[0].includes("-36px"));
+    if(width===390) {
+      report.motion=motion;
+      await evaluate("document.querySelector('dialog').getAnimations({subtree:true}).forEach(a=>{a.pause();a.currentTime=120})");
+      await screenshot("menu-opening-early");
+      await evaluate("document.querySelector('dialog').getAnimations({subtree:true}).forEach(a=>a.currentTime=260)");
+      await screenshot("menu-opening-late");
+      await evaluate("document.querySelector('dialog').getAnimations({subtree:true}).forEach(a=>a.finish())");
+    }
+    await waitFor("document.querySelector('dialog').getAnimations({subtree:true}).every(a=>a.playState==='finished')");
     await screenshot("menu-dark-"+width);
     await click(".mobile-menu .theme-toggle");
     assert.equal(await evaluate("document.documentElement.dataset.theme"),"light");
@@ -92,6 +108,7 @@ try {
       }
     }
     await click(".mobile-nav > button");
+    await waitFor("document.querySelector('dialog').getAnimations({subtree:true}).every(a=>a.playState==='finished')");
     await click('.mobile-menu-links a[href="/#projets"]');
     await waitFor("!document.querySelector('dialog').open && Math.abs(document.querySelector('#projets').getBoundingClientRect().top)<2");
     report.layouts.push({width,height,opening,projectStops:positions});
@@ -99,10 +116,15 @@ try {
   report.checks.push("Every koi and fin starts inside the small viewport and is visible in GPU flow pixels");
   report.checks.push("Native touch flicks stop on each project, heading scrolls away, footer reached after last project");
   report.checks.push("Glass menu opens modally, traps focus, toggles theme, closes on Escape/link, restores scrolling/focus");
+  report.checks.push("Supplied SVG mask, Nathan TOTO label, downward panel entrance and staggered link reveals");
   await page("Emulation.setDeviceMetricsOverride",{width:390,height:844,deviceScaleFactor:1,mobile:true});
   await page("Page.navigate",{url:url+"/?debug"}); await waitFor("!!window.__opening");
+  await page("Emulation.setEmulatedMedia",{features:[{name:"prefers-reduced-motion",value:"reduce"}]});
   await click(".mobile-nav > button");
   await waitFor("document.querySelector('dialog').open");
+  assert.equal(await evaluate("getComputedStyle(document.querySelector('dialog')).animationName"),"none");
+  assert.equal(await evaluate("[...document.querySelectorAll('.mobile-menu-links > a')].every(el=>getComputedStyle(el).animationName==='none' && getComputedStyle(el).opacity==='1')"),true);
+  report.checks.push("Reduced motion shows the menu and all links immediately, without entrance or stagger");
   await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
   await waitFor("!document.querySelector('dialog').open && document.body.style.overflow!=='hidden'");
   assert.equal(await evaluate("getComputedStyle(document.querySelector('.mobile-nav')).display"),"none");

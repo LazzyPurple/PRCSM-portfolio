@@ -115,11 +115,18 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px s
   .contact-button { padding: 7px 10px; }
   .theme-toggle { width: 24px; }
   .mobile-nav { display: block; position: fixed; inset: 14px 16px auto; z-index: 40; }
+  .mobile-nav > button[aria-expanded="true"] { opacity: 0; }
   .mobile-menu-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 56px; padding: 12px 20px; border: 1px solid color-mix(in srgb, var(--foreground-color) 55%, transparent); border-radius: 999px; color: var(--foreground-color); background: color-mix(in srgb, var(--background-color) 55%, transparent); -webkit-backdrop-filter: blur(20px) saturate(170%); backdrop-filter: blur(20px) saturate(170%); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--paper) 40%, transparent), 0 8px 24px color-mix(in srgb, var(--page-dark) 16%, transparent); font-size: 15px; text-align: left; }
   .mobile-menu-bar svg { width: 23px; height: 23px; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; fill: none; }
-  .mobile-menu { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 14px 16px 35px; border: none; color: var(--foreground-color); background: color-mix(in srgb, var(--background-color) 78%, transparent); -webkit-backdrop-filter: blur(26px) saturate(150%); backdrop-filter: blur(26px) saturate(150%); }
+  .mobile-menu-grid { width: 28px; height: 28px; background: currentColor; -webkit-mask: url("/icons/squares-four.svg") center / contain no-repeat; mask: url("/icons/squares-four.svg") center / contain no-repeat; }
+  .mobile-menu { --menu-enter-duration: 380ms; --menu-link-duration: 280ms; --menu-ease: cubic-bezier(.22, 1, .36, 1); --menu-link-delay: 80ms; --menu-stagger: 60ms; position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 14px 16px 35px; border: none; color: var(--foreground-color); background: color-mix(in srgb, var(--background-color) 78%, transparent); -webkit-backdrop-filter: blur(26px) saturate(150%); backdrop-filter: blur(26px) saturate(150%); }
   .mobile-menu::backdrop { background: transparent; }
-  .mobile-menu[open] { display: flex; flex-direction: column; }
+  .mobile-menu[open] { display: flex; flex-direction: column; animation: mobile-menu-enter var(--menu-enter-duration) var(--menu-ease) both; }
+  .mobile-menu[open] .mobile-menu-links > a { animation: mobile-menu-link-enter var(--menu-link-duration) var(--menu-ease) both; animation-delay: var(--menu-link-delay); }
+  .mobile-menu[open] .mobile-menu-links > a:nth-child(2) { animation-delay: calc(var(--menu-link-delay) + var(--menu-stagger)); }
+  .mobile-menu[open] .mobile-menu-links > a:nth-child(3) { animation-delay: calc(var(--menu-link-delay) + var(--menu-stagger) + var(--menu-stagger)); }
+  @keyframes mobile-menu-enter { from { opacity: 0; transform: translateY(-36px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes mobile-menu-link-enter { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: translateY(0); } }
   .mobile-menu-heading { flex-shrink: 0; }
   .mobile-menu-heading button { display: grid; place-items: center; width: 32px; height: 32px; }
   .mobile-menu-links { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: clamp(14px, 4vh, 38px); padding-block: 30px; font: 500 clamp(40px, 10vw, 84px)/1.05 Georgia, serif; letter-spacing: -.045em; }
