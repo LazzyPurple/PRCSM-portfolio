@@ -4,18 +4,22 @@ export const contact = {
   email: "nathan.toto@proton.me",
 };
 
-// Fictional cases only; the real selection will be Mousse, Céphalée and CareerOS.
+// The remaining fictional cases will be replaced with Mousse and CareerOS.
 export const projects = [
   {
-    slug: "lisiere", name: "Lisière", category: "Mobilité · Application mobile",
-    alt: "Concept d’une application de trajets à vélo, sur un téléphone sauge avec une carte épurée.",
-    description: "Trouver un trajet à vélo qui donne envie de laisser la voiture au garage.",
-    problem: "Le chemin le plus court n’est pas toujours celui que l’on a envie de prendre. Ce scénario imagine un service pour les cyclistes du quotidien qui privilégient le calme et la simplicité.",
-    approach: "Commencer par les critères de choix d’un trajet, puis tester un parcours réduit à trois décisions : la destination, le niveau de confort et le départ. Prioriser la confiance plutôt que multiplier les options.",
-    validation: "Des entretiens et un prototype permettraient de vérifier si les critères proposés aident vraiment à choisir un trajet, et où l’information manque encore.",
+    slug: "cephalee", name: "Céphalée", category: "Santé · Application mobile & interface praticien",
+    cover: { src: "/projects/cephalee/cover.webp", width: 1600, height: 1067 },
+    label: "Cadrage & conception",
+    note: "Recherche utilisateur · Benchmark · Périmètre produit · Parcours & écrans",
+    alt: "Céphalée : un téléphone posé sur un bureau ensoleillé présente l’accueil de l’application et sa mascotte violette.",
+    description: "Du journal de crises au dialogue avec le praticien.",
+    problem: "Céphalée permet de consigner ses maux de tête pour en partager le suivi avec son praticien. J’ai travaillé sur la recherche utilisateur, le cadrage fonctionnel et la conception des parcours, avec une décision centrale : penser ensemble l’expérience du patient et celle du professionnel de santé.",
   },
   {
     slug: "intervalle", name: "Intervalle", category: "Services · Réservation",
+    cover: { src: "/projects/intervalle.webp", width: 1536, height: 1024 },
+    label: "Concept fictif",
+    note: "Concept fictif · scénario de démonstration, sans résultat réel revendiqué.",
     alt: "Concept d’un calendrier de réservation d’ateliers, dans une composition lilas et terre cuite.",
     description: "Passer de « j’aimerais essayer » à son premier atelier créatif, sans détour.",
     problem: "Entre les horaires, les places disponibles et le niveau attendu, réserver un atelier peut devenir plus compliqué que prévu. Ce cas fictif part de cette hésitation.",
@@ -24,6 +28,9 @@ export const projects = [
   },
   {
     slug: "boussole", name: "Boussole", category: "Équipes produit · Outil collaboratif",
+    cover: { src: "/projects/boussole.webp", width: 1536, height: 1024 },
+    label: "Concept fictif",
+    note: "Concept fictif · scénario de démonstration, sans résultat réel revendiqué.",
     alt: "Concept d’une feuille de route produit, avec des cartes crème, corail et ambre sur un fond vert profond.",
     description: "Partager les raisons d’une priorité, pas seulement sa place dans le backlog.",
     problem: "Une liste ordonnée ne raconte pas les arbitrages qui l’ont construite. Ce scénario explore un espace commun pour rendre les décisions produit compréhensibles.",

@@ -19,14 +19,25 @@ test("both UI themes and the pale violet footer meet AA text contrast", () => {
   }
 });
 
-test("fictional cases have readable local covers and the requested profile links", async () => {
+test("project covers preserve their dimensions and distinguish the real case from placeholders", async () => {
   assert.equal(contact.linkedin, "https://www.linkedin.com/in/nathan-toto/");
   assert.equal(contact.github, "https://github.com/LazzyPurple");
   assert.equal(new Set(projects.map(p => p.slug)).size, 3);
   for (const project of projects) {
-    const cover = await sharp(`public/projects/${project.slug}.webp`).metadata();
+    const cover = await sharp(`public${project.cover.src}`).metadata();
     assert.equal(cover.format, "webp");
-    assert.equal(cover.width / cover.height, 1.5);
+    assert.equal(cover.width, project.cover.width);
+    assert.equal(cover.height, project.cover.height);
     assert.ok(project.alt.length > 30);
+  }
+  assert.equal(projects[0].slug, "cephalee");
+  assert.equal(projects[0].label, "Cadrage & conception");
+  assert.ok(projects.slice(1).every(project => project.label === "Concept fictif"));
+  for (const screen of ["resume", "rapport", "intensite", "partage"]) {
+    const image = await sharp(`public/projects/cephalee/${screen}.webp`).metadata();
+    assert.equal(image.format, "webp");
+    assert.equal(image.width, 1067);
+    assert.equal(image.height, 1600);
+    assert.equal(image.hasAlpha, true);
   }
 });

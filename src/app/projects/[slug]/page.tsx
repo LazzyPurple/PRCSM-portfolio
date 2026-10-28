@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { projects } from "@/portfolio/content";
 import ProjectPage from "@/portfolio/ProjectPage";
+import CephaleeCase from "@/portfolio/cases/CephaleeCase";
 
 export const dynamicParams = false;
 export function generateStaticParams() { return projects.map(project => ({ slug: project.slug })); }
@@ -17,5 +18,5 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const project = projects.find(project => project.slug === slug);
   if (!project) notFound();
-  return <ProjectPage project={project} />;
+  return <ProjectPage project={project}>{slug === "cephalee" ? <CephaleeCase /> : undefined}</ProjectPage>;
 }

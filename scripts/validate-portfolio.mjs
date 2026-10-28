@@ -6,9 +6,11 @@ import { launchChrome, sleep } from "./chrome.mjs";
 const url = process.argv[2] ?? "http://127.0.0.1:3000";
 const output = resolve("artifacts/portfolio-v2");
 const { page, evaluate, waitFor, errors, close } = await launchChrome(output);
-const report = { layouts: [], themes: [], checks: [], errors };
-const capture = async name => {
-  const { data } = await page("Page.captureScreenshot", { format: "png" });
+const report = { layouts: [], themes: [], cases: [], checks: [], errors };
+const capture = async (name, full = false) => {
+  const { cssContentSize } = full ? await page("Page.getLayoutMetrics") : {};
+  const clip = full ? { x: 0, y: 0, width: cssContentSize.width, height: cssContentSize.height, scale: 1 } : undefined;
+  const { data } = await page("Page.captureScreenshot", { format: "png", captureBeyondViewport: full, clip });
   const buffer = Buffer.from(data, "base64");
   await writeFile(resolve(output, name + ".png"), buffer);
   return buffer;
@@ -94,13 +96,43 @@ try {
   assert.equal(await evaluate("document.documentElement.dataset.theme"),"light");
   await evaluate("window.scrollTo({top:innerHeight,behavior:'instant'})");
   await waitFor("Math.abs(document.querySelector('#projets').getBoundingClientRect().top)<2");
-  await click('.dao-strip a[href="/projects/lisiere"]');
-  await waitFor("location.pathname==='/projects/lisiere' && document.querySelector('h1')?.textContent==='Lisière'");
+  await click('.dao-strip a[href="/projects/cephalee"]');
+  await waitFor("location.pathname==='/projects/cephalee' && document.querySelector('h1')?.textContent==='Céphalée'");
   await waitFor("!document.documentElement.dataset.transition");
   assert.equal(await evaluate("window.__pond===undefined"),true);
   assert.equal(await evaluate("document.documentElement.dataset.theme"),"light");
   assert.equal(await evaluate("getComputedStyle(document.documentElement).scrollSnapType"),"none");
-  await capture("project-lisiere-light");
+  await capture("project-cephalee-light");
+  for (const [width, height, theme] of [[1440,900,"dark"],[390,844,"dark"],[390,844,"light"],[320,740,"dark"]]) {
+    await page("Emulation.setDeviceMetricsOverride",{width,height,deviceScaleFactor:1,mobile:width<1024});
+    await evaluate(`document.documentElement.dataset.theme=${JSON.stringify(theme)};window.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('main img').forEach(el=>el.loading='eager')`);
+    await waitFor("[...document.querySelectorAll('main img')].every(el=>el.complete && el.naturalWidth>0)");
+    const story = await evaluate(`({width:innerWidth,client:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,
+      title:document.querySelector('h1').textContent,figures:document.querySelectorAll('figure').length,
+      screens:[...document.querySelectorAll('figure img')].map(el=>({alt:el.alt,ratio:el.width/el.height,fit:getComputedStyle(el).objectFit})),
+      fullViews:document.querySelectorAll('figure a[target="_blank"]').length,
+      sources:[...document.querySelectorAll('main section a')].map(el=>el.href),
+      note:document.querySelector('main header').textContent})`);
+    assert.equal(story.client,story.scroll); assert.equal(story.title,"Céphalée");
+    assert.equal(story.figures,4); assert.equal(story.fullViews,4);
+    assert.ok(story.screens.every(screen=>screen.alt.length>30 && Math.abs(screen.ratio-1067/1600)<0.005 && screen.fit!=="cover"));
+    assert.ok(story.sources.some(href=>href.includes("1553340")));
+    assert.ok(story.sources.some(href=>href.includes("cnil.fr")));
+    assert.ok(story.sources.some(href=>href.includes("esante.gouv.fr")));
+    assert.ok(!story.note.includes("fictif"));
+    report.cases.push({width,height,theme,...story});
+    await capture(`cephalee-${width}-${theme}`,true);
+    if(width===390 && theme==="dark") {
+      await evaluate("document.querySelector('#cephalee-screens').scrollIntoView({behavior:'instant'})");
+      await capture("cephalee-mobile-screens");
+    }
+  }
+  await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
+  await evaluate("document.documentElement.dataset.theme='light'");
+  const caseHtml = await fetch(url+"/projects/cephalee").then(response=>response.text());
+  assert.ok(caseHtml.includes("Deux interfaces, un même fil de suivi."));
+  assert.ok(caseHtml.includes("/projects/cephalee/partage.webp"));
+  report.checks.push("Céphalée: real cover, four uncropped supplied screens, full-size links, external sources, server-rendered decision narrative; 1440/390/320 px, dark/light, no overflow");
   await evaluate("document.querySelector('.project-pager').scrollIntoView({behavior:'instant'})");
   await click('.project-pager a[href="/projects/intervalle"]');
   await waitFor("location.pathname==='/projects/intervalle' && document.querySelector('h1')?.textContent==='Intervalle'");
@@ -109,7 +141,7 @@ try {
   await waitFor("location.pathname==='/' && location.hash==='#projets' && Math.abs(document.querySelector('#projets').getBoundingClientRect().top)<2");
   assert.ok(await evaluate("document.querySelector('canvas')!==null"));
   report.checks.push("Real project routes, previous/next, gallery return, engine disposal, persistent theme across reload and navigation");
-  for(const slug of ["lisiere","intervalle","boussole"]) assert.equal((await fetch(url+"/projects/"+slug)).status,200);
+  for(const slug of ["cephalee","intervalle","boussole"]) assert.equal((await fetch(url+"/projects/"+slug)).status,200);
   assert.equal((await fetch(url+"/projects/unknown")).status,404);
   await page("Emulation.setScriptExecutionDisabled",{value:true}); await page("Page.navigate",{url}); await sleep(900);
   assert.equal(await evaluate("document.documentElement.dataset.theme"),"dark");

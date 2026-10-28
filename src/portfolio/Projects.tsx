@@ -22,11 +22,11 @@ export default function Projects() {
             <article key={project.slug} className="mobile-project" data-project={project.slug}>
               {index === 0 && <ProjectHeading className="projects-mobile-heading" />}
               <Link href={`/projects/${project.slug}`} className="mobile-project-image relative w-full overflow-hidden rounded-2xl" aria-label={`Voir ${project.name}`}>
-                <Image src={`/projects/${project.slug}.webp`} alt={project.alt} fill sizes="100vw" className="object-cover" />
+                <Image src={project.cover.src} alt={project.alt} fill sizes="100vw" className="object-cover" />
               </Link>
               <h3 className="mt-[5vw] mb-2 text-[21px]">{project.name}</h3>
               <p className="text-[17px] text-[var(--muted-color)]">{project.description}</p>
-              <p className="mt-5 text-[14px] text-[var(--muted-color)]">Concept fictif</p>
+              <p className="mt-5 text-[14px] text-[var(--muted-color)]">{project.label}</p>
               <Link href={`/projects/${project.slug}`} className="mt-5 self-start rounded-full px-4 py-1 text-[15px]" style={{ background: "color-mix(in srgb, var(--foreground-color) 8%, transparent)" }}>Voir le projet →</Link>
             </article>
           ))}
@@ -97,7 +97,7 @@ function DesktopStrip() {
 }
 
 function ProjectHeading({ className }: { className: string }) {
-  return <div className={className}><h2>Mes projets</h2><p>Cas fictifs, en attendant la sélection.</p></div>;
+  return <div className={className}><h2>Mes projets</h2><p>Du besoin aux choix produit.</p></div>;
 }
 
 function StripTile({ project }: { project: Project }) {
@@ -110,10 +110,10 @@ function StripTile({ project }: { project: Project }) {
       pushWithTransition(router, href);
     }}>
       <div data-slug={project.slug} className="relative aspect-[3/2] h-[min(62svh,42rem)] overflow-hidden">
-        <Image src={`/projects/${project.slug}.webp`} alt={project.alt} fill sizes="(min-height: 1100px) 63rem, 93vh" className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+        <Image src={project.cover.src} alt={project.alt} fill sizes="(min-height: 1100px) 63rem, 93vh" className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
         <span className="project-hover pointer-events-none absolute bottom-4 left-4 translate-y-1 rounded-full px-3 py-1.5 text-[12px] opacity-0 transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100">Voir le projet</span>
       </div>
-      <div className="mt-3 flex items-baseline gap-3"><h3 className="whitespace-nowrap text-[15px]">{project.name}</h3><span className="whitespace-nowrap font-mono text-[12px] text-[var(--muted-color)]">Concept fictif</span></div>
+      <div className="mt-3 flex items-baseline gap-3"><h3 className="whitespace-nowrap text-[15px]">{project.name}</h3><span className="whitespace-nowrap font-mono text-[12px] text-[var(--muted-color)]">{project.label}</span></div>
       <p className="mt-1 text-[14px] leading-[1.5] text-[var(--muted-color)]">{project.description}</p>
     </Link>
   );

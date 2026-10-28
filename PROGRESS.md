@@ -319,3 +319,32 @@ Profil production RTX 4070 SUPER, viewport 1440×900/DPR 1, canvas 1425×980 ave
 GPU médian 2,758 ms, p95 3,642 ms, 239,97 FPS sur 10 secondes. Aucun log d'erreur navigateur.
 Rapports : docs/validation/chrome-portfolio-v2*.json. Captures : artifacts/portfolio-v2/.
 Safari, téléphone physique et portable moyen restent non qualifiés.
+
+## 2026-10-28 — Céphalée, premier cas réel
+
+Lisière est remplacé dans la sélection, les aperçus et la navigation par Céphalée,
+route /projects/cephalee. Le cadre et les interactions de la page Dao sont conservés.
+Le récit statique est composé côté serveur dans le shell client existant : contexte,
+sondage et benchmark, décision de deux interfaces, parcours patient et cadrage des
+données de santé. Aucun résultat du sondage propre au projet, déploiement ou effet
+clinique n'est inventé. Intervalle et Boussole restent explicitement fictifs.
+
+Les cinq images fournies sont encodées en WebP à leurs dimensions originales avec
+transparence conservée : environ 500 Ko au total. Les quatre écrans patient sont
+intégraux, responsifs et ouvrables en grand. Aucun écran praticien n'a été fabriqué.
+La source de 2022 est vérifiée : résultats préliminaires, n=300, 77,3 % arrondi à
+77 %, 74 %, 79 % « rarement ou jamais ». Les formalités CNIL sont présentées selon
+le traitement, HDS comme sujet d'hébergement étudié au cadrage. Provenance détaillée
+dans docs/cephalee-sources.md ; liens accessibles depuis la page.
+
+Vérification : tsc, lint, 23 tests et build standard Turbopack passent. Le cache
+Turbopack de production initial empêchait le lancement du worker PostCSS ; le déplacer
+dans artifacts/turbopack-before-cephalee a suffi, sans changement de configuration.
+Un build Webpack de repli a également passé. La nouvelle route a d'abord été mise en
+cache en 404 par le serveur dev, puis a correctement été recompilée sans redémarrage.
+Chrome : 1440/1024 desktop, Céphalée à 1440/390/320, thèmes sombre/clair, quatre
+captures chargées sans recadrage, sources, aucune largeur débordante, précédent/
+suivant et retour, HTML prérendu. Régression mobile 390×844, 320×740, 768×1024,
+844×390 : aimantation par projet, menu animé, clavier et reduced motion passent.
+Aucun log d'erreur navigateur. Rapports : docs/validation/chrome-cephalee*.json.
+Les contrôles portent sur Chrome Windows ; Safari et téléphone physique non vérifiés.
