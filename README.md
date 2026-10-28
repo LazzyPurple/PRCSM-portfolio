@@ -1,4 +1,4 @@
-# Pond
+# PRCSM-portfolio
 
 Portfolio : mare de koï procédurale, Next.js App Router et Three.js vanilla.
 

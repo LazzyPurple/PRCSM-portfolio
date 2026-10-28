@@ -24,10 +24,9 @@ paramètres d'installation.
 
 ## Premier déploiement
 
-1. Publier ce dépôt local sur GitHub, GitLab ou Bitbucket. Aucun dépôt distant n'était
-   configuré lors de cette préparation ; choisir son nom et sa visibilité avant de le publier.
-2. Depuis le tableau de bord Netlify, créer un projet en important ce dépôt Git.
-3. Choisir la branche à publier, puis vérifier les valeurs du tableau ci-dessus.
+1. Depuis le tableau de bord Netlify, créer un projet en important un dépôt GitHub.
+2. Sélectionner [LazzyPurple/PRCSM-portfolio](https://github.com/LazzyPurple/PRCSM-portfolio).
+3. Choisir la branche `main`, puis vérifier les valeurs du tableau ci-dessus.
 4. Lancer le déploiement. Le journal doit montrer le build Next.js et l'adaptateur Netlify.
 5. Ouvrir l'URL attribuée au site, puis relier un domaine si souhaité.
 
