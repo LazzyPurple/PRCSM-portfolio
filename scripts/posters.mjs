@@ -5,12 +5,13 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdir, readdir, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import sharp from "sharp";
 import { launchChrome } from "./chrome.mjs";
 
 const url = process.argv[2] ?? "http://127.0.0.1:3000/";
+const mobileOnly = process.argv.includes("--mobile-only");
 assert.ok((await fetch(url, { signal: AbortSignal.timeout(5000) })).ok, "Start the pond server before capturing posters");
 const SEED = 80210;
 const QUALITY_MIN = 40;
@@ -27,11 +28,13 @@ const output = resolve("public/pond");
 await mkdir(output, { recursive: true });
 const chrome = await launchChrome("artifacts/posters");
 const { page, evaluate, waitFor } = chrome;
-const manifest = { generatedAt: new Date().toISOString(), baseRevision: "", seed: SEED, browser: "", frames: [] };
+const manifest = mobileOnly ? JSON.parse(await readFile("src/pond/posters.json", "utf8"))
+  : { generatedAt: new Date().toISOString(), baseRevision: "", seed: SEED, browser: "", frames: [] };
 
 try {
-  manifest.baseRevision = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
-  manifest.browser = (await chrome.send("Browser.getVersion")).product;
+  const baseRevision = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+  const browser = (await chrome.send("Browser.getVersion")).product;
+  if (!mobileOnly) { manifest.baseRevision = baseRevision; manifest.browser = browser; }
   await page("Page.enable"); await page("Runtime.enable"); await page("Log.enable");
   await page("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
   await page("Page.addScriptToEvaluateOnNewDocument", { source: `
@@ -46,6 +49,7 @@ try {
     });observer.observe(document,{subtree:true,attributes:true,attributeFilter:['data-ready']});
   ` });
   for (const frame of FRAMES) {
+    if (mobileOnly && frame.width >= 1024) continue;
     const mobile = frame.width < frame.height;
     await page("Emulation.setDeviceMetricsOverride", { width: frame.width, height: frame.height, screenWidth: frame.width, screenHeight: frame.height, deviceScaleFactor: 2, mobile });
     await page("Emulation.setTouchEmulationEnabled", { enabled: mobile, maxTouchPoints: 1 });
@@ -72,8 +76,11 @@ try {
       await writeFile(resolve(output, file.split("/").pop()), buffer);
       files.push({ file, width, height: meta.height, bytes: buffer.length, quality: low });
     }
-    manifest.frames.push({ name: frame.name, media: frame.media, width: frame.width, height: frame.height,
-      captureWidth: first.width, captureHeight: first.height, captureSha256: createHash("sha256").update(png).digest("hex"), budget: frame.budget, files });
+    const captured = { name: frame.name, media: frame.media, width: frame.width, height: frame.height,
+      captureWidth: first.width, captureHeight: first.height, captureSha256: createHash("sha256").update(png).digest("hex"), budget: frame.budget, files,
+      generatedAt: new Date().toISOString(), baseRevision, browser };
+    const at = manifest.frames.findIndex(item => item.name === frame.name);
+    if (at < 0) manifest.frames.push(captured); else manifest.frames[at] = captured;
     console.log(`${frame.name}: ${files.map(f => `${f.width}w ${(f.bytes / 1024).toFixed(1)} KiB q${f.quality}`).join(", ")}`);
   }
   assert.equal(chrome.errors.length, 0, "Chrome logged errors while capturing posters");

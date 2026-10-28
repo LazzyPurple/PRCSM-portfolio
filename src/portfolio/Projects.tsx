@@ -17,10 +17,11 @@ export default function Projects() {
   return (
     <>
       <div className="projects-mobile">
-        <div className="mx-auto flex w-full flex-col px-6 pt-44 pb-[12vh]">
-          {projects.map(project => (
-            <article key={project.slug} className="flex flex-col pb-[16vw]">
-              <Link href={`/projects/${project.slug}`} className="relative w-full overflow-hidden rounded-2xl" style={{ height: "65vw" }} aria-label={`Voir ${project.name}`}>
+        <div>
+          {projects.map((project, index) => (
+            <article key={project.slug} className="mobile-project" data-project={project.slug}>
+              {index === 0 && <ProjectHeading className="projects-mobile-heading" />}
+              <Link href={`/projects/${project.slug}`} className="mobile-project-image relative w-full overflow-hidden rounded-2xl" aria-label={`Voir ${project.name}`}>
                 <Image src={`/projects/${project.slug}.webp`} alt={project.alt} fill sizes="100vw" className="object-cover" />
               </Link>
               <h3 className="mt-[5vw] mb-2 text-[21px]">{project.name}</h3>
@@ -87,11 +88,16 @@ function DesktopStrip() {
   }, []);
   return (
     <div className="projects-desktop">
+      <ProjectHeading className="projects-heading" />
       <div ref={stripRef} className="dao-strip" tabIndex={0} role="region" aria-label="Projets, défilement horizontal">
         {projects.map(project => <StripTile key={project.slug} project={project} />)}
       </div>
     </div>
   );
+}
+
+function ProjectHeading({ className }: { className: string }) {
+  return <div className={className}><h2>Mes projets</h2><p>Cas fictifs, en attendant la sélection.</p></div>;
 }
 
 function StripTile({ project }: { project: Project }) {

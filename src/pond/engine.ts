@@ -2,7 +2,7 @@
 import { POND_SWIM_RADIUS, World, type Box } from "./sim/world";
 import { drawSimulation } from "./debug/simulation2d";
 import { PondScene } from "./scene/PondScene";
-import { pondWidth } from "./scene/framing";
+import { pondWidth, frameOpeningSchool, SMALL_SCREEN_WIDTH } from "./scene/framing";
 import { advanceHour, CYCLE_SECONDS, START_HOUR, wrapHour } from "./cycle";
 
 const STEP = 1 / 60;
@@ -34,6 +34,7 @@ export class PondEngine {
   private debugCanvas: HTMLCanvasElement | null = null;
   private lost = false;
   private ready = false;
+  private openingFramed = false;
   private screenPointer = { x: 0, y: 0, active: false };
   private raf = 0;
   private last = 0;
@@ -92,6 +93,7 @@ export class PondEngine {
   togglePause() { this.paused = !this.paused; this.schedule(); }
   restart() {
     this.world = new World();
+    this.openingFramed = false;
     this.stillPrepared = false;
     this.world.shore = POND_SWIM_RADIUS;
     this.world.resize(pondWidth(this.width, this.height), this.height, this.width, this.height);
@@ -155,6 +157,11 @@ export class PondEngine {
 
   private draw(dt = 0) {
     if (this.lost || this.disposed) return;
+    if (!this.openingFramed) {
+      // Match the CSS breakpoint even when a desktop scrollbar narrows the canvas.
+      if (innerWidth < SMALL_SCREEN_WIDTH) frameOpeningSchool(this.world, this.scene.camera, this.width, this.height, Math.min(this.height, innerHeight));
+      this.openingFramed = true;
+    }
     if (this.ctx && this.view === "simulation") {
       drawSimulation(this.ctx, this.world, this.width, this.height);
       if (this.debugCanvas && this.debugCanvas.dataset.ready !== "true") this.debugCanvas.dataset.ready = "true";

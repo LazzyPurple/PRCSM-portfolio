@@ -9,13 +9,11 @@ import { createWater, fullscreenScene, FULLSCREEN_VS } from "./water";
 import { flatMaterial, REGION, sharedUniforms } from "./flow";
 import { PaintPipeline } from "../paint/strokePass";
 import { GpuClock, Scaler, pickTier } from "../paint/budget";
-import { pondWidth } from "./framing";
+import { pondWidth, POND_SCALE as SCALE, POND_MAX_DEPTH as MAX_DEPTH } from "./framing";
 import { createKoiShadow } from "./shadows";
 import { Daylight } from "./daylight";
 import { createFlowers, createAlgae } from "./vegetation";
 
-const SCALE = 0.01;
-const MAX_DEPTH = 1.5;
 const FOV = 40;
 const FRAMING = 0.73;
 const INCLINATION = 55 * Math.PI / 180;

@@ -43,6 +43,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px s
 .theme-toggle { display: grid; place-items: center; width: 32px; height: 32px; }
 .theme-toggle svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 2px var(--portfolio-ink)); }
 .theme-to-dark { display: none; }
+.mobile-nav { display: none; }
 :root[data-theme="light"] .theme-to-light { display: none; }
 :root[data-theme="light"] .theme-to-dark { display: inline; }
 
@@ -98,15 +99,32 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px s
 
 @media (max-width: 1023px) {
   .projects-desktop { display: none; }
-  .projects-mobile { display: block; height: 100%; overflow-y: auto; }
-  .projects-heading { top: 105px; flex-direction: column; gap: 8px; }
+  .projects-section { height: auto; scroll-snap-align: none; }
+  .projects-mobile { display: block; }
+  .mobile-project { display: flex; flex-direction: column; justify-content: center; min-height: 100svh; padding: 60px 24px; scroll-snap-align: start; scroll-snap-stop: always; }
+  .mobile-project:first-child { justify-content: flex-start; padding-top: 108px; }
+  .projects-mobile-heading { position: static; margin-bottom: 28px; }
+  .projects-mobile-heading h2 { font-size: 21px; letter-spacing: -.025em; }
+  .projects-mobile-heading p { margin-top: 8px; font-size: 12px; color: var(--muted-color); }
+  .mobile-project-image { height: min(65vw, 40svh); flex-shrink: 0; }
   .hero-copy { width: min(380px, calc(100vw - 56px)); bottom: 55px; }
   .hero-copy h1 { font-size: clamp(32px, 4.8vw, 46px); }
   .hero-description { font-size: 14px; max-width: 37ch; }
-  .site-header { padding: 22px 16px; }
+  .site-header { display: none; padding: 22px 16px; }
   .site-header nav { gap: clamp(10px, 2.4vw, 24px); font-size: 11px; }
   .contact-button { padding: 7px 10px; }
   .theme-toggle { width: 24px; }
+  .mobile-nav { display: block; position: fixed; inset: 14px 16px auto; z-index: 40; }
+  .mobile-menu-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 56px; padding: 12px 20px; border: 1px solid color-mix(in srgb, var(--foreground-color) 55%, transparent); border-radius: 999px; color: var(--foreground-color); background: color-mix(in srgb, var(--background-color) 55%, transparent); -webkit-backdrop-filter: blur(20px) saturate(170%); backdrop-filter: blur(20px) saturate(170%); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--paper) 40%, transparent), 0 8px 24px color-mix(in srgb, var(--page-dark) 16%, transparent); font-size: 15px; text-align: left; }
+  .mobile-menu-bar svg { width: 23px; height: 23px; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+  .mobile-menu { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 14px 16px 35px; border: none; color: var(--foreground-color); background: color-mix(in srgb, var(--background-color) 78%, transparent); -webkit-backdrop-filter: blur(26px) saturate(150%); backdrop-filter: blur(26px) saturate(150%); }
+  .mobile-menu::backdrop { background: transparent; }
+  .mobile-menu[open] { display: flex; flex-direction: column; }
+  .mobile-menu-heading { flex-shrink: 0; }
+  .mobile-menu-heading button { display: grid; place-items: center; width: 32px; height: 32px; }
+  .mobile-menu-links { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: clamp(14px, 4vh, 38px); padding-block: 30px; font: 500 clamp(40px, 10vw, 84px)/1.05 Georgia, serif; letter-spacing: -.045em; }
+  .mobile-menu-links a:hover { opacity: .7; }
+  .mobile-menu-secondary { display: flex; flex-shrink: 0; justify-content: center; align-items: center; gap: 28px; padding-block: 12px; font-size: 14px; }
 }
 @media (max-width: 360px) {
   .site-header { padding-inline: 10px; }
@@ -121,6 +139,9 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 2px s
   .hero-copy .eyebrow { display: none; }
   .hero-description { margin-top: 12px; font-size: 13px; }
   .hero-copy .text-link { margin-top: 10px; }
+}
+@media (max-height: 540px) and (max-width: 1023px) {
+  .mobile-menu-links { font-size: clamp(30px, 8vh, 48px); gap: 12px; padding-block: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

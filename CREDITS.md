@@ -88,6 +88,11 @@ depuis `src/app/fonts/` de cette référence. Copyright 2024 The Geist Project A
 La licence originale est conservée dans [licenses/GEIST-OFL.txt](licenses/GEIST-OFL.txt).
 Ils sont servis localement par Next.js, sans requête à Google Fonts.
 
+Le menu mobile actuel est une implémentation propre en dialog HTML/CSS, inspirée de
+la capture fournie par Nathan ; il ne reprend pas les dépendances Motion ou next-themes
+du menu mobile Dao. Le placement initial des koï dans le viewport et l'aimantation des
+articles mobiles sont propres à cette adaptation.
+
 Les trois projets Lisière, Intervalle et Boussole sont entièrement fictifs.
 Leurs visuels ont été générés avec l'outil intégré `image_gen`, puis encodés en WebP.
 Les prompts et les chemins des fichiers sont consignés dans

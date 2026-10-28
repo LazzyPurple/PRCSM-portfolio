@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="fr" data-theme="dark" suppressHydrationWarning style={colors}>
       <head>
         <script id="theme-init" dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('pond-theme')==='light')document.documentElement.dataset.theme='light'}catch{}" }} />
-        <noscript><style>{".theme-toggle{display:none}"}</style></noscript>
+        <noscript><style>{".theme-toggle,.mobile-nav{display:none!important}.site-header{display:block!important}"}</style></noscript>
       </head>
       <body className={`${sans.variable} ${mono.variable}`}>{children}</body>
     </html>

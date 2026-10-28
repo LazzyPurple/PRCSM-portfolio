@@ -109,51 +109,57 @@
       "width": 768,
       "height": 1024,
       "captureWidth": 1229,
-      "captureHeight": 1638,
-      "captureSha256": "0cf70520cf2a645bc58a216f76c82e14e48027a040a4a7d4c06967ca714c4955",
+      "captureHeight": 1766,
+      "captureSha256": "631d63b329f7b93c679af829d2148c0b49dcdbf63a43b4d66a6ece8778986d51",
       "budget": 102400,
       "files": [
         {
           "file": "/pond/tablet-768.webp",
           "width": 768,
-          "height": 1024,
-          "bytes": 44450,
-          "quality": 52
+          "height": 1104,
+          "bytes": 43380,
+          "quality": 48
         },
         {
           "file": "/pond/tablet-1200.webp",
           "width": 1200,
-          "height": 1599,
-          "bytes": 101618,
-          "quality": 52
+          "height": 1724,
+          "bytes": 100916,
+          "quality": 48
         }
-      ]
+      ],
+      "generatedAt": "2026-10-28T09:40:48.210Z",
+      "baseRevision": "f40de197c1987b5d814b3a3531fa581e9b99b2b0",
+      "browser": "Chrome/156.0.8078.49"
     },
     {
       "name": "phone",
       "media": "",
       "width": 390,
       "height": 844,
-      "captureWidth": 713,
-      "captureHeight": 1543,
-      "captureSha256": "846b51b7359321f2bccfbbc86bde64d925c0b64ebcc52b743a913123833cbaff",
+      "captureWidth": 681,
+      "captureHeight": 1614,
+      "captureSha256": "b3fa300f9ccf70f0a71661aea992b018955f6750f7f2ec0da6a07e191ce76310",
       "budget": 61440,
       "files": [
         {
           "file": "/pond/phone-390.webp",
           "width": 390,
-          "height": 844,
-          "bytes": 20122,
-          "quality": 62
+          "height": 924,
+          "bytes": 24190,
+          "quality": 63
         },
         {
-          "file": "/pond/phone-700.webp",
-          "width": 700,
-          "height": 1515,
-          "bytes": 61346,
-          "quality": 62
+          "file": "/pond/phone-681.webp",
+          "width": 681,
+          "height": 1614,
+          "bytes": 61164,
+          "quality": 63
         }
-      ]
+      ],
+      "generatedAt": "2026-10-28T09:40:50.411Z",
+      "baseRevision": "f40de197c1987b5d814b3a3531fa581e9b99b2b0",
+      "browser": "Chrome/156.0.8078.49"
     }
   ]
 }

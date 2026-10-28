@@ -26,7 +26,8 @@ const prepare = async () => {
 };
 try {
   await page("Page.enable"); await page("Runtime.enable"); await page("Log.enable");
-  for (const [width, height] of [[1440,900],[390,844],[320,740],[844,390]]) {
+  // Mobile has dedicated touch, menu and per-project snap checks in validate-mobile.mjs.
+  for (const [width, height] of [[1440,900],[1024,900]]) {
     await page("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false });
     await page("Page.navigate", { url: url + "/?debug" }); await prepare();
     await evaluate("localStorage.removeItem('pond-theme');document.documentElement.dataset.theme='dark'");
@@ -84,7 +85,8 @@ try {
     assert.equal(await evaluate("getComputedStyle(document.querySelector('footer')).backgroundColor"),"rgb(216, 204, 238)");
     await capture("footer-"+width);
   }
-  report.checks.push("4 viewport sizes: exact full-screen snap sections, visible pond bleed, transparent header, copy bottom-left without background, no counter/name/inline cases; wheel strip/list releases to violet footer");
+  report.checks.push("Desktop: exact full-screen snap sections, visible pond bleed, transparent header, copy bottom-left without background, no counter/name/inline cases; wheel strip releases to violet footer");
+  await evaluate("localStorage.removeItem('pond-theme')");
   await page("Emulation.setDeviceMetricsOverride",{width:1440,height:900,deviceScaleFactor:1,mobile:false});
   await page("Page.navigate",{url:url+"/?debug"}); await prepare();
   assert.equal(await evaluate("document.documentElement.dataset.theme"),"dark");

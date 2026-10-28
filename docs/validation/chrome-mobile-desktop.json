@@ -1,0 +1,104 @@
+{
+  "layouts": [
+    {
+      "width": 1440,
+      "height": 900,
+      "client": 1425,
+      "scroll": 1425,
+      "sections": [
+        900,
+        900,
+        900
+      ],
+      "snap": "y mandatory",
+      "theme": "dark",
+      "canvas": 980,
+      "headerBackground": "rgba(0, 0, 0, 0)",
+      "title": "Hi, I’mNathan TOTO",
+      "headerText": "La mareMes projetsLinkedIn (nouvel onglet)GitHub (nouvel onglet)ContactActiver le thème clairActiver le thème sombre",
+      "counter": false,
+      "details": 0,
+      "cycle": 480
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "client": 1009,
+      "scroll": 1009,
+      "sections": [
+        900,
+        900,
+        900
+      ],
+      "snap": "y mandatory",
+      "theme": "dark",
+      "canvas": 980,
+      "headerBackground": "rgba(0, 0, 0, 0)",
+      "title": "Hi, I’mNathan TOTO",
+      "headerText": "La mareMes projetsLinkedIn (nouvel onglet)GitHub (nouvel onglet)ContactActiver le thème clairActiver le thème sombre",
+      "counter": false,
+      "details": 0,
+      "cycle": 480
+    }
+  ],
+  "themes": [
+    {
+      "width": 1440,
+      "theme": "dark",
+      "hour": 12,
+      "copy": {
+        "background": "rgba(0, 0, 0, 0)",
+        "before": "none",
+        "left": 86.390625,
+        "right": 496.390625,
+        "bottom": 819,
+        "shadow": "rgb(25, 25, 29) -1px -1px 1px, rgb(25, 25, 29) 1px -1px 1px, rgb(25, 25, 29) -1px 1px 1px, rgb(25, 25, 29) 1px 1px 1px"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "hour": 0,
+      "copy": {
+        "background": "rgba(0, 0, 0, 0)",
+        "before": "none",
+        "left": 86.390625,
+        "right": 496.390625,
+        "bottom": 819,
+        "shadow": "rgb(25, 25, 29) -1px -1px 1px, rgb(25, 25, 29) 1px -1px 1px, rgb(25, 25, 29) -1px 1px 1px, rgb(25, 25, 29) 1px 1px 1px"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "hour": 12,
+      "copy": {
+        "background": "rgba(0, 0, 0, 0)",
+        "before": "none",
+        "left": 86.390625,
+        "right": 496.390625,
+        "bottom": 819,
+        "shadow": "rgb(243, 235, 218) -1px -1px 1px, rgb(243, 235, 218) 1px -1px 1px, rgb(243, 235, 218) -1px 1px 1px, rgb(243, 235, 218) 1px 1px 1px"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "hour": 0,
+      "copy": {
+        "background": "rgba(0, 0, 0, 0)",
+        "before": "none",
+        "left": 86.390625,
+        "right": 496.390625,
+        "bottom": 819,
+        "shadow": "rgb(243, 235, 218) -1px -1px 1px, rgb(243, 235, 218) 1px -1px 1px, rgb(243, 235, 218) -1px 1px 1px, rgb(243, 235, 218) 1px 1px 1px"
+      }
+    }
+  ],
+  "checks": [
+    "Desktop: exact full-screen snap sections, visible pond bleed, transparent header, copy bottom-left without background, no counter/name/inline cases; wheel strip releases to violet footer",
+    "Real project routes, previous/next, gallery return, engine disposal, persistent theme across reload and navigation",
+    "All projects prerender, invalid slug is 404, landing/poster and project pages work without JavaScript"
+  ],
+  "errors": []
+}

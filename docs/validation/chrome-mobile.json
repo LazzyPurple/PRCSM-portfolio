@@ -1,0 +1,170 @@
+{
+  "layouts": [
+    {
+      "width": 390,
+      "height": 844,
+      "opening": {
+        "fish": [
+          {
+            "left": 90.63217021188785,
+            "right": 153.16713788206474,
+            "top": 202.28953853489412,
+            "bottom": 302.4097971189867,
+            "painted": 2374
+          },
+          {
+            "left": 248.39131808423386,
+            "right": 282.2835605398559,
+            "top": 226.39463204176522,
+            "bottom": 279.50403401482464,
+            "painted": 608
+          },
+          {
+            "left": 95.18114377422785,
+            "right": 148.1547637135142,
+            "top": 359.3969046332821,
+            "bottom": 450.6671162591661,
+            "painted": 2123
+          }
+        ],
+        "width": 390,
+        "height": 844,
+        "time": 0
+      },
+      "projectStops": [
+        844,
+        1688,
+        2532,
+        3376
+      ]
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "opening": {
+        "fish": [
+          {
+            "left": 88.567496363755,
+            "right": 138.00037065386255,
+            "top": 218.2022254790895,
+            "bottom": 296.9365221799905,
+            "painted": 1380
+          },
+          {
+            "left": 202.46188113636052,
+            "right": 228.02116579412825,
+            "top": 200.474827818508,
+            "bottom": 241.80126482225333,
+            "painted": 388
+          },
+          {
+            "left": 81.88855532489288,
+            "right": 121.74759396886736,
+            "top": 320.2926962090068,
+            "bottom": 389.37581125071335,
+            "painted": 1166
+          }
+        ],
+        "width": 320,
+        "height": 740,
+        "time": 0
+      },
+      "projectStops": [
+        740,
+        1480,
+        2220,
+        2960
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "opening": {
+        "fish": [
+          {
+            "left": 227.64404915048843,
+            "right": 347.6588196837014,
+            "top": 288.23348004142775,
+            "bottom": 476.85327576242975,
+            "painted": 9409
+          },
+          {
+            "left": 482.63491892048347,
+            "right": 547.8252881475609,
+            "top": 252.33566619850404,
+            "bottom": 358.59797008204555,
+            "painted": 2961
+          },
+          {
+            "left": 198.70601465908456,
+            "right": 305.3826650832616,
+            "top": 402.8973020679514,
+            "bottom": 584.9640332793884,
+            "painted": 7982
+          },
+          {
+            "left": 491.7179919286474,
+            "right": 545.5717139843741,
+            "top": 443.6144442014086,
+            "bottom": 537.9208439114618,
+            "painted": 2142
+          }
+        ],
+        "width": 768,
+        "height": 1024,
+        "time": 0
+      },
+      "projectStops": [
+        1024,
+        2048,
+        3072,
+        4096
+      ]
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "opening": {
+        "fish": [
+          {
+            "left": 308.568547886501,
+            "right": 384.30711046947545,
+            "top": 169.36499679523214,
+            "bottom": 300.20375040836956,
+            "painted": 4371
+          },
+          {
+            "left": 504.7771398050541,
+            "right": 544.7580405298014,
+            "top": 148.82200442050126,
+            "bottom": 213.55618154183767,
+            "painted": 1140
+          },
+          {
+            "left": 262.81373245319855,
+            "right": 322.79197343734506,
+            "top": 156.14598347409168,
+            "bottom": 257.66160515525183,
+            "painted": 2545
+          }
+        ],
+        "width": 844,
+        "height": 390,
+        "time": 0
+      },
+      "projectStops": [
+        390,
+        998.1875,
+        1472.875,
+        1947.5625
+      ]
+    }
+  ],
+  "checks": [
+    "Every koi and fin starts inside the small viewport and is visible in GPU flow pixels",
+    "Native touch flicks stop on each project, heading scrolls away, footer reached after last project",
+    "Glass menu opens modally, traps focus, toggles theme, closes on Escape/link, restores scrolling/focus",
+    "Resizing to desktop closes mobile menu and restores the original desktop navbar"
+  ],
+  "errors": []
+}

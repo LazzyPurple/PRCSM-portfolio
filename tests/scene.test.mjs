@@ -4,6 +4,7 @@ import { stripTypeScriptTypes } from "node:module";
 import { resolve, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import { test } from "node:test";
+import { PerspectiveCamera, Vector3 } from "three";
 
 const cache = new Map();
 function moduleUrl(file) {
@@ -24,7 +25,7 @@ const { sharedUniforms } = await import(moduleUrl("src/pond/scene/flow.ts"));
 const { createKoi } = await import(moduleUrl("src/pond/scene/koiMesh.ts"));
 const { createLilyPads, randomSeed } = await import(moduleUrl("src/pond/scene/lilyPads.ts"));
 const { POND_SWIM_RADIUS } = await import(moduleUrl("src/pond/sim/world.ts"));
-const { pondWidth } = await import(moduleUrl("src/pond/scene/framing.ts"));
+const { pondWidth, frameOpeningSchool, POND_SCALE, POND_MAX_DEPTH } = await import(moduleUrl("src/pond/scene/framing.ts"));
 const { createKoiShadow } = await import(moduleUrl("src/pond/scene/shadows.ts"));
 const { koiMarkings } = await import(moduleUrl("src/pond/sim/markings.ts"));
 const { advanceHour, CYCLE_SECONDS, START_HOUR, phaseAt, formatHour } = await import(moduleUrl("src/pond/cycle.ts"));
@@ -131,6 +132,38 @@ test("portrait crops a broad pond while fish sizes and population follow the vie
   assert.equal(world.pellets.length, 0);
   world.feed(world.width / 2, world.height / 2);
   assert.ok(world.pellets.length >= 5);
+});
+
+test("small-screen opening poses keep every mesh vertex inside the first viewport", () => {
+  for (const [width, visibleHeight] of [[320,740],[390,844],[768,1024],[844,390],[1023,768]]) {
+    const height = visibleHeight + 80;
+    const camera = new PerspectiveCamera(40, width / height, 0.1, 200);
+    const inclination = 55 * Math.PI / 180;
+    const distance = height * POND_SCALE / Math.sin(inclination) / (2 * Math.tan(40 * Math.PI / 360)) * 0.73;
+    camera.position.set(0, distance * Math.sin(inclination), distance * Math.cos(inclination));
+    camera.lookAt(0,0,0); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
+    for (const seed of [1,42,90210]) withSeed(seed, () => {
+      const world = new World(); world.shore = POND_SWIM_RADIUS;
+      world.resize(pondWidth(width,height), height, width, height);
+      frameOpeningSchool(world,camera,width,height,visibleHeight);
+      const uniforms = sharedUniforms(); uniforms.uMaxDepth.value = POND_MAX_DEPTH;
+      const vertex = new Vector3();
+      for (const koi of world.koi) {
+        const model = createKoi(koi,uniforms); model.update(POND_SCALE,-world.width*POND_SCALE/2,-height*POND_SCALE/2);
+        const positions = model.mesh.geometry.attributes.position;
+        for (let i = 0; i < positions.count; i++) {
+          vertex.fromBufferAttribute(positions,i).project(camera);
+          const x=(vertex.x+1)*width/2,y=(1-vertex.y)*height/2;
+          assert.ok(x>=8 && x<=width-8 && y>=8 && y<=visibleHeight-8, `${width}x${visibleHeight}: vertex at ${x},${y}`);
+        }
+        model.mesh.geometry.dispose(); model.mesh.material.dispose();
+      }
+    });
+  }
+  const world = new World(); world.shore=POND_SWIM_RADIUS; world.resize(1440,980);
+  const before=world.koi.map(koi=>koi.nodes.slice());
+  frameOpeningSchool(world,new PerspectiveCamera(),1440,980,900);
+  world.koi.forEach((koi,i)=>assert.deepEqual(koi.nodes,before[i]));
 });
 
 test("shore contains fully flared fins during feeding, flight and resize", () => withSeed(1, () => {

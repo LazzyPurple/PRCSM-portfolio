@@ -167,6 +167,47 @@ Profil production 1440×900/DPR 1 sur RTX 4070 SUPER : GPU médian 2.826 ms,
 p95 3.678 ms, 239.87 FPS sur 10 s. Preuves : docs/validation/chrome-cycle-{dev,prod}.json.
 Safari, téléphone physique et portable moyen restent non qualifiés.
 
+## Adaptations ciblées aux petits écrans — 28 octobre 2026
+
+Les changements visuels sont limités au breakpoint mobile (<1024px). Au premier rendu,
+la colonne de chaque koï est placée dans le viewport réellement visible, par projection
+caméra sur son plan de profondeur. Les nageoires entières sont testées dans le cadrage.
+Ce placement ne s'exécute qu'à l'ouverture ou à une relance de la mare, après la préparation
+du mouvement réduit si nécessaire ; la simulation continue ensuite librement. Ni l'angle
+de caméra, ni les dimensions du monde, ni le comportement normal ne sont modifiés.
+Le seuil utilise la largeur du viewport pour préserver aussi le desktop à 1024px avec
+une barre de défilement. Le placement desktop reste inchangé.
+
+Le titre Mes projets était extérieur à un conteneur mobile défilant, ce qui le faisait
+paraître sticky. Le mobile utilise maintenant le défilement de la page : son titre est
+dans le flux du premier projet et chaque article a son propre arrêt obligatoire de scroll.
+Les articles font au moins un viewport, en laissant le contenu dépasser en paysage court
+pour éviter de le couper. Les grandes impulsions tactiles passent successivement par les
+trois projets avant d'atteindre le footer. La bande desktop et sa navigation sont conservées.
+
+Le menu mobile utilise un dialog HTML natif : capsule translucide avec flou de fond,
+grands liens inspirés de la référence fournie, liens sociaux et thème en bas. Il bloque
+le défilement de fond, contient le focus, se ferme avec Échap ou un lien et rend le focus
+au bouton. Un passage au desktop ferme le menu et restaure la navbar existante. Le fond
+du menu et son contraste suivent le thème ; les commandes restent visibles en paysage.
+Aucune dépendance supplémentaire. Sans JavaScript, une navigation simple est conservée.
+
+Les affiches téléphone et tablette sont actualisées avec les nouveaux placements ; les
+fichiers desktop restent identiques. Commande ciblée :
+`node scripts/posters.mjs http://127.0.0.1:3000/ --mobile-only`.
+Les métadonnées par capture distinguent les affiches réactualisées.
+
+Validation : 23 tests CPU/actifs, typecheck, lint et build passent. Test de tous les sommets
+des poissons sur cinq formats et trois graines, plus vérification que le desktop n'est pas
+repositionné. Chrome tactile émulé : 390×844, 320×740, 768×1024, 844×390. Tous les poissons
+sont cadrés et apparaissent effectivement dans les pixels GPU dès la première image
+(3, 3, 4 et 3 koï respectivement). Les flicks s'arrêtent sur chaque projet ; le titre remonte
+avec le contenu. Menu, thème, focus, Échap, liens et changement de breakpoint vérifiés.
+Les contrôles desktop à 1440×900 et 1024×900, les routes projet et les pages sans JS passent.
+Les 16 scénarios de régression de la mare passent également, sans erreur navigateur.
+Rapports : docs/validation/chrome-mobile*.json ; captures : artifacts/mobile/.
+Safari et appareil tactile physique restent à qualifier.
+
 ## Disques réfléchis du soleil et de la lune — 28 octobre 2026
 
 Le soleil est reconnaissable comme un disque doré, la lune comme un disque pâle

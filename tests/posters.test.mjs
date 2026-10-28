@@ -18,7 +18,7 @@ test("posters are real WebPs with correct sizes, aspect ratios and bounded bytes
       assert.equal(meta.width, file.width); assert.equal(meta.height, file.height);
       assert.equal(bytes.length, file.bytes); assert.ok(bytes.length <= frame.budget);
       assert.ok(meta.width <= frame.captureWidth);
-      assert.ok(Math.abs(meta.height - meta.width * frame.height / frame.width) <= 1);
+      assert.ok(Math.abs(meta.height - meta.width * frame.captureHeight / frame.captureWidth) <= 1);
       files.push(file.file.split("/").pop());
     }
   }
